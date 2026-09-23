@@ -1,0 +1,54 @@
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+.vscode/.browse.c_cpp.db*
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/ipch/
+
+# Artefatos de build
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+*.lst
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+*~
+
+# Editores
+*.swp
+*.swo
+.idea/
+*.code-workspace
+
+# Logs e temporários
+*.log
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Node / ferramentas de desenvolvimento (uso opcional)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+coverage/
+dist/
+build/
+
+# Python (scripts auxiliares de análise/automação)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Rascunhos de capturas de tela (as evidências versionadas ficam em docs/05-testing/)
+*.tmp.png
+screenshots/

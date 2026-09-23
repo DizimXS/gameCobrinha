@@ -1,0 +1,45 @@
+Solicitação de Desenvolvimento:
+
+    Crie um jogo da cobrinha (Snake) completo e totalmente funcional contendo HTML, CSS e JavaScript integrados em um único arquivo HTML.
+
+    Requisitos Técnicos:
+
+        Estrutura de Arquivo Único: O código deve conter as tags <style> para o CSS e <script> para o JavaScript diretamente dentro do arquivo .html.
+
+        Sem Dependências Externas: Utilize apenas HTML5 Canvas, Vanilla CSS e Vanilla JavaScript (sem bibliotecas ou frameworks externos).
+
+        Design e Interface:
+
+            Layout moderno, limpo e responsivo (centralizado na tela).
+
+            Tema escuro estilo retro-arcade (ex: fundo escuro com elementos em tons neon).
+
+            Placar visível mostrando a Pontuação Atual e a Melhor Pontuação (High Score) salva no localStorage.
+
+            Tela de Game Over amigável com botão de reiniciar.
+
+        Mecânicas do Jogo:
+
+            Controles: Suporte a setas do teclado (ArrowKeys) e teclas WASD.
+
+            Mobile/Touch: Adicione botões na tela (D-Pad virtual) para jogar em dispositivos móveis/telas sensíveis ao toque.
+
+            Movimentação: Impedir que a cobra inverta a direção instantaneamente (ex: ir para a esquerda se estiver indo para a direita).
+
+            Comida: A comida deve aparecer em posições aleatórias da grade, sem surgir por cima do corpo da cobra.
+
+            Colisão: O jogo termina ao colidir com as paredes do tabuleiro ou com o próprio corpo.
+
+            Crescimento e Velocidade: A cobra deve crescer a cada comida ingerida e a pontuação deve aumentar.
+
+        Qualidade do Código:
+
+            Código bem estruturado, comentado e limpo.
+
+            Utilização de requestAnimationFrame ou setInterval controlado de forma eficiente para o game loop.
+
+    Forneça o código completo dentro de um único bloco de código pronto para salvar como index.html e rodar diretamente no navegador.
+
+Dica extra:
+
+Se quiser adicionar recursos específicos (como efeitos sonoros, diferentes níveis de dificuldade ou itens especiais), você pode adicionar uma seção ao prompt chamada "Recursos Bônus (Opcionais)" antes de enviar!

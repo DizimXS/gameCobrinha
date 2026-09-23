@@ -1,0 +1,7 @@
+ Insira aqui a descrição do seu projeto.
+ 
+ Procure fornecer uma visão geral clara e concisa do seu projeto, incluindo seus objetivos, funcionalidades e requisitos funcionais.
+
+Inclua detalhes sobre o hardware, framework e tecnologias utilizadas, bem como qualquer requisito específico para a execução do projeto.
+
+Detalhe.

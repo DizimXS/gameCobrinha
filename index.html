@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="color-scheme" content="dark" />
+<meta name="description" content="Jogo da cobrinha (Snake) em arquivo unico, tema neon retro-arcade, sem dependencias externas." />
+<title>Snake Neon</title>
+
+<style>
+/* ============================================================================
+   TEMA (ADR-007) - variaveis de design centralizadas
+   ========================================================================== */
+:root {
+  --bg:            #04060d;
+  --bg-soft:       #0a1020;
+  --panel:         rgba(11, 17, 32, 0.86);
+  --panel-border:  rgba(57, 255, 20, 0.22);
+  --grid-line:     rgba(57, 255, 20, 0.07);
+  --neon:          #39ff14;   /* verde neon  */
+  --neon-2:        #22d3ee;   /* ciano       */
+  --neon-3:        #ff2fd0;   /* magenta     */
+  --text:          #d9fff1;
+  --muted:         #7b8aa3;
+  --radius-lg:     20px;
+  --radius-md:     14px;
+  --font-mono:     ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas,
+                   "Liberation Mono", Menlo, monospace;
+}
+
+/* ============================================================================
+   RESET E LAYOUT BASE (NFR-002)
+   ========================================================================== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  color: var(--text);
+  background-color: var(--bg);
+  /* Fundo escuro com brilhos suaves de neon (NFR-003). */
+  background-image:
+    radial-gradient(900px 520px at 12% -10%, rgba(57, 255, 20, 0.10), transparent 62%),
+    radial-gradient(760px 520px at 100% 108%, rgba(255, 47, 208, 0.10), transparent 60%),
+    radial-gradient(680px 420px at 92% -6%, rgba(34, 211, 238, 0.09), transparent 58%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ============================================================================
+   ESTRUTURA PRINCIPAL
+   ========================================================================== */
+.app {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.app__header { text-align: center; }
+
+.title {
+  margin: 0;
+  font-size: clamp(1.4rem, 5.4vw, 2.1rem);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--neon);
+  text-shadow:
+    0 0 6px rgba(57, 255, 20, 0.85),
+    0 0 22px rgba(57, 255, 20, 0.45);
+}
+
+.title__accent {
+  color: var(--neon-3);
+  text-shadow:
+    0 0 6px rgba(255, 47, 208, 0.85),
+    0 0 22px rgba(255, 47, 208, 0.5);
+}
+
+/* ============================================================================
+   PLACAR (FR-009)
+   ========================================================================== */
+.hud {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.hud__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  box-shadow: inset 0 0 24px rgba(57, 255, 20, 0.06);
+}
+
+.hud__label {
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hud__value {
+  font-size: 1.32rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--neon);
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.6);
+}
+
+.hud__value--alt {
+  color: var(--neon-2);
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.6);
+}
+
+/* ============================================================================
+   TABULEIRO E OVERLAY
+   ========================================================================== */
+.stage {
+  position: relative;
+  width: min(92vw, 56vh, 520px);
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-soft);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 18px 50px rgba(0, 0, 0, 0.65),
+    0 0 34px rgba(57, 255, 20, 0.16);
+  overflow: hidden;
+}
+
+#board {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(4, 6, 13, 0.82);
+  backdrop-filter: blur(3px);
+  transition: opacity 180ms ease, visibility 180ms ease;
+}
+
+.overlay.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.overlay__title {
+  margin: 0;
+  font-size: clamp(1.05rem, 4.4vw, 1.5rem);
+  letter-spacing: 0.2em;
+  color: var(--neon);
+  text-shadow: 0 0 14px rgba(57, 255, 20, 0.7);
+}
+
+.overlay__text {
+  margin: 0;
+  max-width: 32ch;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* ============================================================================
+   BOTOES
+   ========================================================================== */
+.btn {
+  margin-top: 6px;
+  padding: 11px 24px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #05230f;
+  background: linear-gradient(180deg, #7dff62, var(--neon));
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(57, 255, 20, 0.45);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+
+.btn:hover { transform: translateY(-1px); box-shadow: 0 0 26px rgba(57, 255, 20, 0.7); }
+.btn:active { transform: translateY(1px); filter: brightness(0.92); }
+
+.btn:focus-visible,
+.dpad__btn:focus-visible {
+  outline: 2px solid var(--neon-2);
+  outline-offset: 3px;
+}
+
+/* ============================================================================
+   D-PAD VIRTUAL PARA TOQUE (FR-004, CA-008)
+   ========================================================================== */
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 58px);
+  grid-template-rows: repeat(3, 58px);
+  grid-template-areas:
+    ".    up    ."
+    "left .     right"
+    ".    down  .";
+  gap: 8px;
+  touch-action: none;          /* evita rolagem/zoom durante o jogo */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dpad__btn {
+  font-family: inherit;
+  font-size: 1.05rem;
+  color: var(--neon);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: inset 0 0 18px rgba(57, 255, 20, 0.08);
+  transition: transform 100ms ease, background 100ms ease, box-shadow 100ms ease;
+}
+
+.dpad__btn:hover { background: rgba(57, 255, 20, 0.14); }
+.dpad__btn:active { transform: scale(0.93); box-shadow: 0 0 20px rgba(57, 255, 20, 0.6); }
+
+.dpad__btn--up    { grid-area: up; }
+.dpad__btn--down  { grid-area: down; }
+.dpad__btn--left  { grid-area: left; }
+.dpad__btn--right { grid-area: right; }
+
+.hint {
+  margin: 0;
+  font-size: 0.68rem;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--muted);
+}
+
+.hint kbd {
+  padding: 1px 5px;
+  font-family: inherit;
+  font-size: 0.68rem;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 5px;
+}
+
+/* ============================================================================
+   ACESSIBILIDADE / MOVIMENTO REDUZIDO (NFR-009)
+   ========================================================================== */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Telas baixas: reduz o tabuleiro para caber sem rolagem (NFR-004). */
+@media (max-height: 700px) {
+  .stage { width: min(88vw, 44vh, 460px); }
+  .dpad { grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 50px); }
+}
+</style>
+</head>
+
+<body>
+<main class="app">
+  <header class="app__header">
+    <h1 class="title">Snake<span class="title__accent">Neon</span></h1>
+  </header>
+
+  <!-- Placar: pontuacao atual e melhor pontuacao (FR-009) -->
+  <section class="hud" aria-label="Placar">
+    <div class="hud__item">
+      <span class="hud__label">Pontuação</span>
+      <strong class="hud__value" id="scoreValue">0</strong>
+    </div>
+    <div class="hud__item">
+      <span class="hud__label">Recorde</span>
+      <strong class="hud__value hud__value--alt" id="highScoreValue">0</strong>
+    </div>
+  </section>
+
+  <!-- Tabuleiro renderizado em Canvas 2D (FR-002) -->
+  <section class="stage">
+    <canvas id="board" width="480" height="480" role="img"
+            aria-label="Tabuleiro do jogo da cobrinha"></canvas>
+
+    <!-- Overlay de estados: pronto / pausado / fim de jogo (FR-011, FR-012, FR-013) -->
+    <div class="overlay" id="overlay">
+      <p class="overlay__title" id="overlayTitle">Pronto?</p>
+      <p class="overlay__text" id="overlayText">Setas, WASD ou o D-Pad para começar</p>
+      <button class="btn" id="actionBtn" type="button">Começar</button>
+    </div>
+  </section>
+
+  <!-- Controles de toque (FR-004) -->
+  <section class="controls" aria-label="Controles">
+    <div class="dpad" id="dpad">
+      <button class="dpad__btn dpad__btn--up"    data-dir="up"    type="button" aria-label="Mover para cima">▲</button>
+      <button class="dpad__btn dpad__btn--left"  data-dir="left"  type="button" aria-label="Mover para a esquerda">◀</button>
+      <button class="dpad__btn dpad__btn--right" data-dir="right" type="button" aria-label="Mover para a direita">▶</button>
+      <button class="dpad__btn dpad__btn--down"  data-dir="down"  type="button" aria-label="Mover para baixo">▼</button>
+    </div>
+
+    <p class="hint">
+      <kbd>↑</kbd> <kbd>←</kbd> <kbd>↓</kbd> <kbd>→</kbd> ou <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
+      · <kbd>Espaço</kbd> pausa · <kbd>Enter</kbd> reinicia
+    </p>
+  </section>
+
+  <!-- Regiao viva para leitores de tela -->
+  <p class="sr-only" id="liveRegion" role="status" aria-live="polite"></p>
+</main>
+
+<script>
+/* ============================================================================
+ * JOGO DA COBRINHA (SNAKE) - arquivo unico, sem dependencias externas.
+ * Referencias: .specs/features/snake-game/spec.md e design.md.
+ * ========================================================================== */
+(function () {
+  'use strict';
+
+  /* ==========================================================================
+   * 1. CONFIGURACAO CENTRAL (CON-003 / ADR-005)
+   * ======================================================================== */
+  const CONFIG = Object.freeze({
+    cols: 24,                 // colunas da grade
+    rows: 24,                 // linhas da grade
+    initialLength: 4,         // tamanho inicial da cobra
+    baseStepMs: 140,          // intervalo inicial entre ticks (ms)
+    minStepMs: 68,            // intervalo minimo entre ticks (ms)
+    speedUpPerFood: 4,        // reducao do intervalo por comida (ms)
+    pointsPerFood: 10,        // pontos por comida
+    maxQueue: 2,              // tamanho maximo da fila de direcoes
+    maxTicksPerFrame: 5,      // teto de ticks por quadro (anti "espiral da morte")
+    maxFoodAttempts: 500,     // tentativas aleatorias antes da varredura deterministica
+    storageKey: 'snake-neon:highscore'
+  });
+
+  /** Direcoes cardinais como vetores unitarios. */
+  const DIRECTIONS = Object.freeze({
+    up:    Object.freeze({ x: 0,  y: -1 }),
+    down:  Object.freeze({ x: 0,  y: 1  }),
+    left:  Object.freeze({ x: -1, y: 0  }),
+    right: Object.freeze({ x: 1,  y: 0  })
+  });
+
+  /** Mapeamento tecla -> direcao (FR-003). Usa Map para evitar chaves herdadas. */
+  const KEY_TO_DIRECTION = new Map([
+    ['arrowup', 'up'], ['arrowdown', 'down'], ['arrowleft', 'left'], ['arrowright', 'right'],
+    ['w', 'up'], ['s', 'down'], ['a', 'left'], ['d', 'right']
+  ]);
+
+  /* ==========================================================================
+   * 2. REFERENCIAS DE DOM
+   * ======================================================================== */
+  const dom = {
+    canvas:        document.getElementById('board'),
+    score:         document.getElementById('scoreValue'),
+    highScore:     document.getElementById('highScoreValue'),
+    overlay:       document.getElementById('overlay'),
+    overlayTitle:  document.getElementById('overlayTitle'),
+    overlayText:   document.getElementById('overlayText'),
+    actionBtn:     document.getElementById('actionBtn'),
+    dpad:          document.getElementById('dpad'),
+    liveRegion:    document.getElementById('liveRegion')
+  };
+
+  const ctx = dom.canvas.getContext('2d');
+
+  /* ==========================================================================
+   * 3. ESTADO DO JOGO
+   * ======================================================================== */
+  const state = {
+    snake: [],                          // corpo: indice 0 = cabeca
+    dir: { ...DIRECTIONS.right },       // direcao aplicada no tick
+    queue: [],                          // direcoes pendentes (FR-005 / ADR-003)
+    food: { x: 0, y: 0 },
+    score: 0,
+    highScore: 0,
+    status: 'ready',                    // ready | running | paused | over | won
+    stepMs: CONFIG.baseStepMs,
+    acc: 0,                             // acumulador de tempo (ms)
+    lastTs: 0,                          // timestamp do ultimo quadro
+    elapsed: 0                          // tempo total, para animacoes
+  };
+
+  /** Metricas de renderizacao em pixels CSS. */
+  const view = { size: 0, cell: 0 };
+
+  const prefersReducedMotion = window.matchMedia
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
+
+  /* ==========================================================================
+   * 4. UTILITARIOS
+   * ======================================================================== */
+
+  /** Inteiro aleatorio em [0, max). */
+  function randomInt(max) {
+    return Math.floor(Math.random() * max);
+  }
+
+  /** Compara duas celulas por valor. */
+  function sameCell(a, b) {
+    return a.x === b.x && a.y === b.y;
+  }
+
+  /** Verdadeiro quando `b` e exatamente o oposto de `a` (inversao de 180 graus). */
+  function isOpposite(a, b) {
+    return a.x + b.x === 0 && a.y + b.y === 0;
+  }
+
+  /**
+   * Caminho arredondado com fallback para navegadores sem ctx.roundRect.
+   */
+  function roundedRectPath(x, y, width, height, radius) {
+    const r = Math.min(radius, width / 2, height / 2);
+    ctx.beginPath();
+    if (typeof ctx.roundRect === 'function') {
+      ctx.roundRect(x, y, width, height, r);
+      return;
+    }
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + width,  y, x + width,  y + height, r);
+    ctx.arcTo(x + width,  y + height, x, y + height, r);
+    ctx.arcTo(x, y + height, x, y, r);
+    ctx.arcTo(x, y, x + width, y, r);
+    ctx.closePath();
+  }
+
+  /* ==========================================================================
+   * 5. PERSISTENCIA DO RECORDE (FR-010 / ADR-006 / DAT-001)
+   * ======================================================================== */
+
+  /** Le o recorde; qualquer falha resulta em 0 sem interromper o jogo. */
+  function loadHighScore() {
+    try {
+      const raw = window.localStorage.getItem(CONFIG.storageKey);
+      const value = Number.parseInt(raw === null ? '0' : raw, 10);
+      return Number.isFinite(value) && value > 0 ? value : 0;
+    } catch (error) {
+      console.warn('localStorage indisponivel: o recorde nao sera persistido.', error);
+      return 0;
+    }
+  }
+
+  /** Grava o recorde; retorna false quando o armazenamento nao esta disponivel. */
+  function saveHighScore(value) {
+    try {
+      window.localStorage.setItem(CONFIG.storageKey, String(value));
+      return true;
+    } catch (error) {
+      console.warn('Nao foi possivel gravar o recorde.', error);
+      return false;
+    }
+  }
+
+  /** Atualiza o recorde em memoria e no armazenamento quando superado (CA-007). */
+  function syncHighScore() {
+    if (state.score > state.highScore) {
+      state.highScore = state.score;
+      saveHighScore(state.highScore);
+    }
+  }
+
+  /* ==========================================================================
+   * 6. REGRAS PURAS DO JOGO
+   * ======================================================================== */
+
+  /**
+   * Monta o corpo inicial com a cabeca em (headX, headY) e o restante
+   * posicionado no sentido oposto a direcao de movimento.
+   */
+  function buildSnake(headX, headY, dir, length) {
+    const body = [];
+    for (let i = 0; i < length; i += 1) {
+      body.push({ x: headX - dir.x * i, y: headY - dir.y * i });
+    }
+    return body;
+  }
+
+  /**
+   * Sorteia uma celula livre para a comida (FR-006 / CA-004).
+   * Primeiro tenta amostragem aleatoria; se falhar, faz varredura deterministica.
+   * Retorna null quando a grade esta totalmente ocupada (vitoria).
+   */
+  function spawnFood() {
+    const occupied = new Set(state.snake.map(function (cell) {
+      return cell.x + ',' + cell.y;
+    }));
+
+    for (let attempt = 0; attempt < CONFIG.maxFoodAttempts; attempt += 1) {
+      const cell = { x: randomInt(CONFIG.cols), y: randomInt(CONFIG.rows) };
+      if (!occupied.has(cell.x + ',' + cell.y)) {
+        return cell;
+      }
+    }
+
+    for (let y = 0; y < CONFIG.rows; y += 1) {
+      for (let x = 0; x < CONFIG.cols; x += 1) {
+        if (!occupied.has(x + ',' + y)) {
+          return { x: x, y: y };
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Enfileira uma direcao solicitada (FR-003, FR-004, FR-005).
+   * Ignora repeticoes e inversoes de 180 graus (CA-002).
+   */
+  function requestDirection(name) {
+    const next = DIRECTIONS[name];
+    if (!next) {
+      return;
+    }
+
+    // No estado inicial a cobra ainda nao se moveu: qualquer direcao cardinal e
+    // aceita e o corpo e reposicionado atras da nova cabeca (evita autocolisao).
+    if (state.status === 'ready') {
+      state.dir = { ...next };
+      state.snake = buildSnake(
+        Math.floor((CONFIG.cols - 1) / 2),
+        Math.floor((CONFIG.rows - 1) / 2),
+        state.dir,
+        CONFIG.initialLength
+      );
+      startGame();
+      return;
+    }
+
+    if (state.status !== 'running' && state.status !== 'paused') {
+      return;
+    }
+
+    const reference = state.queue.length > 0 ? state.queue[state.queue.length - 1] : state.dir;
+
+    if (sameCell(next, reference) || isOpposite(next, reference)) {
+      return; // mesma direcao ou inversao imediata: descarta
+    }
+
+    if (state.queue.length >= CONFIG.maxQueue) {
+      state.queue.shift();
+    }
+    state.queue.push({ ...next });
+  }
+
+  /* ==========================================================================
+   * 7. FLUXO DE PARTIDA
+   * ======================================================================== */
+
+  /** Reinicia o estado para uma nova partida no status "ready". */
+  function resetGame() {
+    const centerX = Math.floor((CONFIG.cols - 1) / 2);
+    const centerY = Math.floor((CONFIG.rows - 1) / 2);
+
+    state.dir = { ...DIRECTIONS.right };
+    state.snake = buildSnake(centerX, centerY, state.dir, CONFIG.initialLength);
+    state.queue.length = 0;
+    state.score = 0;
+    state.stepMs = CONFIG.baseStepMs;
+    state.acc = 0;
+    state.status = 'ready';
+    state.food = spawnFood();
+
+    updateHud();
+    showOverlay('ready');
+  }
+
+  /** Inicia a movimentacao a partir do estado "ready" (FR-012 / CA-009). */
+  function startGame() {
+    if (state.status !== 'ready') {
+      return;
+    }
+    state.status = 'running';
+    state.acc = 0;
+    hideOverlay();
+    announce('Partida iniciada.');
+  }
+
+  /** Alterna pausa/retomada (FR-013 / CA-010). */
+  function togglePause() {
+    if (state.status === 'running') {
+      state.status = 'paused';
+      showOverlay('paused');
+      announce('Jogo pausado.');
+      return;
+    }
+    if (state.status === 'paused') {
+      state.status = 'running';
+      state.acc = 0;
+      hideOverlay();
+      announce('Jogo retomado.');
+    }
+  }
+
+  /** Encerra a partida por colisao (FR-008 / CA-005 / CA-006). */
+  function endGame(reason) {
+    state.status = reason === 'win' ? 'won' : 'over';
+    syncHighScore();
+    updateHud();
+    showOverlay(state.status);
+    announce(reason === 'win' ? 'Tabuleiro completo. Voce venceu.' : 'Fim de jogo.');
+  }
+
+  /** Acao unificada do botao do overlay e da tecla Enter (FR-011). */
+  function handleAction() {
+    if (state.status === 'ready') {
+      startGame();
+      return;
+    }
+    if (state.status === 'paused') {
+      togglePause();
+      return;
+    }
+    // "over" ou "won": reinicia e ja comeca a mover.
+    resetGame();
+    startGame();
+  }
+
+  /* ==========================================================================
+   * 8. SIMULACAO (TICK)
+   * ======================================================================== */
+
+  /** Executa um passo logico do jogo (design.md, secao 4.3). */
+  function tick() {
+    // 1. Aplica a proxima direcao valida da fila.
+    if (state.queue.length > 0) {
+      state.dir = state.queue.shift();
+    }
+
+    // 2. Calcula a nova cabeca.
+    const head = {
+      x: state.snake[0].x + state.dir.x,
+      y: state.snake[0].y + state.dir.y
+    };
+
+    // 3. Colisao com as paredes (FR-008 / CA-005).
+    if (head.x < 0 || head.y < 0 || head.x >= CONFIG.cols || head.y >= CONFIG.rows) {
+      endGame('collision');
+      return;
+    }
+
+    const growing = state.food !== null && sameCell(head, state.food);
+
+    // 4. A cauda e removida ANTES do teste de colisao (ADR-004), permitindo
+    //    ocupar a celula que ela acabou de liberar.
+    if (!growing) {
+      state.snake.pop();
+    }
+
+    // 5. Colisao com o proprio corpo (FR-008 / CA-006).
+    for (let i = 0; i < state.snake.length; i += 1) {
+      if (sameCell(state.snake[i], head)) {
+        endGame('collision');
+        return;
+      }
+    }
+
+    state.snake.unshift(head);
+
+    // 6. Crescimento, pontuacao e velocidade (FR-007 / FR-015 / CA-003 / CA-012).
+    if (growing) {
+      state.score += CONFIG.pointsPerFood;
+
+      const eaten = state.score / CONFIG.pointsPerFood;
+      state.stepMs = Math.max(
+        CONFIG.minStepMs,
+        CONFIG.baseStepMs - eaten * CONFIG.speedUpPerFood
+      );
+
+      state.food = spawnFood();
+      syncHighScore();
+      updateHud();
+
+      if (state.food === null) {
+        endGame('win');
+      }
+    }
+  }
+
+  /* ==========================================================================
+   * 9. RENDERIZACAO (Canvas 2D) - ADR-001
+   * ======================================================================== */
+
+  /** Define cores do corpo: verde neon perto da cabeca, escurecendo na cauda. */
+  function segmentColor(t) {
+    const hue = 152 - t * 24;
+    const lightness = 56 - t * 22;
+    return 'hsl(' + hue + ', 92%, ' + lightness + '%)';
+  }
+
+  /** Desenha o fundo e a grade discreta do tabuleiro. */
+  function drawBoard() {
+    ctx.fillStyle = '#070b14';
+    ctx.fillRect(0, 0, view.size, view.size);
+
+    ctx.strokeStyle = 'rgba(57, 255, 20, 0.07)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 1; i < CONFIG.cols; i += 1) {
+      const p = Math.round(i * view.cell) + 0.5;
+      ctx.moveTo(p, 0);
+      ctx.lineTo(p, view.size);
+      ctx.moveTo(0, p);
+      ctx.lineTo(view.size, p);
+    }
+    ctx.stroke();
+  }
+
+  /** Desenha a cobra com brilho neon na cabeca e olhos orientados pela direcao. */
+  function drawSnake() {
+    const cell = view.cell;
+    const pad = Math.max(1, cell * 0.08);
+    const total = state.snake.length;
+
+    for (let i = total - 1; i >= 0; i -= 1) {
+      const segment = state.snake[i];
+      const t = total > 1 ? i / (total - 1) : 0;
+      const x = segment.x * cell + pad;
+      const y = segment.y * cell + pad;
+      const side = cell - pad * 2;
+
+      if (i === 0) {
+        ctx.shadowColor = '#39ff14';
+        ctx.shadowBlur = cell * 0.9;
+        ctx.fillStyle = '#ddffd2';
+      } else {
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = segmentColor(t);
+      }
+
+      roundedRectPath(x, y, side, side, cell * 0.28);
+      ctx.fill();
+    }
+
+    ctx.shadowBlur = 0;
+    drawEyes();
+  }
+
+  /** Olhos da cabeca, deslocados perpendicularmente a direcao de movimento. */
+  function drawEyes() {
+    const cell = view.cell;
+    const head = state.snake[0];
+    const centerX = (head.x + 0.5) * cell;
+    const centerY = (head.y + 0.5) * cell;
+
+    const perpendicularX = state.dir.y !== 0 ? 1 : 0;
+    const perpendicularY = state.dir.x !== 0 ? 1 : 0;
+    const offset = cell * 0.19;
+    const radius = Math.max(1, cell * 0.085);
+
+    ctx.fillStyle = '#04140a';
+    for (let s = -1; s <= 1; s += 2) {
+      ctx.beginPath();
+      ctx.arc(
+        centerX + perpendicularX * offset * s + state.dir.x * cell * 0.13,
+        centerY + perpendicularY * offset * s + state.dir.y * cell * 0.13,
+        radius, 0, Math.PI * 2
+      );
+      ctx.fill();
+    }
+  }
+
+  /** Desenha a comida pulsante em magenta neon. */
+  function drawFood() {
+    if (state.food === null) {
+      return;
+    }
+
+    const cell = view.cell;
+    const pulse = prefersReducedMotion ? 1 : 0.82 + 0.18 * Math.sin(state.elapsed / 180);
+    const centerX = (state.food.x + 0.5) * cell;
+    const centerY = (state.food.y + 0.5) * cell;
+    const radius = cell * 0.32 * pulse;
+
+    ctx.save();
+    ctx.shadowColor = '#ff2fd0';
+    ctx.shadowBlur = cell * (prefersReducedMotion ? 0.5 : 0.95 * pulse);
+    ctx.fillStyle = '#ff4ddb';
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.beginPath();
+    ctx.arc(centerX - radius * 0.3, centerY - radius * 0.3, radius * 0.28, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /** Quadro completo: fundo -> comida -> cobra. */
+  function render() {
+    if (view.cell <= 0 || state.snake.length === 0) {
+      return;
+    }
+    drawBoard();
+    drawFood();
+    drawSnake();
+  }
+
+  /**
+   * Ajusta o bitmap do canvas ao tamanho CSS e a densidade da tela (NFR-006).
+   */
+  function resizeCanvas() {
+    const rect = dom.canvas.getBoundingClientRect();
+    const cssSize = Math.max(1, Math.round(rect.width));
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    dom.canvas.width = Math.round(cssSize * dpr);
+    dom.canvas.height = Math.round(cssSize * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    view.size = cssSize;
+    view.cell = cssSize / CONFIG.cols;
+
+    render();
+  }
+
+  /* ==========================================================================
+   * 10. GAME LOOP (FR-014 / CON-004 / ADR-002)
+   * ======================================================================== */
+
+  function loop(timestamp) {
+    if (state.lastTs === 0) {
+      state.lastTs = timestamp;
+    }
+
+    const delta = Math.min(timestamp - state.lastTs, 250); // limita saltos longos
+    state.lastTs = timestamp;
+    state.elapsed += delta;
+
+    if (state.status === 'running') {
+      state.acc += delta;
+
+      let steps = 0;
+      while (state.acc >= state.stepMs && steps < CONFIG.maxTicksPerFrame) {
+        state.acc -= state.stepMs;
+        steps += 1;
+        tick();
+        if (state.status !== 'running') {
+          state.acc = 0;
+          break;
+        }
+      }
+
+      // Descarta acumulo excessivo (aba em segundo plano por muito tempo).
+      if (state.acc > state.stepMs * CONFIG.maxTicksPerFrame) {
+        state.acc = 0;
+      }
+    } else {
+      state.acc = 0;
+    }
+
+    render();
+    window.requestAnimationFrame(loop);
+  }
+
+  /* ==========================================================================
+   * 11. INTERFACE (HUD e OVERLAY)
+   * ======================================================================== */
+
+  function updateHud() {
+    dom.score.textContent = String(state.score);
+    dom.highScore.textContent = String(state.highScore);
+  }
+
+  /** Conteudo textual de cada estado do overlay. */
+  function overlayContent(status) {
+    switch (status) {
+      case 'ready':
+        return {
+          title: 'Pronto?',
+          text: 'Setas, WASD ou o D-Pad para começar',
+          action: 'Começar'
+        };
+      case 'paused':
+        return {
+          title: 'Pausado',
+          text: 'Pressione Espaço para continuar',
+          action: 'Continuar'
+        };
+      case 'won':
+        return {
+          title: 'Você venceu!',
+          text: 'Tabuleiro completo · Pontuação: ' + state.score,
+          action: 'Jogar novamente'
+        };
+      case 'over':
+      default:
+        return {
+          title: 'Fim de jogo',
+          text: 'Pontuação: ' + state.score + ' · Recorde: ' + state.highScore,
+          action: 'Jogar novamente'
+        };
+    }
+  }
+
+  function showOverlay(status) {
+    const content = overlayContent(status);
+    dom.overlayTitle.textContent = content.title;
+    dom.overlayText.textContent = content.text;
+    dom.actionBtn.textContent = content.action;
+    dom.overlay.classList.remove('is-hidden');
+  }
+
+  function hideOverlay() {
+    dom.overlay.classList.add('is-hidden');
+  }
+
+  /** Mensagem para leitores de tela. */
+  function announce(message) {
+    dom.liveRegion.textContent = message;
+  }
+
+  /* ==========================================================================
+   * 12. ENTRADA DO USUARIO
+   * ======================================================================== */
+
+  function handleKeyDown(event) {
+    if (event.ctrlKey || event.metaKey || event.altKey) {
+      return; // nao captura atalhos do sistema/navegador
+    }
+
+    const key = typeof event.key === 'string' ? event.key : '';
+    const lower = key.toLowerCase();
+
+    // Espaco / P: inicia, pausa ou retoma (FR-012, FR-013).
+    if (lower === ' ' || lower === 'spacebar' || lower === 'p') {
+      event.preventDefault();
+      if (state.status === 'running' || state.status === 'paused') {
+        togglePause();
+      } else {
+        handleAction();
+      }
+      return;
+    }
+
+    // Enter: comeca ou reinicia (FR-011).
+    if (key === 'Enter') {
+      event.preventDefault();
+      handleAction();
+      return;
+    }
+
+    // R: reinicia imediatamente.
+    if (lower === 'r') {
+      event.preventDefault();
+      resetGame();
+      return;
+    }
+
+    // Setas e WASD (FR-003). preventDefault evita a rolagem da pagina (NFR-007).
+    const direction = KEY_TO_DIRECTION.get(lower);
+    if (direction) {
+      event.preventDefault();
+      requestDirection(direction);
+    }
+  }
+
+  function bindInput() {
+    window.addEventListener('keydown', handleKeyDown, { passive: false });
+
+    // Pausa automatica quando a janela perde o foco (FR-013).
+    window.addEventListener('blur', function () {
+      if (state.status === 'running') {
+        togglePause();
+      }
+    });
+
+    // D-Pad virtual: pointerdown no mobile, click como fallback (FR-004 / CA-008).
+    const dpadEvent = window.PointerEvent ? 'pointerdown' : 'click';
+    dom.dpad.addEventListener(dpadEvent, function (event) {
+      const button = event.target.closest('[data-dir]');
+      if (!button) {
+        return;
+      }
+      event.preventDefault();
+      requestDirection(button.dataset.dir);
+    });
+
+    dom.actionBtn.addEventListener('click', handleAction);
+
+    // Evita zoom/rolagem ao interagir com os controles em telas de toque.
+    dom.dpad.addEventListener('contextmenu', function (event) {
+      event.preventDefault();
+    });
+  }
+
+  /* ==========================================================================
+   * 13. INICIALIZACAO
+   * ======================================================================== */
+
+  function init() {
+    state.highScore = loadHighScore();
+    resetGame();
+    resizeCanvas();
+
+    if (window.ResizeObserver) {
+      new ResizeObserver(resizeCanvas).observe(dom.canvas.parentElement);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('orientationchange', resizeCanvas);
+
+    bindInput();
+    window.requestAnimationFrame(loop);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
