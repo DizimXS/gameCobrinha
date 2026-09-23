@@ -4,13 +4,26 @@ Monografia de graduação em Engenharia sobre **desenvolvimento de software orie
 especificações (SDD) com agentes de inteligência artificial**, tendo o jogo `Snake Neon`
 como estudo de caso.
 
-## ⚠️ Status da compilação
+## ✅ Status da compilação
 
-**O PDF NÃO foi gerado.** Não há toolchain LaTeX instalada no ambiente em que o projeto foi
-escrito (`latexmk`, `pdflatex`, `xelatex` e `tectonic` estão ausentes). O código LaTeX **não foi
-validado por compilador** — erros de sintaxe ou de dependência podem existir.
+**O PDF está gerado: `monografia/main.pdf`, com 83 páginas.**
 
-Nenhum documento deste projeto afirma que houve compilação bem-sucedida.
+```text
+latexmk -pdf -interaction=nonstopmode main.tex
+exit code: 0
+erros: 0
+overfull/underfull hbox: 0
+referências e citações não definidas: 0
+Output written on main.pdf (83 pages)
+```
+
+A toolchain foi instalada em nível de usuário (**TinyTeX** em `~/.TinyTeX`), sem privilégios de
+administrador. Ver `MONOGRAFIA_STATUS.md` § 3 para o registro completo, incluindo os três defeitos
+que a compilação revelou e que foram corrigidos.
+
+**Não verificado:** o layout dos 11 diagramas TikZ e a composição final página a página. Não há
+visualizador nem ferramenta de inspeção neste ambiente (`pdfinfo`, `pdftotext`, `pdftoppm`, `gs` e
+`qpdf` ausentes). Abra o PDF e confira os diagramas.
 
 ## Arquitetura do projeto
 
@@ -45,19 +58,38 @@ monografia/
 
 ## Como compilar
 
-### Dependências
+### Toolchain já instalada neste ambiente
 
-- TeX Live (recomendado: `texlive-full`) ou MiKTeX com instalação automática de pacotes.
-- Pacotes principais: `abntex2`, `abntex2cite`, `booktabs`, `longtable`, `tabularx`, `tikz`,
-  `listings`, `microtype`, `hyperref`.
-- `bibtex` para as referências (o estilo ABNT vem do `abntex2cite`).
-
-Em TeX Live mínimo, instale o essencial:
+O **TinyTeX** (TeX Live) está instalado em `~/.TinyTeX`, em nível de usuário, sem `sudo`.
+Para usar em uma sessão de terminal:
 
 ```bash
-# Debian/Ubuntu — requer privilégios de administrador
-sudo apt install texlive-full texlive-lang-portuguese
+export PATH="$HOME/.TinyTeX/bin/x86_64-linux:$PATH"
 ```
+
+Para tornar permanente, acrescente a linha acima ao final de `~/.bashrc`.
+
+### Pacotes instalados
+
+```bash
+tlmgr install abntex2 newfloat memoir booktabs multirow listings microtype \
+    babel-portugues latexmk xcolor pgf caption enumitem \
+    xpatch l3packages l3kernel needspace oberdiek iftex \
+    lastpage geometry colortbl fancyvrb float placeins \
+    hyphen-portuguese
+fmtutil-sys --byfmt pdflatex   # pre-carrega os padrões de hifenização portugueses
+```
+
+O comando `fmtutil-sys` é seguro aqui porque a árvore do TinyTeX pertence ao próprio usuário.
+Sem ele, o `babel` emite o aviso *"No hyphenation patterns were preloaded for the language
+'Portuguese'"* e usa padrões ingleses para hifenizar.
+
+### Em outra máquina
+
+- TeX Live completo (`texlive-full` + `texlive-lang-portuguese`) ou MiKTeX com instalação
+  automática de pacotes resolve tudo.
+- `bibtex` é obrigatório: o estilo ABNT vem do `abntex2cite`, que usa o fluxo BibTeX. **Não use
+  `biber`** neste projeto.
 
 ### Compilação
 
@@ -84,14 +116,15 @@ O `bibtex` é necessário porque o `abntex2cite` usa o fluxo BibTeX, e não o Bi
 latexmk -c
 ```
 
-### Riscos conhecidos na primeira compilação
+### Riscos conhecidos
 
-O código nunca foi compilado. As validações possíveis sem compilador passaram (todos os
-`\input` resolvem, todo `\ref` tem `\label`, toda citação tem entrada no `.bib`, ambientes
-balanceados). Os riscos restantes, com a ação corretiva de cada um, estão em
-`MONOGRAFIA_PENDENCIAS.md`, seção 6 (itens P-30 a P-36). Os mais prováveis são o P-30 (o nome
-da lista de quadros gerada pelo `newfloat` pode não ser `\listofquadro`) e o P-35 (canal alfa
-da captura de tela).
+A compilação já foi executada com sucesso, então os riscos previstos foram resolvidos ou
+descartados. O status de cada um está em `MONOGRAFIA_PENDENCIAS.md`, seção 6:
+
+- **Resolvidos:** P-30 (nome da lista de quadros), P-35 (canal alfa da captura de tela).
+- **Não se confirmaram:** P-31, P-32, P-34.
+- **Ainda válido:** P-36 (caminho relativo da imagem, quebra em envio isolado ao Overleaf).
+- **Parcial:** P-33 (os diagramas TikZ compilam, mas o layout visual não foi conferido — ver P-37).
 
 ## Diagramas
 
@@ -123,12 +156,13 @@ monografia — o preâmbulo declara
 
 Dois cuidados antes de compilar:
 
-1. **Canal alfa (P-35).** O arquivo é PNG RGBA (color type 6). O `pdflatex` pode não tratar o
-   canal alfa corretamente. Se a figura aparecer com fundo preto, converta para RGB:
-   `magick images/screenshot_gaming.png -background black -flatten images/screenshot_gaming.rgb.png`
-   e ajuste o nome no `\includegraphics`. Alternativa: compilar com `xelatex` ou `lualatex`.
-2. **Caminho relativo (P-36).** Se você enviar apenas a pasta `monografia/` para o Overleaf, a
-   imagem não será encontrada. Nesse caso, copie o arquivo para `monografia/figures/`.
+1. **Canal alfa (P-35) — resolvido.** O arquivo é PNG RGBA (color type 6) e o `pdflatex`
+   **incluiu a imagem corretamente** (registro `<use ../images/screenshot_gaming.png>` no
+   `main.log`, página 59). Nenhuma conversão foi necessária. Se você mudar para outra captura de
+   tela com transparência, o procedimento de conversão seria
+   `magick imagem.png -background black -flatten imagem.rgb.png`.
+2. **Caminho relativo (P-36) — ainda válido.** Se você enviar apenas a pasta `monografia/` para o
+   Overleaf, a imagem não será encontrada. Nesse caso, copie o arquivo para `monografia/figures/`.
 
 ## Ordem de leitura para continuidade
 

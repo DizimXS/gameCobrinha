@@ -87,10 +87,14 @@ A captura de tela (F-12) é a única figura cuja fonte é uma imagem real, não 
 Ela é mantida em `images/` na raiz do repositório e referenciada por caminho relativo, sem
 duplicação. Dois riscos associados: canal alfa (P-35) e caminho relativo (P-36).
 
-## 6. Plano de expansão para a meta de extensão
+## 6. Plano de expansão — META JÁ ATINGIDA
 
-A skill exige 65–100 páginas. O conteúdo atual está abaixo disso. A expansão **não** deve ser
-feita com texto genérico; deve ocorrer nas seguintes frentes acadêmicas específicas:
+A skill exige 65–100 páginas. A compilação produziu **83 páginas** (`main.pdf`, medido pelo
+compilador), portanto **a meta de extensão está cumprida** e o plano abaixo passa a ser
+**opcional**: são frentes de aprofundamento acadêmico, não de preenchimento.
+
+A expansão **não** deve ser feita com texto genérico. Se houver interesse em aprofundar, as
+frentes acadêmicas específicas são as seguintes:
 
 | Frente | O que falta | Ganho estimado |
 |---|---|---|

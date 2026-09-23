@@ -102,12 +102,14 @@ INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/latex/bookmark/bkm-pdftex.def
 INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/babel.sty
 INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/babel.sty
 INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/txtbabel.def
-INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/invalid/babel-brazil.tex
-INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/invalid/babel-brazil.tex
-INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/invalid/babel-brazil.tex
+INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/pt/babel-brazilian.tex
+INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/pt/babel-brazilian.tex
+INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/pt/babel-brazilian.tex
 INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/en/babel-english.tex
 INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/en/babel-english.tex
 INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/en/babel-english.tex
+INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/invalid/babel-brazil.tex
+INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/invalid/babel-brazil.tex
 INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/invalid/babel-brazil.tex
 INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel/locale/pt/babel-pt-BR.ini
 INPUT /home/lsertorio/.TinyTeX/texmf-dist/tex/generic/babel-portuges/brazilian.ldf

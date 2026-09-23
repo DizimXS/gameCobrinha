@@ -52,6 +52,21 @@
 | E-33 | A interface implementada exibe título, placar com pontuação e recorde, tabuleiro, sobreposição de fim de jogo com botão de reinício, quatro botões direcionais e linha de atalhos | Captura de tela real do produto em execução, no estado de fim de jogo com pontuação 40 e recorde 40 | `images/screenshot_gaming.png` | 7.9 |
 | E-34 | A pasta `images/` na raiz é a fonte única da captura de tela, que não é duplicada dentro da monografia | `\graphicspath` em `main.tex` resolve `../images/`; `figures/fig-interface-implementada.tex` inclui o arquivo sem copiá-lo | `main.tex`, `figures/fig-interface-implementada.tex` | 7.9 |
 
+## 3.1 Evidências de compilação do artefato textual
+
+| ID | Afirmação | Evidência | Arquivo/Fonte | Seção |
+|---|---|---|---|---|
+| E-35 | O projeto LaTeX compila sem erros e produz um PDF de 83 páginas | `latexmk -pdf -interaction=nonstopmode main.tex` com exit code 0; linha `Output written on main.pdf (83 pages` no log | `monografia/main.pdf`, `main.log` | todo o documento |
+| E-36 | A composição tipográfica não apresenta caixas transbordantes | Contagem de `Overfull \hbox` e `Underfull \hbox` no log: 0 e 0 | `main.log` | todo o documento |
+| E-37 | Todas as referências cruzadas e citações foram resolvidas | Contagem de `undefined citation` / `undefined reference` no log: 0; `main.bbl` com 32 entradas | `main.log`, `main.bbl` | todo o documento |
+| E-38 | As três listas de elementos gráficos foram geradas | `main.lof` com 12 figuras, `main.loq` com 21 quadros, `main.lot` com 11 tabelas | `main.lof`, `main.loq`, `main.lot` | pré-textuais |
+| E-39 | A captura de tela real foi incorporada ao PDF | Registro `<use ../images/screenshot_gaming.png>` e página 59 no log | `main.log` | 7.9 |
+| E-40 | Os 11 diagramas TikZ compilam sem erro | Compilação com 0 erros, com os 11 arquivos de `figures/` efetivamente incluídos | `figures/*.tex`, `main.log` | 2, 5, 7, 8 |
+
+**Ressalva sobre E-40:** "compila sem erro" é diferente de "tem boa aparência". O layout visual dos
+diagramas não foi inspecionado (P-37).
+
+
 ## 4. Afirmações sem evidência disponível (marcadas)
 
 | ID | Afirmação pretendida | Situação | Marcador |

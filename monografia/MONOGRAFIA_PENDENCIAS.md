@@ -15,8 +15,9 @@
 | P-05 | Banca examinadora (membros e titulação) não informada | Folha de aprovação | idem | Informar após a defesa |
 | P-06 | Cidade e data de apresentação não informadas | Capa, folha de aprovação | idem | Informar cidade e mês/ano |
 | P-07 | Manual de normalização institucional não disponível no workspace | Ajustes de margens, espaçamento, elementos pré-textuais | `main.tex` | Fornecer o modelo oficial — ele prevalece |
-| P-08 | **Toolchain LaTeX ausente** | PDF não gerado; código não validado por compilador | todo o projeto | Instalar TeX Live/MiKTeX e compilar |
-| P-09 | `abntex2` não é instalado por padrão em distribuições mínimas | Falha de compilação | `main.tex` | Verificar dependências no `README.md` da monografia |
+| P-08 | ~~**Toolchain LaTeX ausente**~~ | ~~PDF não gerado~~ | — | **RESOLVIDO.** TinyTeX instalado em `~/.TinyTeX`; `main.pdf` gerado com 83 páginas e 0 erros. Ver `MONOGRAFIA_STATUS.md` § 3 |
+| P-09 | ~~`abntex2` não é instalado por padrão~~ | ~~Falha de compilação~~ | — | **RESOLVIDO.** `tlmgr install abntex2 ...` executado; classe e estilo de citação presentes |
+| P-37 | **Inspeção visual do PDF não executada** | Layout dos diagramas TikZ e composição final não conferidos | `main.pdf` | Abrir o PDF em um leitor; `pdfinfo`, `pdftotext`, `pdftoppm`, `gs` e `qpdf` estão ausentes no ambiente |
 
 ## 2. Dados experimentais ausentes
 
@@ -64,31 +65,38 @@ inventados.
 | P-28 | `AGENTS.md` §9 declara licença Apache 2.0; `README.md`/`LICENSE` declaram MIT | Registrado como pendência jurídica `LIC` no `STATUS.md`; fora do escopo da monografia |
 | P-29 | Nove requisitos não funcionais do alvo não possuem critério de aceitação associado | Registrado como limitação metodológica e autocrítica (Cap. 9, `MONOGRAFIA_RASTREABILIDADE.md` § 4) |
 
-## 6. Riscos de compilação não verificados
+## 6. Riscos de compilação — status após a primeira compilação
 
-As validações possíveis sem compilador foram executadas e passaram: todos os `\input`
-resolvem, todo `\ref` tem `\label`, toda citação tem entrada no `.bib`, e os ambientes
-`\begin`/`\end` estão balanceados nos 28 arquivos LaTeX. Os itens abaixo **não** puderam ser
-verificados e devem ser revisados na primeira compilação com sucesso.
+A compilação foi executada com sucesso (`latexmk -pdf -interaction=nonstopmode main.tex`,
+exit code 0, `main.pdf` com 83 páginas, 0 erros, 0 overfull/underfull hbox, 0 referências ou
+citações não definidas). Os riscos previstos foram resolvidos ou reclassificados:
 
-| ID | Risco | Ação se falhar |
+| ID | Risco previsto | Status após compilar |
 |---|---|---|
-| P-30 | `newfloat` nomeia a lista de quadros a partir do ambiente, gerando `\listofquadro` | Ajustar o nome em `chapters/pre-textuais.tex` |
-| P-31 | `newfloat` pode conflitar com `memoir` em versões antigas de TeX Live | Converter os 21 `quadro` em `table` com `\captionsetup{name=Quadro}` |
-| P-32 | Ordem de carregamento entre `hyperref` e `abntex2cite` | Inverter a ordem no preâmbulo |
-| P-33 | Layout dos 11 diagramas TikZ não inspecionado visualmente | Ajustar coordenadas após a primeira compilação |
-| P-34 | Acentuação em `listings` com `pdflatex` | As 5 listagens foram escritas só com ASCII; se houver erro, confirmar que nenhum acento entrou |
-| P-35 | A captura de tela `images/screenshot_gaming.png` é PNG de 8 bits com canal alfa (RGB**A**, color type 6, 601×849). O `pdflatex` pode não tratar o canal alfa corretamente, resultando em fundo preto ou canal descartado | Converter para RGB antes de compilar: `magick screenshot_gaming.png -background black -flatten screenshot_gaming.rgb.png` (ImageMagick está ausente neste ambiente) ou compilar com `xelatex`/`lualatex`. O canal alfa **não pôde ser inspecionado** (sem PIL, sem `pngcheck`) |
-| P-36 | O caminho da imagem é relativo (`../images/`). Se a pasta `monografia/` for movida para outro local ou enviada isoladamente ao Overleaf, a figura não será encontrada | Copiar `images/screenshot_gaming.png` para `monografia/figures/` antes do envio isolado. `\graphicspath` já contempla `figures/` e `images/` |
+| P-30 | `newfloat` geraria a lista de quadros com outro nome | **RESOLVIDO.** `\listofquadro` funcionou; `main.loq` gerado com 21 quadros |
+| P-31 | `newfloat` conflitaria com `memoir` | **NÃO SE CONFIRMOU.** Coexistem sem erro |
+| P-32 | Ordem entre `hyperref` e `abntex2cite` | **NÃO SE CONFIRMOU.** A ordem adotada funciona |
+| P-33 | Layout dos 11 diagramas TikZ não inspecionado | **PARCIAL.** Os 11 diagramas **compilam sem erro**, mas a disposição visual segue não inspecionada (P-37) |
+| P-34 | Acentuação em `listings` | **NÃO SE CONFIRMOU.** As 5 listagens compilaram; a decisão de usar só ASCII evitou o problema |
+| P-35 | Canal alfa do PNG (RGBA) | **RESOLVIDO.** A imagem foi incluída com sucesso (`<use ../images/screenshot_gaming.png>`, página 59) |
+| P-36 | Caminho relativo `../images/` quebra no Overleaf | **AINDA VÁLIDO.** Copiar a imagem para `monografia/figures/` antes de envio isolado |
+
+Três defeitos **não previstos** foram encontrados e corrigidos pela compilação (D-01, D-02, D-03 em
+`MONOGRAFIA_STATUS.md` § 3.4). Nenhuma validação estática os detectaria, porque são de semântica de
+macro: colchete interpretado como argumento opcional, ambiente de lista usado como tabela e
+colchete interno fechando argumento opcional.
 
 ## 7. Resumo executivo das pendências
 
-- **Bloqueadores de entrega:** P-01 … P-09 (9 itens).
+- **Bloqueadores de entrega:** P-01 … P-07 (7 itens — P-08 e P-09 foram **resolvidos** pela
+  instalação do TinyTeX e pela compilação bem-sucedida).
 - **Dados ausentes:** P-10 … P-15 (6 itens) — nenhum será estimado.
 - **Verificação bibliográfica:** P-16 … P-21 (6 itens).
 - **Decisões a validar:** P-22 … P-25 (4 itens).
 - **Inconsistências do workspace:** P-26 … P-29 (4 itens).
-- **Riscos de compilação:** P-30 … P-36 (7 itens).
+- **Riscos de compilação:** P-30 … P-36 (7 itens — dois resolvidos, quatro não se confirmaram,
+  um ainda válido).
+- **Novas pendências:** P-37 (inspeção visual do PDF).
 
 Nenhum item desta lista foi resolvido por suposição silenciosa. Todos estão visíveis no corpo
 da monografia por meio de marcador explícito.

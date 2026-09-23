@@ -52,3 +52,21 @@ venv/
 # Rascunhos de capturas de tela (as evidências versionadas ficam em docs/05-testing/)
 *.tmp.png
 screenshots/
+
+# LaTeX — arquivos auxiliares de compilação (o PDF final NÃO é ignorado,
+# pois é entregável da monografia)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.loq
+*.lof
+*.lot
+*.out
+*.toc
+*.synctex.gz
+*.xdv
+*.nav
+*.snm
+*.vrb
