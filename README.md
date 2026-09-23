@@ -64,7 +64,7 @@ python3 -m http.server 8000
 ├── LICENSE                             # MIT
 ├── images/
 │   └── screenshot_gaming.png           # captura de tela do jogo em execução
-├── monografia/                         # monografia em LaTeX (ABNT), com diagramas
+├── monografia/                         # monografia em LaTeX (ABNT) + main.pdf (83 páginas)
 ├── .specs/features/snake-game/
 │   ├── spec.md                         # requisitos FR/NFR e critérios de aceitação CA
 │   ├── design.md                       # decisões arquiteturais (ADR) e algoritmos
