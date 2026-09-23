@@ -1,0 +1,144 @@
+\contentsline {chapter}{Lista de ilustra\c {c}\~{o}es}{3}{chapter*.3}%
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {chapter}{Lista de quadros}{5}{chapter*.4}%
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {chapter}{Lista de tabelas}{6}{chapter*.5}%
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\changetocdepth {4}
+\babel@toc {brazil}{}\relax 
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {1}\MakeTextUppercase []{Introdução}}{14}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Contextualização}{14}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Problema de engenharia}{14}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Justificativa}{15}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Hipótese}{15}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Objetivos}{16}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Objetivo geral}{16}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Objetivos específicos}{16}{subsection.1.5.2}%
+\contentsline {section}{\numberline {1.6}Delimitação do escopo}{16}{section.1.6}%
+\contentsline {section}{\numberline {1.7}Visão resumida do método}{17}{section.1.7}%
+\contentsline {section}{\numberline {1.8}Organização do trabalho}{17}{section.1.8}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {2}\MakeTextUppercase []{Fundamentação Teórica}}{18}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Engenharia de software e ciclo de vida}{18}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Especificação de requisitos}{18}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Verificação e validação}{19}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Testes e critérios de aceitação}{19}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Qualidade de produto de software}{20}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Arquitetura e decisões de projeto}{20}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Modelos de linguagem de grande porte}{21}{section.2.7}%
+\contentsline {section}{\numberline {2.8}Agentes de inteligência artificial}{22}{section.2.8}%
+\contentsline {section}{\numberline {2.9}Sistemas multiagente}{22}{section.2.9}%
+\contentsline {section}{\numberline {2.10}Contexto, custo e disciplina documental}{23}{section.2.10}%
+\contentsline {section}{\numberline {2.11}O domínio de aplicação}{23}{section.2.11}%
+\contentsline {section}{\numberline {2.12}Síntese e lacuna identificada}{24}{section.2.12}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {3}\MakeTextUppercase []{Trabalhos Relacionados}}{25}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Processos orientados por especificação}{25}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Agentes de linguagem no desenvolvimento de software}{25}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Padrões de raciocínio e autocorreção}{26}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Comparação}{26}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Posicionamento e contribuição pretendida}{26}{section.3.5}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {4}\MakeTextUppercase []{Materiais e Métodos}}{28}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Natureza e abordagem da pesquisa}{28}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Unidade de análise e contexto}{28}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Procedimento}{28}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Instrumentos}{29}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Ambiente experimental}{30}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Variáveis}{30}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Métricas}{31}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Tratamento dos dados}{32}{section.4.8}%
+\contentsline {section}{\numberline {4.9}Ética e integridade}{32}{section.4.9}%
+\contentsline {section}{\numberline {4.10}Ameaças à validade}{32}{section.4.10}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {5}\MakeTextUppercase []{O Framework SDD Agêntico}}{34}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Princípios de projeto}{34}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Motivação: lacunas do material de origem}{34}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Arquitetura em camadas}{35}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Agentes}{36}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Instruções permanentes}{36}{section.5.5}%
+\contentsline {section}{\numberline {5.6}Habilidades de domínio}{37}{section.5.6}%
+\contentsline {section}{\numberline {5.7}Fluxo adaptativo}{38}{section.5.7}%
+\contentsline {section}{\numberline {5.8}Portões de verificação}{38}{section.5.8}%
+\contentsline {section}{\numberline {5.9}Definição de concluído}{39}{section.5.9}%
+\contentsline {section}{\numberline {5.10}Protocolo de contexto}{41}{section.5.10}%
+\contentsline {section}{\numberline {5.11}Condições de parada}{41}{section.5.11}%
+\contentsline {section}{\numberline {5.12}Matriz de rastreabilidade}{42}{section.5.12}%
+\contentsline {section}{\numberline {5.13}Síntese do capítulo}{42}{section.5.13}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {6}\MakeTextUppercase []{Especificação do Sistema-Alvo}}{43}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Contexto de especificação}{43}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Requisitos funcionais}{43}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Requisitos não funcionais}{44}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Restrições e diretrizes}{44}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Decisões arquiteturais}{45}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Contratos de dados}{45}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Regra de evolução da velocidade}{45}{section.6.7}%
+\contentsline {section}{\numberline {6.8}Critérios de aceitação}{47}{section.6.8}%
+\contentsline {section}{\numberline {6.9}Casos de borda declarados}{47}{section.6.9}%
+\contentsline {section}{\numberline {6.10}Síntese do capítulo}{48}{section.6.10}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {7}\MakeTextUppercase []{Implementação}}{49}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Estrutura do artefato}{49}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Máquina de estados da partida}{50}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Laço de animação}{50}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Algoritmo de um passo de simulação}{52}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Fila de entrada e bloqueio de inversão}{53}{section.7.5}%
+\contentsline {section}{\numberline {7.6}Sorteio do alvo}{54}{section.7.6}%
+\contentsline {section}{\numberline {7.7}Persistência do recorde}{56}{section.7.7}%
+\contentsline {section}{\numberline {7.8}Renderização}{56}{section.7.8}%
+\contentsline {section}{\numberline {7.9}Acessibilidade e resposta a preferências}{57}{section.7.9}%
+\contentsline {section}{\numberline {7.10}Verificação de restrições durante a implementação}{58}{section.7.10}%
+\contentsline {section}{\numberline {7.11}Síntese do capítulo}{58}{section.7.11}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {8}\MakeTextUppercase []{Experimentos e Resultados}}{60}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Protocolo de verificação}{60}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Resultados por critério de aceitação}{60}{section.8.2}%
+\contentsline {section}{\numberline {8.3}Cobertura de rastreabilidade}{61}{section.8.3}%
+\contentsline {section}{\numberline {8.4}Verificação de propriedades estruturais}{62}{section.8.4}%
+\contentsline {section}{\numberline {8.5}Medição do intervalo entre passos}{62}{section.8.5}%
+\contentsline {subsection}{\numberline {8.5.1}Procedimento}{63}{subsection.8.5.1}%
+\contentsline {subsection}{\numberline {8.5.2}Resultado}{63}{subsection.8.5.2}%
+\contentsline {section}{\numberline {8.6}Comportamentos observados sem critério correspondente}{64}{section.8.6}%
+\contentsline {section}{\numberline {8.7}O que não foi verificado}{65}{section.8.7}%
+\contentsline {section}{\numberline {8.8}Síntese do capítulo}{65}{section.8.8}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {9}\MakeTextUppercase []{Discussão}}{66}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Retomada do problema e da hipótese}{66}{section.9.1}%
+\contentsline {section}{\numberline {9.2}A assimetria entre requisitos funcionais e não funcionais}{66}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}A lacuna do portão de intenção}{67}{subsection.9.2.1}%
+\contentsline {section}{\numberline {9.3}Valor dos casos de borda e das decisões arquiteturais}{68}{section.9.3}%
+\contentsline {section}{\numberline {9.4}Custo do processo}{68}{section.9.4}%
+\contentsline {section}{\numberline {9.5}Ameaças à validade revisitadas}{69}{section.9.5}%
+\contentsline {section}{\numberline {9.6}Generalização}{70}{section.9.6}%
+\contentsline {section}{\numberline {9.7}Comparação com a literatura}{70}{section.9.7}%
+\contentsline {section}{\numberline {9.8}Implicações práticas}{71}{section.9.8}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\contentsline {chapter}{\chapternumberline {10}\MakeTextUppercase []{Conclusão}}{72}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Resposta ao problema}{72}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Cumprimento dos objetivos}{72}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Contribuições}{73}{section.10.3}%
+\contentsline {section}{\numberline {10.4}Limitações}{73}{section.10.4}%
+\contentsline {section}{\numberline {10.5}Trabalhos futuros}{74}{section.10.5}%
+\contentsline {section}{\numberline {10.6}Considerações finais}{75}{section.10.6}%
+\vspace {\cftbeforechapterskip }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\contentsline {chapter}{\MakeTextUppercase []{Refer\^encias}}{76}{section*.16}%
+\renewcommand *{\cftappendixname }{AP\^ENDICE \space }
+\setlength {\cftpartindent }{\cftlastnumwidth } \setlength {\cftpartnumwidth }{2em}
+\cftinsert {A}
+\contentsline {part}{\uppercase {Ap\^endices}}{78}{section*.17}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\cftinsert {A}
+\contentsline {appendix}{\chapternumberline {A}\MakeTextUppercase []{Matriz de rastreabilidade completa}}{79}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Leitura da matriz}{80}{appendix.A.1}%
+\setlength {\cftchapterindent }{0em} \setlength {\cftchapternumwidth }{\cftlastnumwidth }
+\setlength {\cftchapterindent }{\cftlastnumwidth } \setlength {\cftchapternumwidth }{2em}
+\cftinsert {A}
+\contentsline {appendix}{\chapternumberline {B}\MakeTextUppercase []{Lista de verificação de encerramento aplicada}}{81}{appendix.B}%
+\contentsline {section}{\numberline {B.1}Leitura da lista}{82}{appendix.B.1}%

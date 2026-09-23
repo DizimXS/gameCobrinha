@@ -1,0 +1,19 @@
+%%{init: {"theme":"neutral"}}%%
+%% DG-10 - Camadas de revisao aplicadas a monografia
+%% Corresponde a Figura 1 do capitulo 2 (fig-verificacao.tex)
+flowchart TB
+    R1["1. Conteudo - APLICADA"]
+    R2["2. Engenharia - APLICADA"]
+    R3["3. Evidencias - APLICADA"]
+    R4["4. Coerencia - APLICADA"]
+    R5["5. Bibliografica - APLICADA"]
+    R6["6. ABNT - PARCIAL: depende do manual institucional"]
+    R7["7. Linguistica - APLICADA"]
+    R8["8. LaTeX - NAO EXECUTADA: sem compilador"]
+    R9["9. Inspecao do PDF - NAO EXECUTADA: sem compilador"]
+
+    R1 --> R2 --> R3 --> R4 --> R5 --> R6 --> R7 --> R8 --> R9
+
+    style R6 fill:#fff3cd,stroke:#997404
+    style R8 fill:#f8d7da,stroke:#b02a37
+    style R9 fill:#f8d7da,stroke:#b02a37

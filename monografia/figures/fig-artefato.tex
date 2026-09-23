@@ -1,0 +1,38 @@
+%% ---------------------------------------------------------------------
+%%  FIGURA - Estrutura do artefato unico (DG-07)
+%% ---------------------------------------------------------------------
+\begin{figure}[htb]
+	\caption{Estrutura do artefato único e suas treze seções de código}
+	\label{fig:artefato}
+	\centering
+	\begin{tikzpicture}[
+			font=\footnotesize,
+			bloco/.style={draw, rounded corners=2pt, align=center, fill=black!4, inner sep=4pt},
+			interno/.style={draw, rounded corners=1pt, align=left, fill=black!8, font=\scriptsize, inner sep=3pt},
+			>=Stealth,
+			fl/.style={->, thick}
+		]
+
+		\node[bloco, minimum width=3.1cm, minimum height=0.8cm] (head) at (0,0) {\texttt{head}\\ metadados e título};
+		\node[bloco, minimum width=3.1cm, minimum height=0.8cm, below=0.3cm of head] (style) {\texttt{style}\\ tema e layout};
+		\node[bloco, minimum width=3.1cm, minimum height=0.8cm, below=0.3cm of style] (body) {\texttt{body}\\ HUD, tela, D-Pad};
+		\node[bloco, minimum width=3.1cm, minimum height=0.8cm, below=0.3cm of body] (script) {\texttt{script}\\ lógica do jogo};
+
+		\node[interno, right=0.9cm of script, anchor=west] (sec) {%
+			1 configuração \hfill 8 passo de simulação\\
+			2 referências de DOM \hfill 9 renderização\\
+			3 estado \hfill 10 laço de animação\\
+			4 utilitários \hfill 11 interface\\
+			5 persistência \hfill 12 entrada\\
+			6 regras puras \hfill 13 inicialização\\
+			7 fluxo de partida \hfill \\
+		};
+
+		\draw[fl] (script) -- (sec);
+
+		\node[font=\scriptsize, above=0.25cm of head] (tag) {Arquivo único: 1\,063 linhas, 32\,305 bytes};
+	\end{tikzpicture}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{index.html}. A restrição de artefato
+	único (\texttt{CON-001}) impede a separação física entre módulos, de modo que o isolamento é obtido
+	por funções de responsabilidade única dentro do mesmo arquivo.}
+\end{figure}

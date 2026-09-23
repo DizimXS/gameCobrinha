@@ -1,0 +1,19 @@
+%%{init: {"theme":"neutral"}}%%
+%% DG-08 - Sequencia de tratamento de entrada direcional
+%% Corresponde a Figura 9 do capitulo 7 (fig-sequencia.tex)
+sequenceDiagram
+    actor J as Jogador
+    participant UI as "Interface (teclado / D-Pad)"
+    participant F as "Fila de entrada"
+    participant V as "Validacao de direcao"
+    participant P as "Passo de simulacao"
+
+    J->>UI: tecla ou toque
+    UI->>F: nome da direcao
+    F->>V: direcao solicitada
+    Note over V: referencia = ultima direcao enfileirada,<br/>ou direcao corrente se a fila estiver vazia
+    V-->>V: descartar se igual a referencia
+    V-->>V: descartar se oposta a referencia
+    V->>P: enfileirar direcao valida
+    P-->>F: consumir no inicio do proximo passo
+    Note over P: aplicar como direcao corrente do passo

@@ -1,0 +1,383 @@
+%% =====================================================================
+%%  CAPITULO 5 - O FRAMEWORK SDD AGENTICO
+%% =====================================================================
+
+\chapter{O Framework SDD Agêntico}
+\label{cap:framework}
+
+Este capítulo descreve o processo proposto: sua arquitetura, os agentes, as
+instruções permanentes, as habilidades de domínio, o fluxo adaptativo, os portões
+de verificação, a definição de concluído, o protocolo de contexto e as condições
+de parada. O framework é a variável independente do estudo.
+
+\section{Princípios de projeto}
+\label{sec:fw-principios}
+
+O framework foi projetado a partir de oito princípios operacionais, adotados como
+regras de conduta do executor:
+
+\begin{enumerate}
+	\item Planejar antes de editar.
+	\item Verificar antes de assumir.
+	\item Implementar pouco por vez.
+	\item Testar imediatamente.
+	\item Registrar decisões importantes.
+	\item Nunca esconder incerteza.
+	\item Nunca fabricar evidência.
+	\item Nunca declarar validação física sem validação física.
+\end{enumerate}
+
+Os princípios 6 a 8 são os mais consequentes para o resultado deste trabalho.
+Eles convertem uma postura epistemológica em regra operacional: a ausência de
+dado não é uma falha a ser disfarçada, mas um estado a ser declarado. O item 8 é
+específico ao domínio de sistemas embarcados do material de origem e estabelece
+que nenhum nível de evidência pode ser promovido por analogia --- teste em
+simulador não promove um resultado a validado em bancada.
+
+\section{Motivação: lacunas do material de origem}
+\label{sec:fw-lacunas}
+
+O ponto de partida foi uma avaliação crítica de um conjunto prévio de artefatos
+de processo. Essa avaliação identificou oito oportunidades de melhoria, listadas
+no Quadro~\ref{qua:lacunas} com o tratamento dado a cada uma no framework
+proposto.
+
+\begin{quadro}[htb]
+	\caption{Lacunas identificadas no material de origem e tratamento no framework}
+	\label{qua:lacunas}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}c p{5.4cm} X@{}}
+		\toprule
+		\textbf{\#} & \textbf{Lacuna identificada} & \textbf{Tratamento no framework proposto} \\
+		\midrule
+		L1 & Fluxo linear demais, com cadeia completa mesmo para alterações pequenas & Roteamento por complexidade e risco, com quatro trilhas (Seção~\ref{sec:fw-fluxo}) \\
+		\addlinespace
+		L2 & Ausência de um portão independente de verificação & Agente dedicado a responder se há evidência suficiente para declarar conclusão \\
+		\addlinespace
+		L3 & Economia de contexto não era regra operacional permanente & Conjunto de instruções permanentes com dez regras de contexto \\
+		\addlinespace
+		L4 & Falta de separação explícita entre estado real e memória da conversa & Protocolo de contexto com ordem de precedência de fontes \\
+		\addlinespace
+		L5 & Rastreabilidade definida em conceito, não operacionalizada & Matriz de rastreabilidade com formato fixo e regra de evidência obrigatória \\
+		\addlinespace
+		L6 & Risco de duplicação entre documentos de estado e de transferência & Definição de papel único por documento; transferência só quando há continuidade \\
+		\addlinespace
+		L7 & Ausência de mecanismo explícito de parada & Seis condições de parada obrigatórias \\
+		\addlinespace
+		L8 & Definição de concluído dispersa em vários documentos & Lista única de verificação de encerramento com quatorze itens \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026) a partir da avaliação crítica do material de origem.}
+\end{quadro}
+
+\section{Arquitetura em camadas}
+\label{sec:fw-camadas}
+
+O framework organiza-se em cinco camadas com responsabilidades distintas, como
+ilustra a Figura~\ref{fig:camadas}. A separação é funcional: cada camada responde
+a uma pergunta diferente, e a violação da fronteira entre camadas é a origem mais
+comum de degradação de processo.
+
+\input{figures/fig-camadas}
+
+\textbf{Camada de princípios.} Contém o que não muda com a tarefa: a constituição
+e as regras permanentes. É a camada mais estável e a de maior precedência.
+
+\textbf{Camada de instruções.} Contém regras operacionais de aplicação ampla:
+economia de contexto, controle de mudanças, artefatos e engenharia de domínio.
+Instruções são carregadas por padrão de arquivo afetado, e não por decisão
+discricionária.
+
+\textbf{Camada de habilidades.} Contém conhecimento de domínio acionado sob
+demanda: produção de especificação, desenvolvimento embarcado, artigo científico,
+monografia e documentação de projeto. Habilidades não são carregadas
+preventivamente.
+
+\textbf{Camada de agentes.} Contém quinze papéis especializados, cada um com
+entrada esperada, artefatos que pode ler, artefatos que pode alterar e portão de
+saída.
+
+\textbf{Camada de artefatos de controle.} Contém o estado do trabalho:
+especificação, decisões, tarefas, estado, transferência e matriz de
+rastreabilidade. É a única camada que persiste entre sessões.
+
+\section{Agentes}
+\label{sec:fw-agentes}
+
+Os quinze agentes distribuem-se em quatro grupos funcionais, conforme o
+Quadro~\ref{qua:agentes}.
+
+\begin{quadro}[htb]
+	\caption{Agentes do framework, por grupo funcional}
+	\label{qua:agentes}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}c p{3.4cm} X@{}}
+		\toprule
+		\textbf{\#} & \textbf{Agente} & \textbf{Responsabilidade} \\
+		\midrule
+		\multicolumn{3}{@{}l}{\textit{Grupo A --- Roteamento e planejamento}} \\
+		\midrule
+		00 & \texttt{task-router} & Classifica a solicitação, estima complexidade e risco e encaminha ao menor fluxo suficiente \\
+		\addlinespace
+		01 & \texttt{product-planner} & Define escopo, objetivos, restrições, riscos e critérios de sucesso \\
+		\addlinespace
+		02 & \texttt{requirements-engineer} & Redige requisitos funcionais e não funcionais, regras de negócio, casos de uso e critérios de aceitação \\
+		\addlinespace
+		03 & \texttt{architect} & Define componentes, interfaces, dados, tecnologias e decisões arquiteturais \\
+		\addlinespace
+		04 & \texttt{task-planner} & Decompõe requisitos e arquitetura em tarefas pequenas, ordenadas e verificáveis \\
+		\midrule
+		\multicolumn{3}{@{}l}{\textit{Grupo B --- Execução}} \\
+		\midrule
+		05 & \texttt{implementer} & Executa a tarefa aprovada seguindo requisitos, arquitetura e padrões do projeto \\
+		\midrule
+		\multicolumn{3}{@{}l}{\textit{Grupo C --- Verificação}} \\
+		\midrule
+		06 & \texttt{code-reviewer} & Avalia corretude, qualidade, manutenibilidade, testes e aderência à arquitetura \\
+		\addlinespace
+		07 & \texttt{test-engineer} & Define a estratégia de teste e cria testes de unidade, integração, sistema e ponta a ponta \\
+		\addlinespace
+		08 & \texttt{security-reviewer} & Avalia risco em código, arquitetura, dependências, configuração e tratamento de dados \\
+		\addlinespace
+		13 & \texttt{verification-gate} & Responde se há evidência suficiente para declarar a tarefa concluída \\
+		\midrule
+		\multicolumn{3}{@{}l}{\textit{Grupo D --- Encerramento e continuidade}} \\
+		\midrule
+		09 & \texttt{documentation} & Mantém a documentação técnica e de uso sincronizada \\
+		\addlinespace
+		10 & \texttt{integration-agent} & Valida a integração entre módulos, serviços, hardware e interfaces \\
+		\addlinespace
+		11 & \texttt{release-agent} & Verifica qualidade, documentação, versionamento e critérios de aceite antes da liberação \\
+		\addlinespace
+		12 & \texttt{project-orchestrator} & Coordena os demais agentes e preserva a rastreabilidade do roteamento à transferência \\
+		\addlinespace
+		14 & \texttt{handoff-manager} & Produz transferência compacta e verificável entre agentes ou sessões \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{.github/agents/}.}
+\end{quadro}
+
+A separação entre o agente que implementa (05) e os que verificam (06, 07, 13) é
+deliberada e corresponde ao princípio clássico de independência entre construção e
+verificação. O agente \texttt{code-reviewer} e o \texttt{test-engineer} avaliam;
+o \texttt{verification-gate} decide. Concentrar as três funções em um único papel
+reproduziria o problema que a separação pretende resolver.
+
+\section{Instruções permanentes}
+\label{sec:fw-instrucoes}
+
+Quatro conjuntos de instruções são aplicados por padrão de arquivo afetado. Essa
+forma de aplicação --- automática e baseada em caminho --- remove a decisão de
+carregar ou não carregar da esfera discricionária do executor, o que é relevante
+quando o executor é um agente.
+
+\begin{quadro}[htb]
+	\caption{Instruções permanentes do framework}
+	\label{qua:instrucoes}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{4.2cm} p{2.6cm} X@{}}
+		\toprule
+		\textbf{Instrução} & \textbf{Aplicação} & \textbf{Conteúdo} \\
+		\midrule
+		Economia de contexto & Todos os arquivos & Dez regras de inspeção incremental; proíbe varredura proativa; obriga leitura de estado antes de alterar \\
+		\addlinespace
+		Engenharia embarcada & Código C, C++, Rust, Python e assembly & Restrições de memória, tempo real, concorrência e segurança específicas do domínio \\
+		\addlinespace
+		Artefatos SDD & Especificações, documentação e arquivos de estado & Convenções de identificador (\texttt{FR}, \texttt{NFR}, \texttt{CA}, \texttt{T}, \texttt{ADR}) e regra de evidência obrigatória \\
+		\addlinespace
+		Controle de mudanças & Todos os arquivos & Escopo, menor alteração suficiente, proibição de alterar testes para fazê-los passar e verificação posterior obrigatória \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{.github/instructions/}.}
+\end{quadro}
+
+A instrução de controle de mudanças contém uma proibição que merece destaque:
+é vedado alterar testes com o objetivo de fazê-los passar. Essa é a regra que
+impede a degradação mais comum de processos de verificação --- a adaptação
+retroativa do critério ao resultado obtido.
+
+\section{Habilidades de domínio}
+\label{sec:fw-skills}
+
+Cinco habilidades concentram conhecimento especializado, carregado apenas quando a
+tarefa correspondente está ativa:
+
+\begin{itemize}
+	\item \textbf{Criação de especificação} --- estrutura de especificação otimizada para consumo por agente, com distinção entre requisito, restrição e recomendação.
+	\item \textbf{Desenvolvimento embarcado} --- especificação e implementação de firmware, com níveis de evidência e fluxo adaptativo.
+	\item \textbf{Artigo científico em LaTeX} --- produção com rigor metodológico e referências verificáveis.
+	\item \textbf{Monografia de engenharia em LaTeX} --- produção com conformidade ABNT, diagramas e projeto compilável.
+	\item \textbf{Documentação de projeto} --- criação e manutenção do arquivo de apresentação do repositório.
+\end{itemize}
+
+O carregamento sob demanda é o mecanismo que resolve a tensão identificada na
+Seção~\ref{sec:contexto-custo}: conhecimento especializado existe sem ocupar
+contexto quando não é necessário.
+
+\section{Fluxo adaptativo}
+\label{sec:fw-fluxo}
+
+O fluxo não aplica a cadeia completa a toda solicitação. O roteador classifica a
+complexidade e o risco e seleciona a trilha mínima suficiente, como ilustra a
+Figura~\ref{fig:fluxo-agentico}. Essa decisão responde diretamente à lacuna L1.
+
+\input{figures/fig-fluxo-agentico}
+
+O Quadro~\ref{qua:trilhas} descreve as quatro trilhas e o critério de elevação
+entre elas.
+
+\begin{quadro}[htb]
+	\caption{Trilhas do fluxo adaptativo e critério de elevação}
+	\label{qua:trilhas}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{2.2cm} X p{3.4cm}@{}}
+		\toprule
+		\textbf{Trilha} & \textbf{Sequência de agentes} & \textbf{Critério de elevação} \\
+		\midrule
+		Pergunta & Resposta fundamentada, sem alteração de artefato & Necessidade de alterar qualquer arquivo \\
+		\addlinespace
+		Correção local & Roteador, executor, portão de verificação & Alteração de comportamento observável \\
+		\addlinespace
+		Recurso médio & Roteador, requisitos, executor, teste, revisão, verificação & Necessidade de decisão arquitetural \\
+		\addlinespace
+		Recurso amplo & Planejamento, requisitos, arquitetura, tarefas, execução, teste, revisão, segurança, verificação, documentação, integração & --- \\
+		\addlinespace
+		Liberação & Verificação, segurança, documentação, integração, liberação & --- \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026).}
+\end{quadro}
+
+\section{Portões de verificação}
+\label{sec:fw-gates}
+
+Seis portões pontuam o fluxo, conforme a Figura~\ref{fig:pipeline-gates} e o
+Quadro~\ref{qua:gates}.
+
+\input{figures/fig-pipeline-gates}
+
+\begin{quadro}[htb]
+	\caption{Portões de verificação do framework}
+	\label{qua:gates}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}c p{3.2cm} X@{}}
+		\toprule
+		\textbf{Portão} & \textbf{Nome} & \textbf{Condição de passagem} \\
+		\midrule
+		G0 & Estado & Estado real do repositório inspecionado antes de qualquer alteração \\
+		\addlinespace
+		G1 & Intenção & Requisito e critério de aceitação identificados \\
+		\addlinespace
+		G2 & Projeto & Decisão arquitetural registrada quando a complexidade exige \\
+		\addlinespace
+		G3 & Implementação & Alteração mínima, rastreável e restrita ao escopo \\
+		\addlinespace
+		G4 & Evidência & Compilação, testes e validações aplicáveis executados \\
+		\addlinespace
+		G5 & Encerramento & Documentação, rastreabilidade, estado e riscos atualizados \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{docs/agentic/WORKFLOW.md}.}
+\end{quadro}
+
+O portão G1 é o que garante a precedência do critério sobre a implementação: sem
+requisito e critério identificados, o fluxo não avança para a execução. O portão
+G4 é o que impede a conclusão sem evidência.
+
+\section{Definição de concluído}
+\label{sec:fw-dod}
+
+A definição de concluído consolida, em uma única lista de quatorze itens, o que
+estava disperso em vários documentos de origem (lacuna L8):
+
+1.~requisito relacionado identificado; 2.~critérios de aceitação verificados;
+3.~estado do repositório inspecionado antes da alteração; 4.~alteração no menor
+escopo necessário; 5.~compilação do alvo executada; 6.~testes executados;
+7.~análise estática executada quando aplicável; 8.~consumo de memória e tempo
+verificados quando aplicável; 9.~documentação atualizada; 10.~rastreabilidade
+atualizada; 11.~arquivo de estado atualizado se houve mudança significativa;
+12.~arquivo de transferência atualizado apenas se houver continuidade;
+13.~riscos residuais registrados; 14.~nenhuma alteração não relacionada
+incorporada.
+
+Os itens 5, 6, 7 e 8 são ``quando aplicável''. Essa qualificação é deliberada: em
+um artefato sem compilação --- como o produto deste estudo de caso, que é
+interpretado diretamente pelo navegador --- não existe etapa de compilação, e
+exigi-la produziria um item permanentemente não cumprido. A condição de
+aplicabilidade precisa ser declarada, e não presumida.
+
+\section{Protocolo de contexto}
+\label{sec:fw-contexto}
+
+O protocolo de contexto estabelece a ordem de precedência entre fontes de
+informação:
+
+\begin{enumerate}
+	\item estado real do repositório e do sistema de controle de versão;
+	\item princípios permanentes;
+	\item especificação do recurso;
+	\item registro de decisões arquiteturais;
+	\item tarefas;
+	\item código atual;
+	\item testes e evidências;
+	\item arquivos de estado e de transferência;
+	\item histórico da conversa.
+\end{enumerate}
+
+A regra central é: \emph{o histórico da conversa pode fornecer intenção, mas nunca
+deve substituir a leitura do estado atual do repositório}. Essa regra endereça a
+lacuna L4 e é a defesa direta contra a falha mais insidiosa em fluxos executados
+por agentes --- tratar uma versão lembrada de um arquivo como se fosse a versão
+presente. A posição do histórico no último nível da hierarquia é a expressão
+formal dessa defesa.
+
+\section{Condições de parada}
+\label{sec:fw-parada}
+
+Seis condições obrigam a interrupção do fluxo e o pedido de decisão, em vez de
+prosseguimento sob suposição:
+
+\begin{enumerate}
+	\item informação essencial de hardware ausente;
+	\item duas especificações em conflito;
+	\item necessidade de mudança arquitetural não aprovada;
+	\item risco de perda de dados ou de persistência;
+	\item impacto de segurança não especificado;
+	\item teste obrigatório que não pode ser executado quando o resultado é necessário para liberar a tarefa.
+\end{enumerate}
+
+A segunda condição é a que produz mais consequências neste trabalho, porque uma
+situação dessa natureza foi de fato encontrada: o repositório descreve um sistema
+embarcado e contém, simultaneamente, um produto de página web. Diante do conflito,
+a conduta adotada foi registrar a divergência e declarar a escolha, em vez de
+produzir documentação sobre um sistema que não existe no repositório
+(Seção~\ref{sec:delimitacao}).
+
+\section{Matriz de rastreabilidade}
+\label{sec:fw-rastreabilidade}
+
+A matriz operacionaliza a rastreabilidade (lacuna L5) com sete colunas fixas:
+requisito, critério, tarefa, código, teste, evidência e estado. Três regras a
+governam: não marcar como aprovado sem evidência; acompanhar toda pendência de
+justificativa e risco residual; e propagar toda alteração de requisito para
+tarefa, teste e documentação.
+
+Figura~\ref{fig:rastreabilidade} representa a cadeia de rastreabilidade aplicada
+ao estudo de caso.
+
+\input{figures/fig-rastreabilidade}
+
+\section{Síntese do capítulo}
+\label{sec:fw-sintese}
+
+O framework proposto é um protocolo de controle: cinco camadas, quinze agentes,
+quatro conjuntos de instruções, cinco habilidades, seis portões, catorze itens de
+conclusão e seis condições de parada. Seus dois mecanismos distintivos são a
+\emph{precedência do critério} sobre a implementação e a \emph{proibição de
+evidência fabricada}. O Capítulo~\ref{cap:especificacao} mostra o primeiro em
+operação; o Capítulo~\ref{cap:resultados}, o segundo.

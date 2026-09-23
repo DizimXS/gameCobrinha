@@ -1,0 +1,138 @@
+%% =====================================================================
+%%  CAPITULO 3 - TRABALHOS RELACIONADOS
+%% =====================================================================
+
+\chapter{Trabalhos Relacionados}
+\label{cap:relacionados}
+
+Este capítulo posiciona o trabalho em relação a três linhas: processos
+orientados por especificação, agentes de linguagem aplicados ao desenvolvimento
+de software e verificação de software assistida por agentes. A comparação é
+predominantemente qualitativa; onde uma comparação quantitativa exigiria dados
+que não foram consultados na fonte original, isso é declarado.
+
+\section{Processos orientados por especificação}
+\label{sec:rel-sdd}
+
+O desenvolvimento orientado por testes estabelece o teste como artefato de
+primeira classe, escrito antes da implementação (\citeonline{beck2002tdd}). A
+especificação por exemplo leva a ideia adiante, substituindo descrição abstrata
+por exemplos concretos que funcionam simultaneamente como requisito, teste e
+documentação (\citeonline{adzic2011}). Ambos compartilham o mecanismo central
+adotado neste trabalho: o critério de aceitação precede a implementação.
+
+A engenharia de requisitos normatizada fornece o vocabulário para tornar o
+critério verificável, incluindo atributos de qualidade de requisito
+(\citeonline{iso29148}). O modelo de qualidade de produto
+(\citeonline{iso25010}) fornece a taxonomia para classificar requisitos não
+funcionais.
+
+O desenvolvimento de linguagens específicas de domínio ilustra o caso extremo da
+mesma tese: quando o domínio é bem compreendido, uma notação restrita reduz a
+ambiguidade e a possibilidade de erro (\citeonline{mernike2005}). O paralelo com
+este trabalho está na função dos identificadores estáveis: ao nomear cada
+requisito, critério e tarefa, restringe-se o espaço de referências ambíguas.
+
+\section{Agentes de linguagem no desenvolvimento de software}
+\label{sec:rel-agentes}
+
+Três trabalhos representativos organizam múltiplos agentes para produzir software.
+MetaGPT atribui papéis análogos aos de uma equipe e representa artefatos
+intermediários de forma estruturada, com o argumento de que representações
+intermediárias bem definidas reduzem a propagação de erro entre etapas
+(\citeonline{hong2024metagpt}). ChatDev modela o desenvolvimento como
+conversação entre papéis de projetista, programador e revisor, com foco na
+comunicação entre agentes como mecanismo de correção
+(\citeonline{qian2024chatdev}). AutoGen trata a conversação entre agentes
+configuráveis como primitiva de construção, permitindo compor fluxos com
+participação humana (\citeonline{wu2023autogen}).
+
+Esses trabalhos demonstram que a decomposição em papéis melhora a qualidade do
+artefato gerado. Entretanto, o critério de sucesso predominante é a qualidade do
+código ou a taxa de conclusão da tarefa, e não a existência de uma cadeia
+auditável entre requisito, teste e evidência. Em particular, nenhum dos três
+define condições de parada por informação ausente como parte do protocolo: o
+agente pode continuar produzindo na ausência de dados essenciais.
+
+\section{Padrões de raciocínio e autocorreção}
+\label{sec:rel-padroes}
+
+O intercalamento entre raciocínio e ação permite que o agente use o resultado de
+uma ação para decidir a próxima, corrigindo a trajetória durante a execução
+(\citeonline{yao2023react}). A reflexão sobre o próprio erro, com registro da
+avaliação crítica reutilizada em tentativas posteriores, melhora o desempenho em
+tarefas que admitem tentativa e erro (\citeonline{shinn2023reflexion}). A
+explicitação do raciocínio intermediário melhora o desempenho em tarefas de
+múltiplos passos (\citeonline{wei2022}).
+
+Esses padrões são adotados no framework proposto, mas com uma restrição: a
+autocorreção é aplicada a artefatos internos (especificação, tarefas, código),
+nunca à evidência. A evidência de teste não é objeto de reflexão do agente; ela é
+resultado de execução. Essa separação é deliberada e responde ao problema de
+opacidade apontado na Seção~\ref{sec:agentes}.
+
+\section{Comparação}
+\label{sec:rel-comparacao}
+
+O Quadro~\ref{qua:comparacao} compara os trabalhos segundo cinco critérios
+derivados do problema de pesquisa.
+
+\begin{quadro}[htb]
+	\caption{Comparação entre abordagens correlatas segundo critérios de controle de processo}
+	\label{qua:comparacao}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{3.3cm} c c c c c@{}}
+		\toprule
+		\textbf{Abordagem} &
+		\rotatebox{70}{\textbf{Especificação prévia}} &
+		\rotatebox{70}{\textbf{Múltiplos papéis}} &
+		\rotatebox{70}{\textbf{Critério verificável}} &
+		\rotatebox{70}{\textbf{Evidência de execução}} &
+		\rotatebox{70}{\textbf{Parada por dado ausente}} \\
+		\midrule
+		\citeonline{beck2002tdd}      & Parcial & Não  & Sim     & Sim     & Não \\
+		\addlinespace
+		\citeonline{adzic2011}        & Sim     & Não  & Sim     & Sim     & Não \\
+		\addlinespace
+		\citeonline{iso29148}         & Sim     & Não  & Sim     & Não     & Não \\
+		\addlinespace
+		\citeonline{hong2024metagpt}  & Parcial & Sim  & Não     & Não     & Não \\
+		\addlinespace
+		\citeonline{qian2024chatdev}  & Parcial & Sim  & Não     & Não     & Não \\
+		\addlinespace
+		\citeonline{wu2023autogen}    & Não     & Sim  & Não     & Parcial & Não \\
+		\addlinespace
+		\citeonline{yao2023react}     & Não     & Não  & Não     & Sim     & Não \\
+		\addlinespace
+		\citeonline{shinn2023reflexion} & Não   & Não  & Não     & Sim     & Não \\
+		\addlinespace
+		\midrule
+		\textbf{Processo proposto}    & Sim     & Sim  & Sim     & Sim     & Sim \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026). A classificação é qualitativa e baseada na leitura
+	dos trabalhos; ``parcial'' indica que o critério existe de forma implícita ou incompleta.
+	Confirmar cada classificação contra o texto original --- ver P-16 a P-21.}
+\end{quadro}
+
+\section{Posicionamento e contribuição pretendida}
+\label{sec:rel-posicionamento}
+
+A comparação do Quadro~\ref{qua:comparacao} evidencia que as abordagens existentes
+cobrem bem a geração cooperativa e os padrões de raciocínio, mas não combinam, em
+um único processo, quatro elementos: especificação prévia obrigatória, critério
+verificável com identificador estável, evidência de execução como única fonte de
+conclusão e parada explícita diante de informação ausente.
+
+A contribuição pretendida não é um novo modelo de linguagem nem um novo algoritmo
+de coordenação. É um \emph{protocolo de controle} aplicável sobre agentes
+existentes, com três propriedades verificáveis:
+
+1. \textbf{Rastreabilidade} --- cada entrega é referenciável a um requisito.
+2. \textbf{Falseabilidade} --- cada requisito relevante tem um teste capaz de reprová-lo.
+3. \textbf{Honestidade epistêmica} --- ausência de dado é registrada como ausência, nunca suprida por estimativa.
+
+A avaliação dessa contribuição é feita por estudo de caso, conforme o
+Capítulo~\ref{cap:metodos}, e não por experimento controlado. Essa escolha
+metodológica tem custo e benefício, discutidos na Seção~\ref{sec:ameacas}.

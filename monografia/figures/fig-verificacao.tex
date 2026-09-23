@@ -1,0 +1,31 @@
+%% ---------------------------------------------------------------------
+%%  FIGURA - Camadas de revisao da monografia (DG-10)
+%% ---------------------------------------------------------------------
+\begin{figure}[htb]
+	\caption{Camadas de revisão aplicadas à produção da monografia}
+	\label{fig:verificacao}
+	\centering
+	\begin{tikzpicture}[
+			font=\footnotesize,
+			cam/.style={draw, rounded corners=2pt, minimum width=8.2cm, minimum height=0.7cm, align=center, fill=black!4},
+			>=Stealth,
+			fl/.style={->, thick}
+		]
+
+		\node[cam] (r1) at (0,0) {1. Conteúdo};
+		\node[cam, below=0.2cm of r1] (r2) {2. Engenharia};
+		\node[cam, below=0.2cm of r2] (r3) {3. Evidências};
+		\node[cam, below=0.2cm of r3] (r4) {4. Coerência};
+		\node[cam, below=0.2cm of r4] (r5) {5. Bibliográfica};
+		\node[cam, below=0.2cm of r5] (r6) {6. ABNT};
+		\node[cam, below=0.2cm of r6] (r7) {7. Linguística};
+		\node[cam, below=0.2cm of r7] (r8) {8. LaTeX};
+		\node[cam, below=0.2cm of r8] (r9) {9. Inspeção do PDF};
+
+		\draw[fl] (5.2,0.0) -- (5.2,-7.4);
+	\end{tikzpicture}
+	\legend{Fonte: elaborado pelo autor (2026). Neste trabalho, as camadas 1 a 5 foram aplicadas durante a
+	produção; a camada 6 foi parcialmente aplicada e depende do manual institucional; as camadas 8 e 9
+	\textbf{não foram executadas} por ausência de compilador LaTeX no ambiente --- ver
+	\texttt{MONOGRAFIA\_STATUS.md}, seção~3.}
+\end{figure}

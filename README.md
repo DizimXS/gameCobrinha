@@ -4,6 +4,10 @@ Jogo da cobrinha (Snake) completo, entregue em **um único arquivo `index.html`*
 
 Renderizado em HTML5 Canvas 2D com tema escuro estilo retro-arcade, placar persistente e controles para teclado e toque.
 
+![Tela do Snake Neon no estado de fim de jogo: título neon, placar com pontuação 40 e recorde 40, tabuleiro com o corpo do jogador, sobreposição "Fim de jogo" com botão "Jogar novamente", quatro botões direcionais e a linha de atalhos de teclado.](images/screenshot_gaming.png)
+
+*Estado de fim de jogo: placar preenchido, botão de reinício e controles na tela.*
+
 ## Funcionalidades
 
 - **Arquivo único e autocontido** — `<style>` e `<script>` embutidos, zero requisições de rede.
@@ -55,9 +59,12 @@ python3 -m http.server 8000
 .
 ├── index.html                          # o jogo completo (arquivo único)
 ├── STATUS.md                           # estado atual, pendências e riscos
-├── AGENTS.md                          # regras permanentes do projeto
+├── AGENTS.md                           # regras permanentes do projeto
 ├── .gitignore
 ├── LICENSE                             # MIT
+├── images/
+│   └── screenshot_gaming.png           # captura de tela do jogo em execução
+├── monografia/                         # monografia em LaTeX (ABNT), com diagramas
 ├── .specs/features/snake-game/
 │   ├── spec.md                         # requisitos FR/NFR e critérios de aceitação CA
 │   ├── design.md                       # decisões arquiteturais (ADR) e algoritmos
@@ -96,6 +103,19 @@ O artefato é verificado em **navegador real** (`file://`), por inspeção está
 | Velocidade crescente com a pontuação (`CA-012`) | PASS — 133 ms → 105 ms |
 
 Detalhes, método e capturas de tela: [`docs/05-testing/snake-game-evidence.md`](docs/05-testing/snake-game-evidence.md).
+
+Registros visuais do produto em execução:
+
+| Arquivo | Estado registrado |
+|---|---|
+| [`images/screenshot_gaming.png`](images/screenshot_gaming.png) | Fim de jogo com placar preenchido (pontuação 40, recorde 40) |
+| [`docs/05-testing/snake-game-over.png`](docs/05-testing/snake-game-over.png) | Fim de jogo com placar zerado |
+| [`docs/05-testing/snake-game-restarted.png`](docs/05-testing/snake-game-restarted.png) | Partida reiniciada |
+
+> [!NOTE]
+> Capturas de tela são **registro visual**, não verificação. Nenhum critério de aceitação é
+> aprovado ou reprovado com base em imagem — os critérios são verificados por observação de
+> comportamento, conforme a tabela acima.
 
 > [!NOTE]
 > A validação do D-Pad em **dispositivo móvel físico** segue pendente (`T-016`). A verificação atual usa emulação de `pointerdown` em navegador de desktop, o que não equivale a validação em hardware real.

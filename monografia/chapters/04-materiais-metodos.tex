@@ -1,0 +1,288 @@
+%% =====================================================================
+%%  CAPITULO 4 - MATERIAIS E METODOS
+%% =====================================================================
+
+\chapter{Materiais e Métodos}
+\label{cap:metodos}
+
+Este capítulo descreve a natureza da pesquisa, o procedimento, os instrumentos, o
+ambiente experimental, as variáveis, as métricas, o tratamento dos dados e as
+ameaças à validade. O objetivo é permitir que outro pesquisador avalie
+criticamente o trabalho e reproduza o que foi executado.
+
+\section{Natureza e abordagem da pesquisa}
+\label{sec:natureza}
+
+A pesquisa é de natureza \textbf{aplicada}, com objetivo \textbf{exploratório e
+descritivo}, e abordagem \textbf{qualitativa predominante com componentes
+quantitativos pontuais}. O método é o \textbf{estudo de caso único}, adequado
+quando o fenômeno é contemporâneo, não manipulável pelo pesquisador e
+inseparável do contexto em que ocorre (\citeonline{yin2018}). As diretrizes para
+condução e relato de estudos de caso em engenharia de software
+(\citeonline{runeson2009}) orientaram a estrutura deste capítulo.
+
+A escolha do estudo de caso em detrimento do experimento controlado é
+consequência da pergunta de pesquisa. A pergunta é ``como estruturar um
+processo'', e processos são artefatos sócio-técnicos cuja validade depende de
+como são operados na prática. Um experimento controlado exigiria um grupo de
+controle submetido ao mesmo pedido sem o processo proposto --- o que foi
+registrado como dado necessário e não obtido (P-14).
+
+\section{Unidade de análise e contexto}
+\label{sec:unidade}
+
+A unidade de análise é a \textbf{execução do processo} sobre um sistema-alvo. O
+sistema-alvo é um jogo digital de movimentação em grade, entregue como artefato
+único de página web, com os seguintes requisitos de produto declarados na
+solicitação original:
+
+\begin{quadro}[htb]
+	\caption{Requisitos declarados na solicitação original do produto}
+	\label{qua:requisitos-origem}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}c X@{}}
+		\toprule
+		\textbf{\#} & \textbf{Requisito declarado na solicitação} \\
+		\midrule
+		R1 & Arquivo único com CSS e JavaScript embutidos na mesma página. \\
+		R2 & Ausência de dependências externas: apenas desenho vetorial, CSS e JavaScript nativos. \\
+		R3 & Layout moderno, limpo, responsivo e centralizado. \\
+		R4 & Tema escuro de estilo retro-arcade com elementos em tons neon. \\
+		R5 & Placar com pontuação atual e melhor pontuação persistida no navegador. \\
+		R6 & Tela de fim de jogo com botão de reinício. \\
+		R7 & Controle por setas do teclado e por teclas W, A, S e D. \\
+		R8 & Botões direcionais na tela para uso em dispositivos de toque. \\
+		R9 & Bloqueio de inversão instantânea de direção. \\
+		R10 & Alvo sorteado em posição aleatória, nunca sobre o corpo do jogador. \\
+		R11 & Fim de jogo por colisão com a borda do tabuleiro ou com o próprio corpo. \\
+		R12 & Crescimento do jogador e aumento de pontuação a cada alvo consumido. \\
+		R13 & Código estruturado, comentado e limpo. \\
+		R14 & Laço de jogo eficiente, com \texttt{requestAnimationFrame} ou temporizador controlado. \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: adaptado de \texttt{docs/memorial.txt} (solicitação original do produto).}
+\end{quadro}
+
+\section{Procedimento}
+\label{sec:procedimento}
+
+O procedimento teve quatro etapas encadeadas, cada uma produzindo artefatos
+consumidos pela seguinte. O pipeline completo está no Quadro~\ref{qua:pipeline}.
+
+\begin{quadro}[htb]
+	\caption{Etapas do procedimento e artefatos produzidos}
+	\label{qua:pipeline}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}c p{2.6cm} X@{}}
+		\toprule
+		\textbf{Etapa} & \textbf{Nome} & \textbf{Artefatos produzidos} \\
+		\midrule
+		E1 & Auditoria e compreensão & Classificação do material disponível; identificação de oito lacunas no material de origem do framework. \\
+		\addlinespace
+		E2 & Especificação & Especificação com 15 requisitos funcionais, 9 não funcionais, 12 critérios de aceitação, contratos de dados e casos de borda. \\
+		\addlinespace
+		E3 & Projeto e implementação & Documento com 7 decisões arquiteturais e o artefato de código único. \\
+		\addlinespace
+		E4 & Verificação & Protocolo de teste, execução das verificações e registro de evidências com resultado por critério. \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026).}
+\end{quadro}
+
+A ordem das etapas não é negociável dentro do processo: a especificação precede a
+implementação e a verificação conclui. Essa precedência é a variável independente
+do estudo.
+
+\section{Instrumentos}
+\label{sec:instrumentos}
+
+Foram usados quatro instrumentos, todos disponíveis no ambiente sem instalação
+adicional.
+
+\textbf{Inspeção estática.} Busca textual no artefato para confirmar propriedades
+estruturais que não dependem de execução, como a ausência de referências de rede
+e a existência de um único bloco de estilo e um único bloco de script.
+
+\textbf{Automação de navegador.} Controle programático de um navegador real para
+enviar eventos de teclado e de apontador e para inspecionar o estado observável
+da página. Esse instrumento permite verificar comportamento sem instrumentar o
+código do produto --- ponto relevante, porque instrumentar o produto para
+testá-lo alteraria o objeto de estudo.
+
+\textbf{Leitura de pixels da superfície de desenho.} Amostragem dos pixels do
+elemento de desenho para localizar a célula do alvo e a posição da cabeça do
+jogador. Essa técnica permitiu implementar um agente de teste que joga o jogo de
+forma autônoma, tornando possível verificar crescimento, pontuação e velocidade
+sem intervenção manual e sem acesso à estrutura interna do programa.
+
+\textbf{Captura de tela.} Registro visual dos estados de interface, usado como
+evidência complementar qualitativa.
+
+\section{Ambiente experimental}
+\label{sec:ambiente}
+
+O Quadro~\ref{qua:ambiente} registra o ambiente, conforme exigido para
+reprodutibilidade. Os itens marcados como não registrados não foram anotados
+durante a execução e não são reconstruídos aqui por estimativa.
+
+\begin{quadro}[htb]
+	\caption{Ambiente experimental registrado}
+	\label{qua:ambiente}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{4.2cm} X@{}}
+		\toprule
+		\textbf{Item} & \textbf{Registro} \\
+		\midrule
+		Sistema operacional & Linux \\
+		Forma de execução & Arquivo local, protocolo de arquivo, sem servidor \\
+		Motor de navegador & Motor Chromium \\
+		Versão exata do navegador & [DADO NECESSÁRIO --- não registrado durante a execução] \\
+		Resolução da janela & Área de conteúdo de aproximadamente 1200\,px de largura; elemento de desenho com 517,5\,px de lado \\
+		Razão de pixels do dispositivo & 1 (não emulado) \\
+		Armazenamento local & Disponível e persistente entre recarregamentos \\
+		Idioma da interface & Português do Brasil \\
+		Preferência de movimento reduzido & [DADO NECESSÁRIO --- estado não registrado] \\
+		Duração das sessões de medição & Janela de 150\,s para a medição de velocidade \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026).}
+\end{quadro}
+
+\section{Variáveis}
+\label{sec:variaveis}
+
+\textbf{Variável independente:} a presença do processo orientado por
+especificação, com critérios de aceitação definidos antes da implementação.
+
+\textbf{Variáveis dependentes:} (i) fração $A$ de critérios de aceitação
+satisfeitos, definida na Equação~(\ref{eq:cobertura}); (ii) cobertura de
+rastreabilidade, definida como a fração de requisitos com critério de aceitação
+associado; (iii) intervalo médio entre passos de simulação, definido na
+Equação~(\ref{eq:intervalo-medio}).
+
+\textbf{Variáveis de controle:} as constantes do alvo (dimensões da grade,
+intervalo inicial, intervalo mínimo, passo de redução, pontos por item), fixadas
+no artefato e registradas na Tabela~\ref{tab:constantes}.
+
+O intervalo entre passos de simulação é o principal alvo de medição quantitativa
+porque é a única grandeza de comportamento contínuo cujo valor alvo está declarado
+na especificação e que é observável externamente sem instrumentar o produto.
+
+\section{Métricas}
+\label{sec:metricas}
+
+A Tabela~\ref{tab:metricas} define as métricas operacionais, a forma de coleta e
+a limitação de cada uma.
+
+\begin{table}[htb]
+	\caption{Métricas operacionais, coleta e limitação}
+	\label{tab:metricas}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{2.6cm} X p{3.6cm}@{}}
+		\toprule
+		\textbf{Métrica} & \textbf{Coleta} & \textbf{Limitação} \\
+		\midrule
+		$A$ (cobertura de verificação) & Contagem de critérios com resultado observado favorável sobre o total & Mede conformidade com a especificação, não adequação ao uso \\
+		\addlinespace
+		Rastreabilidade de requisitos & Contagem de requisitos com critério de aceitação associado sobre o total & Não avalia a qualidade do critério, apenas sua existência \\
+		\addlinespace
+		$t$ (intervalo entre passos) & Marcações de tempo do observador entre mudanças sucessivas da posição da cabeça & A granularidade do observador adiciona erro positivo; o valor medido é um limite superior \\
+		\addlinespace
+		Comprimento do jogador & Contagem de células ocupadas na superfície de desenho & Depende da detecção correta de cor \\
+		\addlinespace
+		Colisões indevidas & Contagem de amostras em que o alvo coincidiu com célula do corpo & Limitada ao número de amostras coletadas \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026).}
+\end{table}
+
+O erro positivo do observador na medição de $t$ merece destaque, porque justifica
+o tratamento adotado. Seja $\varepsilon$ o atraso introduzido pelo ciclo de
+observação. O intervalo medido é $t_{\mathrm{med}} = t_{\mathrm{real}} +
+\varepsilon$. Como $\varepsilon$ é aproximadamente constante ao longo de uma
+janela, a comparação entre janelas preserva a \emph{diferença} mas não o valor
+absoluto. Por isso, os valores absolutos medidos não são tratados como
+estimativas do parâmetro do alvo; o que se afirma é a \emph{ordem} e a
+\emph{direção} da variação, conforme a Equação~(\ref{eq:intervalo-medio}).
+
+\section{Tratamento dos dados}
+\label{sec:tratamento}
+
+Para cada mudança de posição da cabeça do jogador registrou-se um par
+(instante, pontuação corrente). O intervalo médio entre passos em uma faixa de
+pontuação foi estimado por:
+
+\begin{equation}
+	\mathrm{E}[T] \;=\; \frac{1}{m-1}
+	\sum_{i=2}^{m} \left( \tau_i - \tau_{i-1} \right)
+	\label{eq:intervalo-medio}
+\end{equation}
+
+\noindent em que $\tau_i$ é o instante da $i$-ésima mudança de posição e $m$ é o
+número de mudanças observadas na faixa. A média, e não a mediana, foi adotada
+como tratamento principal porque o erro de observação $\varepsilon$ é aditivo e
+aproximadamente constante: a média o absorve de forma previsível, enquanto a
+mediana o distribui de modo dependente da amostra.
+
+A estatística descritiva completa por faixa --- contagem, média, mínimo e máximo
+--- está reportada no Capítulo~\ref{cap:resultados}. Não se aplicou teste de
+hipótese, pelo tamanho da amostra e pela natureza de estudo de caso; essa escolha
+é retomada em \ref{sec:ameacas}.
+
+\section{Ética e integridade}
+\label{sec:etica}
+
+O trabalho não envolveu seres humanos como sujeitos de pesquisa, não coletou
+dados pessoais e não utiliza dados sensíveis; a apreciação por comitê de ética
+não se aplica. O produto armazena apenas um valor numérico de recorde no
+armazenamento local do navegador de quem o executa.
+
+Declara-se explicitamente a política de integridade adotada: nenhum dado,
+medição, resultado ou referência foi estimado, interpolado ou produzido de
+memória. Informação ausente recebeu marcador explícito e foi registrada em
+\texttt{MONOGRAFIA\_PENDENCIAS.md}. As referências bibliográficas foram
+declaradas sem identificadores não verificados --- sem ISBN ou DOI inventados
+--- e exigem conferência contra a fonte original antes da entrega final.
+
+\section{Ameaças à validade}
+\label{sec:ameacas}
+
+A classificação segue \citeonline{wohlin2012} e \citeonline{runeson2009}. O
+Quadro~\ref{qua:ameacas} enumera as ameaças identificadas, a categoria e a
+mitigação efetivamente aplicada.
+
+\begin{quadro}[htb]
+	\caption{Ameaças à validade identificadas e mitigações}
+	\label{qua:ameacas}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}c p{4.6cm} X@{}}
+		\toprule
+		\textbf{ID} & \textbf{Ameaça} & \textbf{Categoria e mitigação} \\
+		\midrule
+		AV-1 & Ausência de grupo de controle que executou o mesmo alvo sem o processo proposto & \textit{Validade interna}. Não mitigada. Sem controle não é possível atribuir o resultado ao processo em vez de à competência do executor ou à simplicidade do alvo. Mitigação parcial: registrar a lacuna (P-14). \\
+		\addlinespace
+		AV-2 & Estudo de caso único em um domínio com estado discreto e regras bem definidas & \textit{Validade externa}. Generalização limitada a domínios de complexidade comparável. Mitigação: declarar explicitamente o escopo de generalização. \\
+		\addlinespace
+		AV-3 & Autoria do executante e do observador coincidirem & \textit{Validade de construto}. Risco de confirmação. Mitigação: a evidência é produzida por execução automatizada e por inspeção textual reproduzível, não por julgamento do autor. \\
+		\addlinespace
+		AV-4 & A métrica de rastreabilidade avalia existência de critério, não sua qualidade & \textit{Validade de construto}. Um critério mal formulado contaria como cobertura. Mitigação: não mitigada; registrada como limitação da métrica. \\
+		\addlinespace
+		AV-5 & Erro positivo na medição do intervalo por ciclo de observação & \textit{Validade de conclusão}. Afeta valores absolutos. Mitigação: reportar apenas a direção da variação e declarar o viés. \\
+		\addlinespace
+		AV-6 & Amostra temporal única por faixa, sem repetição nem intervalo de confiança & \textit{Validade de conclusão}. Não permite inferência estatística. Mitigação: não mitigada; repetição registrada como dado necessário (P-11). \\
+		\addlinespace
+		AV-7 & Detecção de posições por cor, sujeita a erro em pixels de borda & \textit{Validade de construto}. Mitigação: critérios de cor restritivos e verificação de que a célula do alvo nunca foi classificada como corpo em 25 amostras. \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026), a partir de \citeonline{wohlin2012} e \citeonline{runeson2009}.}
+\end{quadro}
+
+Duas ameaças não foram mitigadas: a ausência de grupo de controle (AV-1) e a
+ausência de repetição com tratamento estatístico (AV-6). Ambas exigiriam trabalho
+experimental adicional. Registrá-las explicitamente é preferível a apresentar os
+resultados como se essas limitações não existissem.

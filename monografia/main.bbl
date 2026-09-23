@@ -1,0 +1,143 @@
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\setlength{\labelsep}{0pt}\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.7 }
+
+\bibitem[Adzic 2011]{adzic2011}
+\abntrefinfo{Adzic}{ADZIC}{2011}
+{ADZIC, G. \emph{Specification by Example: How Successful Teams Deliver the Right Software}. Shelter Island: Manning, 2011.}
+
+\bibitem[Bass, Clements e Kazman 2021]{bass2021}
+\abntrefinfo{Bass, Clements e Kazman}{BASS; CLEMENTS; KAZMAN}{2021}
+{BASS, L.; CLEMENTS, P.; KAZMAN, R. \emph{Software Architecture in Practice}. 4. ed. Boston: Addison-Wesley, 2021.}
+
+\bibitem[Beck 2002]{beck2002tdd}
+\abntrefinfo{Beck}{BECK}{2002}
+{BECK, K. \emph{Test-Driven Development: By Example}. Boston: Addison-Wesley, 2002.}
+
+\bibitem[Boehm 1984]{boehm1984}
+\abntrefinfo{Boehm}{BOEHM}{1984}
+{BOEHM, B.~W. Verifying and validating software requirements and design specifications.
+\emph{IEEE Software}, 1984.}
+
+\bibitem[Brown et al. 2020]{brown2020}
+\abntrefinfo{Brown et al.}{BROWN et al.}{2020}
+{BROWN, T.~B. et al. Language models are few-shot learners. In:  \emph{Advances in Neural Information Processing Systems}. [S.l.: s.n.], 2020.}
+
+\bibitem[{Ecma International} 2023]{ecma2023}
+\abntrefinfo{{Ecma International}}{{Ecma International}}{2023}
+{{Ecma International}. \emph{ECMA-262: ECMAScript Language Specification}. 2023. Norma técnica.}
+
+\bibitem[Forsgren, Humble e Kim 2018]{forsgren2018}
+\abntrefinfo{Forsgren, Humble e Kim}{FORSGREN; HUMBLE; KIM}{2018}
+{FORSGREN, N.; HUMBLE, J.; KIM, G. \emph{Accelerate: The Science of Lean Software and DevOps}. Portland: IT Revolution Press, 2018.}
+
+\bibitem[Gamma et al. 1994]{gamma1994}
+\abntrefinfo{Gamma et al.}{GAMMA et al.}{1994}
+{GAMMA, E. et al. \emph{Design Patterns: Elements of Reusable Object-Oriented Software}. Boston: Addison-Wesley, 1994.}
+
+\bibitem[Hong et al. 2024]{hong2024metagpt}
+\abntrefinfo{Hong et al.}{HONG et al.}{2024}
+{HONG, S. et al. Metagpt: Meta programming for a multi-agent collaborative framework. In:  \emph{International Conference on Learning Representations}. [S.l.: s.n.], 2024.}
+
+\bibitem[Humble e Farley 2010]{humble2010}
+\abntrefinfo{Humble e Farley}{HUMBLE; FARLEY}{2010}
+{HUMBLE, J.; FARLEY, D. \emph{Continuous Delivery: Reliable Software Releases through Build, Test, and Deployment Automation}. Boston: Addison-Wesley, 2010.}
+
+\bibitem[International Organization for Standardization 2011]{iso25010}
+\abntrefinfo{International Organization for Standardization}{INTERNATIONAL ORGANIZATION FOR STANDARDIZATION}{2011}
+{INTERNATIONAL ORGANIZATION FOR STANDARDIZATION. \emph{ISO/IEC 25010: Systems and software engineering --- Systems and software Quality Requirements and Evaluation (SQuaRE) --- System and software quality models}.
+Geneva, 2011. Verificar a edição vigente antes da entrega.}
+
+\bibitem[International Organization for Standardization 2018]{iso29148}
+\abntrefinfo{International Organization for Standardization}{INTERNATIONAL ORGANIZATION FOR STANDARDIZATION}{2018}
+{INTERNATIONAL ORGANIZATION FOR STANDARDIZATION. \emph{ISO/IEC/IEEE 29148: Systems and software engineering --- Life cycle processes --- Requirements engineering}.
+Geneva, 2018. Verificar a edição vigente antes da entrega.}
+
+\bibitem[Mernik, Heering e Sloane 2005]{mernike2005}
+\abntrefinfo{Mernik, Heering e Sloane}{MERNIK; HEERING; SLOANE}{2005}
+{MERNIK, M.; HEERING, J.; SLOANE, A.~M. When and how to develop domain-specific languages.
+\emph{ACM Computing Surveys}, 2005.}
+
+\bibitem[{Mozilla Foundation} 2024]{mdn2024canvas}
+\abntrefinfo{{Mozilla Foundation}}{{Mozilla Foundation}}{2024a}
+{{Mozilla Foundation}. \emph{Canvas API --- MDN Web Docs}. 2024. Documentação técnica oficial.}
+
+\bibitem[{Mozilla Foundation} 2024]{mdn2024storage}
+\abntrefinfo{{Mozilla Foundation}}{{Mozilla Foundation}}{2024b}
+{{Mozilla Foundation}. \emph{Window.localStorage --- MDN Web Docs}. 2024. Documentação técnica oficial.}
+
+\bibitem[{Mozilla Foundation} 2024]{mdn2024raf}
+\abntrefinfo{{Mozilla Foundation}}{{Mozilla Foundation}}{2024c}
+{{Mozilla Foundation}. \emph{Window.requestAnimationFrame() --- MDN Web Docs}. 2024. Documentação técnica oficial.}
+
+\bibitem[Myers, Sandler e Badgett 2011]{myers2011}
+\abntrefinfo{Myers, Sandler e Badgett}{MYERS; SANDLER; BADGETT}{2011}
+{MYERS, G.~J.; SANDLER, C.; BADGETT, T. \emph{The Art of Software Testing}. 3. ed. Hoboken: John Wiley \& Sons, 2011.}
+
+\bibitem[Pressman e Maxim 2016]{pressman2016}
+\abntrefinfo{Pressman e Maxim}{PRESSMAN; MAXIM}{2016}
+{PRESSMAN, R.~S.; MAXIM, B.~R. \emph{Engenharia de Software: uma abordagem profissional}. 8. ed. Porto Alegre: AMGH, 2016.}
+
+\bibitem[Qian et al. 2024]{qian2024chatdev}
+\abntrefinfo{Qian et al.}{QIAN et al.}{2024}
+{QIAN, C. et al. Chatdev: Communicative agents for software development. In:  \emph{Annual Meeting of the Association for Computational Linguistics}. [S.l.: s.n.], 2024.}
+
+\bibitem[Runeson e H{\"o}st 2009]{runeson2009}
+\abntrefinfo{Runeson e H{\"o}st}{RUNESON; H{\"O}ST}{2009}
+{RUNESON, P.; H{\"O}ST, M. Guidelines for conducting and reporting case study research in software engineering.
+\emph{Empirical Software Engineering}, 2009.}
+
+\bibitem[Russell e Norvig 2021]{russell2021}
+\abntrefinfo{Russell e Norvig}{RUSSELL; NORVIG}{2021}
+{RUSSELL, S.; NORVIG, P. \emph{Artificial Intelligence: A Modern Approach}. 4. ed. Hoboken: Pearson, 2021.}
+
+\bibitem[Shinn et al. 2023]{shinn2023reflexion}
+\abntrefinfo{Shinn et al.}{SHINN et al.}{2023}
+{SHINN, N. et al. Reflexion: Language agents with verbal reinforcement learning. In:  \emph{Advances in Neural Information Processing Systems}. [S.l.: s.n.], 2023.}
+
+\bibitem[Sommerville 2019]{sommerville2019}
+\abntrefinfo{Sommerville}{SOMMERVILLE}{2019}
+{SOMMERVILLE, I. \emph{Engenharia de Software}. 10. ed. São Paulo: Pearson, 2019.}
+
+\bibitem[Vaswani et al. 2017]{vaswani2017}
+\abntrefinfo{Vaswani et al.}{VASWANI et al.}{2017}
+{VASWANI, A. et al. Attention is all you need. In:  \emph{Advances in Neural Information Processing Systems}. [S.l.: s.n.], 2017.}
+
+\bibitem[{Web Hypertext Application Technology Working Group} 2024]{whatwg2024html}
+\abntrefinfo{{Web Hypertext Application Technology Working Group}}{{Web Hypertext Application Technology Working Group}}{2024}
+{{Web Hypertext Application Technology Working Group}. \emph{HTML Living Standard}. 2024. Especificação técnica.
+Documento em constante atualização.}
+
+\bibitem[Wei et al. 2022]{wei2022}
+\abntrefinfo{Wei et al.}{WEI et al.}{2022}
+{WEI, J. et al. Chain-of-thought prompting elicits reasoning in large language models. In:  \emph{Advances in Neural Information Processing Systems}. [S.l.: s.n.], 2022.}
+
+\bibitem[Wohlin et al. 2012]{wohlin2012}
+\abntrefinfo{Wohlin et al.}{WOHLIN et al.}{2012}
+{WOHLIN, C. et al. \emph{Experimentation in Software Engineering}. Berlin: Springer, 2012.}
+
+\bibitem[Wooldridge 2009]{wooldridge2009}
+\abntrefinfo{Wooldridge}{WOOLDRIDGE}{2009}
+{WOOLDRIDGE, M. \emph{An Introduction to MultiAgent Systems}. 2. ed. Chichester: John Wiley \& Sons, 2009.}
+
+\bibitem[{World Wide Web Consortium} 2023]{w3c2023wcag22}
+\abntrefinfo{{World Wide Web Consortium}}{{World Wide Web Consortium}}{2023}
+{{World Wide Web Consortium}. \emph{Web Content Accessibility Guidelines (WCAG) 2.2}. 2023. W3C Recommendation.}
+
+\bibitem[Wu et al. 2023]{wu2023autogen}
+\abntrefinfo{Wu et al.}{WU et al.}{2023}
+{WU, Q. et al. \emph{AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation}. 2023.
+ArXiv:2308.08155.}
+
+\bibitem[Yao et al. 2023]{yao2023react}
+\abntrefinfo{Yao et al.}{YAO et al.}{2023}
+{YAO, S. et al. React: Synergizing reasoning and acting in language models. In:  \emph{International Conference on Learning Representations}. [S.l.: s.n.], 2023.}
+
+\bibitem[Yin 2018]{yin2018}
+\abntrefinfo{Yin}{YIN}{2018}
+{YIN, R.~K. \emph{Case Study Research and Applications: Design and Methods}. 6. ed. Los Angeles: SAGE, 2018.}
+
+\end{thebibliography}

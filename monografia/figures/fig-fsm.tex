@@ -1,0 +1,37 @@
+%% ---------------------------------------------------------------------
+%%  FIGURA - Maquina de estados da partida (DG-04)
+%% ---------------------------------------------------------------------
+\begin{figure}[htb]
+	\caption{Máquina de estados da partida e transições}
+	\label{fig:fsm}
+	\centering
+	\begin{tikzpicture}[
+			font=\footnotesize,
+			estado/.style={draw, rounded corners=3pt, minimum width=2.4cm, minimum height=0.85cm, align=center},
+			inicial/.style={estado, very thick, fill=black!8},
+			>=Stealth,
+			tr/.style={->, thick},
+			rot/.style={font=\scriptsize, inner sep=2pt, fill=white}
+		]
+
+		\node[inicial] (ready) at (0,0) {\texttt{ready}};
+		\node[estado] (run) at (4.6,0) {\texttt{running}};
+		\node[estado] (pause) at (4.6,-2.3) {\texttt{paused}};
+		\node[estado] (over) at (9.2,1.1) {\texttt{over}};
+		\node[estado] (won) at (9.2,-1.1) {\texttt{won}};
+
+		\draw[tr] (ready) -- node[rot, above] {direção válida} (run);
+		\draw[tr] (run) -- node[rot, right] {pausa ou perda de foco} (pause);
+		\draw[tr] (pause) -- node[rot, left] {retomada} (run);
+		\draw[tr] (run) -- node[rot, pos=0.62, above] {colisão} (over);
+		\draw[tr] (run) -- node[rot, pos=0.62, below] {grade completa} (won);
+
+		\draw[tr] (run) to[out=110, in=70, looseness=7] node[rot, above] {passo de simulação} (run);
+
+		\draw[tr] (over) to[out=200, in=30, looseness=1.3] node[rot, pos=0.42, above] {reinício} (ready);
+		\draw[tr] (won) to[out=200, in=-10, looseness=1.15] node[rot, pos=0.4, below] {reinício} (ready);
+	\end{tikzpicture}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{index.html}, seção~7.
+	O estado \texttt{won} não constava da solicitação original: ele foi criado para tratar o caso de
+	borda ``grade completamente ocupada''.}
+\end{figure}

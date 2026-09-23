@@ -1,0 +1,23 @@
+%%{init: {"theme":"neutral"}}%%
+%% DG-01 - Fluxo agentico adaptativo por complexidade e risco
+%% Corresponde a Figura 3 do capitulo 5 (fig-fluxo-agentico.tex)
+flowchart TD
+    A["Solicitacao"] --> B["Task Router"]
+    B --> C{"Complexidade e risco?"}
+
+    C -->|"Pergunta"| D["Responder com evidencia"]
+    C -->|"Simples"| E["Correcao local"]
+    C -->|"Medio"| F["Recurso medio"]
+    C -->|"Amplo"| G["Recurso amplo"]
+
+    E --> H["Implementer"]
+    F --> H
+    G --> I["Architect"] --> J["Task Planner"] --> H
+
+    H --> K["Test Engineer"]
+    K --> L["Code Reviewer"]
+    L --> M["Security Reviewer quando aplicavel"]
+    M --> N["Verification Gate"]
+    N --> O["Documentation"]
+    O --> P["Integration"]
+    P --> Q["Release quando aplicavel"]

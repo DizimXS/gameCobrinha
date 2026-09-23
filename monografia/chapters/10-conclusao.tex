@@ -1,0 +1,166 @@
+%% =====================================================================
+%%  CAPITULO 10 - CONCLUSAO
+%% =====================================================================
+
+\chapter{Conclusão}
+\label{cap:conclusao}
+
+\section{Resposta ao problema}
+\label{sec:conc-resposta}
+
+O problema investigado foi como estruturar um processo de desenvolvimento
+assistido por agentes de inteligência artificial de modo que cada entrega fosse
+rastreável a um requisito, verificável por um critério de aceitação e sustentada
+por evidência reproduzível.
+
+O trabalho responde em três partes.
+
+\textbf{Quanto à verificabilidade, a resposta é afirmativa.} Um processo que
+obriga a redigir critérios de aceitação antes da implementação, em forma que um
+observador externo possa decidir o resultado, produz entregas verificáveis por
+terceiros sem acesso ao raciocínio de quem implementou. Os doze critérios
+declarados foram satisfeitos e verificados por observação externa ao produto.
+
+\textbf{Quanto à sustentação por evidência, a resposta é afirmativa.} A
+separação entre o que o agente afirma e o que a execução demonstra é o mecanismo
+central do framework. Toda conclusão deste trabalho se apoia em inspeção textual
+reproduzível, em execução observada ou em medição; nenhuma se apoia em afirmação
+do executor.
+
+\textbf{Quanto à rastreabilidade, a resposta é parcial.} A cadeia
+requisito--critério--evidência existe e é verificável, mas cobre 54,2\,\% do
+conjunto de requisitos. A cobertura é de 73,3\,\% para requisitos funcionais e de
+apenas 22,2\,\% para não funcionais. O processo entrega rastreabilidade onde ela é
+exigida com rigor, mas não garante cobertura completa, e a lacuna se concentra
+exatamente na classe de requisito cuja verificação é mais difícil.
+
+\section{Cumprimento dos objetivos}
+\label{sec:conc-objetivos}
+
+O Quadro~\ref{qua:cumprimento} retoma os objetivos específicos e registra o grau
+de cumprimento.
+
+\begin{quadro}[htb]
+	\caption{Grau de cumprimento dos objetivos específicos}
+	\label{qua:cumprimento}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{1.1cm} X p{1.9cm}@{}}
+		\toprule
+		\textbf{ID} & \textbf{Resultado} & \textbf{Grau} \\
+		\midrule
+		OE-1 & Framework definido com cinco camadas, quinze agentes, quatro conjuntos de instruções, cinco habilidades, seis portões, catorze itens de conclusão e seis condições de parada. & Pleno \\
+		\addlinespace
+		OE-2 & Especificação com 15 requisitos funcionais, 9 não funcionais, 4 restrições, 12 critérios de aceitação e 5 casos de borda. & Pleno \\
+		\addlinespace
+		OE-3 & Sete decisões arquiteturais registradas com justificativa e alternativa descartada. & Pleno \\
+		\addlinespace
+		OE-4 & Artefato único de 1\,063 linhas, sem dependências externas, conforme as quatro restrições do alvo. & Pleno \\
+		\addlinespace
+		OE-5 & Doze de doze critérios satisfeitos, com evidência registrada por critério. & Pleno \\
+		\addlinespace
+		OE-6 & Sete ameaças à validade classificadas, seis dados ausentes marcados, lacuna de rastreabilidade identificada e localizada. & Parcial \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026).}
+\end{quadro}
+
+O objetivo específico OE-6 é classificado como parcial porque a avaliação
+identificou ameaças que não puderam ser mitigadas dentro do escopo, em particular
+a ausência de grupo de controle e a ausência de repetição da medição. Identificar
+e declarar uma limitação é resultado válido, mas não é o mesmo que eliminá-la.
+
+\section{Contribuições}
+\label{sec:conc-contribuicoes}
+
+\begin{enumerate}
+	\item \textbf{Um protocolo de controle operacional} para desenvolvimento com
+	agentes de inteligência artificial, com precedência do critério sobre a
+	implementação e proibição de evidência fabricada, materializado em artefatos
+	versionados e reutilizáveis.
+
+	\item \textbf{Um método de verificação por observação externa} que não
+	instrumenta o produto sob teste, viável em interfaces gráficas discretas por
+	amostragem da superfície de desenho e uso de agente de teste autônomo.
+
+	\item \textbf{Evidência empírica de uma assimetria} entre a verificabilidade
+	de requisitos funcionais e não funcionais, com medição da cobertura por classe:
+	73,3\,\% contra 22,2\,\%.
+
+	\item \textbf{Demonstração de que casos de borda declarados alteram o projeto},
+	e não apenas os testes, com um caso concreto em que a declaração prévia criou um
+	estado de máquina que não existia na modelagem inicial.
+
+	\item \textbf{Registro do custo e das limitações} do processo, incluindo a
+	declaração explícita do que não foi verificado e de quais dados não foram
+	obtidos, em vez de preenchimento por estimativa.
+\end{enumerate}
+
+\section{Limitações}
+\label{sec:conc-limitacoes}
+
+As limitações deste trabalho são de quatro naturezas.
+
+\textbf{Metodológica.} Não houve grupo de controle; o desenho é de estudo de caso
+único, com generalização analítica e não estatística. Não houve repetição da
+medição de intervalo, e portanto não há inferência estatística sobre ela.
+
+\textbf{De escopo.} O alvo tem estado discreto, regras determinísticas e ausência
+de concorrência, integração externa e dependência de hardware. Os resultados não
+se transferem diretamente a domínios de tempo real, sistemas distribuídos ou
+software embarcado, nos quais o framework de origem previa níveis de evidência
+superiores.
+
+\textbf{De cobertura.} Sete dos nove requisitos não funcionais não possuem
+critério de aceitação. Sete itens permaneceram fora da verificação, incluindo
+validação em dispositivo de toque físico, compatibilidade entre navegadores e
+comportamento sob armazenamento local indisponível.
+
+\textbf{De evidência.} Nenhum dado de consumo de memória, de tempo de execução do
+processo ou de custo por tarefa foi coletado. As afirmações sobre custo do
+processo são qualitativas.
+
+\section{Trabalhos futuros}
+\label{sec:conc-futuros}
+
+\begin{enumerate}
+	\item \textbf{Adicionar portão de requisito órfão.} Estender o portão G1 para
+	rejeitar requisito sem critério de aceitação, ou obrigar seu rebaixamento
+	explícito a diretriz não verificável. É a correção diretamente indicada pelo
+	achado principal deste trabalho.
+
+	\item \textbf{Instrumentar o processo.} Medir tempo, número de iterações e
+	custo de contexto por tarefa, convertendo a avaliação qualitativa de custo em
+	avaliação quantitativa.
+
+	\item \textbf{Executar experimento controlado.} Desenvolver o mesmo alvo com e
+	sem o processo, com métricas comparáveis, para atacar a ameaça AV-1.
+
+	\item \textbf{Repetir a medição de velocidade} com múltiplas execuções e
+	tratamento estatístico, com registro do número de amostras por faixa.
+
+	\item \textbf{Aplicar a domínio de nível de evidência superior.} Verificar o
+	comportamento do protocolo em desenvolvimento embarcado, com teste em bancada e
+	integração com hardware, domínio para o qual o material de origem do framework
+	foi concebido.
+
+	\item \textbf{Avaliar a conversão de requisitos não funcionais em métricas}
+	como etapa assistida por agente, verificando se um agente dedicado reduz a
+	assimetria medida.
+\end{enumerate}
+
+\section{Considerações finais}
+\label{sec:conc-finais}
+
+A contribuição central deste trabalho não é um produto de software nem um modelo
+de linguagem. É uma demonstração de que a disciplina de especificação, aplicada a
+um fluxo conduzido por agentes de inteligência artificial, produz um resultado
+auditável --- e de que essa disciplina tem um ponto cego mensurável exatamente
+onde a verificação é mais difícil.
+
+O achado de que a cobertura de requisitos não funcionais é de 22,2\,\% é, do
+ponto de vista da engenharia, mais útil que a afirmação de que doze critérios
+foram satisfeitos. O primeiro resultado localiza um defeito no processo e indica
+a correção; o segundo apenas confirma que o processo funcionou onde era fácil
+funcionar. Um processo de verificação que não expõe sua própria lacuna é um
+processo que ainda não foi verificado.

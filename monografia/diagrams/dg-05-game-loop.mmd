@@ -1,0 +1,18 @@
+%%{init: {"theme":"neutral"}}%%
+%% DG-05 - Laco de animacao com acumulador de tempo
+%% Corresponde a Figura 7 do capitulo 7 (fig-game-loop.tex)
+flowchart TD
+    A["requestAnimationFrame"] --> B["delta = min(agora - lastTs, 250)"]
+    B --> C{"estado = running?"}
+    C -->|"nao"| H["acc = 0"]
+    C -->|"sim"| D["acc += delta"]
+    D --> E{"acc >= stepMs<br/>e passos < 5?"}
+    E -->|"sim"| F["tick()"]
+    F --> G["acc -= stepMs<br/>passos += 1"]
+    G --> E
+    E -->|"nao"| I{"acc > stepMs * 5?"}
+    I -->|"sim"| J["Descartar acumulo residual"]
+    I -->|"nao"| K["render()"]
+    H --> K
+    J --> K
+    K --> A

@@ -1,0 +1,193 @@
+%% =====================================================================
+%%  CAPITULO 1 - INTRODUCAO
+%% =====================================================================
+
+\chapter{Introdução}
+\label{cap:introducao}
+
+Este capítulo apresenta o contexto do trabalho, o problema de engenharia
+investigado, a justificativa, a hipótese, os objetivos, a delimitação do escopo,
+uma visão resumida do método e a organização dos demais capítulos.
+
+\section{Contextualização}
+\label{sec:contextualizacao}
+
+A produção de software assistida por modelos de linguagem de grande porte
+(\textit{Large Language Models} --- LLM) deixou de ser experimento de laboratório
+e passou a integrar rotinas reais de desenvolvimento. Modelos treinados em larga
+escala demonstram capacidade de generalização para tarefas não vistas durante o
+treinamento, fenômeno descrito como aprendizado em poucos exemplos
+(\citeonline{brown2020}). A arquitetura de atenção
+proposta por \citeonline{vaswani2017} viabilizou essa classe de modelos, e
+técnicas de encadeamento de raciocínio ampliaram a capacidade de resolução de
+problemas estruturados (\citeonline{wei2022}).
+
+A partir dessa base, surgiram abordagens que organizam o modelo como agente
+capaz de raciocinar e agir sobre um ambiente (\citeonline{yao2023react}), de
+refletir sobre os próprios erros (\citeonline{shinn2023reflexion}) e de operar em
+conjunto com outros agentes, cada um com papel especializado
+(\citeonline{hong2024metagpt}; \citeonline{qian2024chatdev};
+\citeonline{wu2023autogen}).
+
+O ganho de velocidade é evidente; o ganho de qualidade é condicional. Um agente
+que recebe um pedido vago produz código plausível, mas plausibilidade não é
+corretude. Quando não existe especificação prévia, não há como decidir se o que
+foi entregue é o que foi pedido; quando não existem critérios de aceitação, não
+há como demonstrar que o pedido foi atendido; e quando não há registro de
+evidência, a conclusão depende de confiança, não de verificação. A engenharia de
+software já conhecia esse problema: a distinção entre verificação e validação e a
+necessidade de critérios objetivos foram formalizadas há décadas
+(\citeonline{boehm1984}), e a especificação de requisitos permanece sendo a
+atividade com maior impacto sobre o custo final do produto
+(\citeonline{sommerville2019}; \citeonline{pressman2016}).
+
+\section{Problema de engenharia}
+\label{sec:problema}
+
+O problema investigado é:
+
+\begin{citacao}
+	Como estruturar um processo de desenvolvimento assistido por agentes de
+	inteligência artificial de modo que cada entrega seja (i) rastreável a um
+	requisito, (ii) verificável por um critério de aceitação e (iii) sustentada
+	por evidência reproduzível?
+\end{citacao}
+
+O problema se decompõe em três dificuldades práticas. A primeira é de natureza
+processual: agentes tendem a responder ao pedido mais recente, e não ao contrato
+acumulado, de modo que sem um artefato de estado persistente o escopo se degrada
+ao longo da execução. A segunda é de natureza epistemológica: a saída de um
+agente é texto plausível, e plausibilidade não é evidência; é necessário
+distinguir o que foi afirmado do que foi demonstrado. A terceira é de natureza
+econômica: quanto maior o volume de contexto carregado, maior o custo e maior a
+probabilidade de o agente tratar informação obsoleta como atual.
+
+\section{Justificativa}
+\label{sec:justificativa}
+
+A relevância do estudo se sustenta em três argumentos.
+
+\textbf{Argumento de risco.} As práticas que reduzem risco de regressão em
+software --- integração contínua, testes automatizados, releases frequentes e
+pequenas --- estão associadas a melhor desempenho organizacional
+(\citeonline{humble2010}; \citeonline{forsgren2018}). Um processo que aceita
+código gerado por agente sem passar pelos mesmos portões de qualidade importa
+risco para dentro do produto.
+
+\textbf{Argumento de auditabilidade.} Em domínios regulados ou críticos, a
+pergunta relevante não é apenas se o software funciona, mas quem decidiu o quê,
+com base em qual requisito e com qual evidência. A rastreabilidade é um requisito
+de engenharia, não um subproduto (\citeonline{iso29148}).
+
+\textbf{Argumento de reprodutibilidade.} Se duas execuções do mesmo pedido
+produzem resultados diferentes e não existe especificação, o resultado não é
+comparável nem acumulável. Sem artefatos congelados, o conhecimento produzido em
+uma sessão se perde na seguinte.
+
+Além disso, a literatura sobre agentes LLM aplicados à engenharia de software
+concentra-se majoritariamente na geração de código
+(\citeonline{hong2024metagpt}; \citeonline{qian2024chatdev}). O presente trabalho
+desloca o foco da geração para o \textit{controle}: quais artefatos, portões e
+condições de parada tornam a geração auditável.
+
+\section{Hipótese}
+\label{sec:hipotese}
+
+A hipótese de trabalho é:
+
+\begin{citacao}
+	Um processo que obriga a especificação prévia com requisitos identificados,
+	critérios de aceitação testáveis e evidência registrada produz entregas
+	verificáveis por terceiros sem acesso ao histórico da conversa, ao custo de
+	maior esforço documental.
+\end{citacao}
+
+A hipótese é falseável de duas maneiras. Primeiro, se algum critério de aceitação
+não puder ser verificado sem consultar o autor, a rastreabilidade proposta
+falhou. Segundo, se a evidência registrada não puder ser reproduzida a partir dos
+artefatos versionados, o processo não é reprodutível. Ambos os testes foram
+aplicados neste trabalho, e os resultados estão no Capítulo~\ref{cap:resultados}.
+
+\section{Objetivos}
+\label{sec:objetivos}
+
+\subsection{Objetivo geral}
+\label{subsec:objetivo-geral}
+
+Definir, aplicar e avaliar um processo de desenvolvimento orientado por
+especificações (\textit{spec-driven development} --- SDD) executado por agentes
+de inteligência artificial, utilizando como estudo de caso a construção de um
+jogo digital completo entregue em artefato único.
+
+\subsection{Objetivos específicos}
+\label{subsec:objetivos-especificos}
+
+\begin{quadro}[htb]
+	\caption{Objetivos específicos e critério de sucesso}
+	\label{qua:objetivos}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{1.1cm} X p{3.4cm}@{}}
+		\toprule
+		\textbf{ID} & \textbf{Objetivo específico} & \textbf{Critério de sucesso} \\
+		\midrule
+		OE-1 & Projetar o framework de agentes, instruções e artefatos de controle. & Framework descrito e versionado no repositório. \\
+		\addlinespace
+		OE-2 & Especificar formalmente o sistema-alvo com requisitos e critérios de aceitação verificáveis. & Todo requisito com identificador único. \\
+		\addlinespace
+		OE-3 & Registrar as decisões arquiteturais do alvo com alternativas descartadas. & Cada decisão com justificativa e alternativa rejeitada. \\
+		\addlinespace
+		OE-4 & Implementar o alvo sob as restrições especificadas. & Artefato único, sem dependências externas. \\
+		\addlinespace
+		OE-5 & Verificar cada critério de aceitação com evidência empírica. & Um resultado observável por critério. \\
+		\addlinespace
+		OE-6 & Avaliar o processo, suas limitações e ameaças à validade. & Ameaças classificadas e dados ausentes marcados. \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026).}
+\end{quadro}
+
+\section{Delimitação do escopo}
+\label{sec:delimitacao}
+
+\textbf{Dentro do escopo:} o processo de desenvolvimento, sua especificação,
+sua aplicação a um sistema-alvo e a verificação empírica do alvo.
+
+\textbf{Fora do escopo:} o treinamento ou a avaliação comparativa de modelos de
+linguagem; a medição de custo financeiro por execução; a avaliação de usabilidade
+com usuários humanos; e a comparação experimental contra grupo de controle, que
+exigiria um segundo desenvolvimento paralelo do mesmo alvo.
+
+Registra-se ainda uma delimitação factual relevante. O repositório onde o
+trabalho foi conduzido contém a descrição de um sistema embarcado de controle
+térmico, sem código, medição ou resultado correspondente. Como não há evidência
+empírica desse sistema, ele não é objeto deste estudo; o estudo de caso é o
+produto efetivamente implementado e verificado. Essa inconsistência documental
+está registrada em \texttt{MONOGRAFIA\_PENDENCIAS.md} (P-26).
+
+\section{Visão resumida do método}
+\label{sec:metodo-resumido}
+
+O trabalho é um estudo de caso único, de natureza aplicada, com abordagem
+qualitativa predominante e componentes quantitativos pontuais
+(\citeonline{yin2018}; \citeonline{runeson2009}). O procedimento teve quatro
+etapas: (i) projeto do framework de agentes a partir das lacunas identificadas
+em uma avaliação crítica prévia do material de origem; (ii) especificação do
+alvo com requisitos funcionais, não funcionais e critérios de aceitação;
+(iii) implementação sob restrições declaradas; e (iv) verificação empírica em
+navegador, com inspeção estática e automação. O detalhamento está no
+Capítulo~\ref{cap:metodos}.
+
+\section{Organização do trabalho}
+\label{sec:organizacao}
+
+O Capítulo~\ref{cap:fundamentacao} apresenta a fundamentação teórica em
+engenharia de software e agentes de inteligência artificial. O
+Capítulo~\ref{cap:relacionados} compara trabalhos correlatos. O
+Capítulo~\ref{cap:metodos} descreve materiais e métodos, incluindo ameaças à
+validade. O Capítulo~\ref{cap:framework} detalha o framework SDD agêntico
+proposto. O Capítulo~\ref{cap:especificacao} apresenta a especificação do
+sistema-alvo. O Capítulo~\ref{cap:implementacao} descreve a implementação e suas
+decisões arquiteturais. O Capítulo~\ref{cap:resultados} reporta experimentos e
+resultados. O Capítulo~\ref{cap:discussao} discute os achados e as limitações. O
+Capítulo~\ref{cap:conclusao} conclui e indica trabalhos futuros.

@@ -1,0 +1,16 @@
+%%{init: {"theme":"neutral"}}%%
+%% DG-06 - Algoritmo de um passo de simulacao
+%% Corresponde a Figura 8 do capitulo 7 (fig-tick.tex)
+flowchart TD
+    A["1. Aplicar a proxima direcao valida da fila"] --> B["2. Calcular a nova cabeca"]
+    B --> C{"cabeca fora da grade?"}
+    C -->|"sim"| Z1["Encerrar partida - colisao com borda"]
+    C -->|"nao"| D["3. Verificar se alcancou o alvo"]
+    D --> E["4. Se nao cresceu: remover a cauda"]
+    E --> F{"cabeca em celula do corpo?"}
+    F -->|"sim"| Z2["Encerrar partida - autocolisao"]
+    F -->|"nao"| G["5. Inserir a nova cabeca"]
+    G --> H["6. Se cresceu: somar pontos,<br/>reduzir intervalo, sortear novo alvo"]
+    H --> I{"Sorteio encontrou<br/>celula livre?"}
+    I -->|"nao"| Z3["Vitoria - estado won"]
+    I -->|"sim"| J["Fim do passo"]

@@ -1,0 +1,271 @@
+%% =====================================================================
+%%  CAPITULO 9 - DISCUSSAO
+%% =====================================================================
+
+\chapter{Discussão}
+\label{cap:discussao}
+
+Este capítulo interpreta os resultados, confronta-os com o problema e a
+hipótese, identifica as lacunas que a própria verificação revelou e retoma as
+ameaças à validade. A seção final discute em que medida os achados são
+generalizáveis.
+
+\section{Retomada do problema e da hipótese}
+\label{sec:disc-problema}
+
+O problema enunciado na Seção~\ref{sec:problema} tinha três componentes:
+rastreabilidade a requisito, verificabilidade por critério e sustentação por
+evidência reproduzível. Os três foram examinados, com resultados desiguais.
+
+A \textbf{verificabilidade por critério} foi o componente mais bem-sucedido. Os
+doze critérios declarados foram satisfeitos, e cada um foi verificado por
+observação externa, sem consultar o autor e sem instrumentar o produto. A
+consequência relevante é metodológica: como os critérios foram redigidos de forma
+que um observador externo possa decidir o resultado, verificar deixou de exigir
+acesso ao raciocínio de quem implementou.
+
+A \textbf{sustentação por evidência reproduzível} também se confirmou. A
+inspeção estática é reproduzível por comando; a execução observada é reproduzível
+por automação; a medição de intervalo é reproduzível por agente de teste que
+observa a superfície de desenho. Nenhuma conclusão deste trabalho depende de
+lembrança ou de registro narrativo.
+
+A \textbf{rastreabilidade a requisito} foi o componente que falhou parcialmente.
+A cobertura de 54,2\,\% significa que quase metade dos requisitos não possui
+critério de aceitação associado. A cadeia requisito--critério--evidência existe,
+mas apenas para parte do conjunto especificado. A hipótese, portanto, é
+\emph{parcialmente} sustentada: o processo produz entregas verificáveis, mas não
+garante que a verificabilidade cubra a especificação inteira.
+
+\section{A assimetria entre requisitos funcionais e não funcionais}
+\label{sec:disc-assimetria}
+
+O achado mais relevante do trabalho é a diferença de cobertura entre as classes
+de requisito: 73,3\,\% para funcionais e 22,2\,\% para não funcionais. A
+magnitude da diferença descarta a explicação por acaso.
+
+A explicação é estrutural. Um requisito funcional descreve um comportamento
+observável, e comportamento observável tem forma de teste quase natural: dado um
+estado, ao executar uma ação, espera-se uma consequência. Requisito não funcional
+enunciado como atributo --- ``layout moderno e limpo'', ``tema escuro de estilo
+retro-arcade'' --- não descreve consequência observável; descreve uma
+característica percebida. Sem um passo intermediário de conversão em métrica, ele
+não gera critério, e sem critério não entra em portão algum.
+
+Esse passo intermediário não é trivial e não foi executado. A
+Tabela~\ref{tab:mapeamento-iso} mostra o sintoma: três dos nove requisitos não
+funcionais recaem em características de qualidade para as quais nenhuma métrica
+foi declarada. O requisito existe, a característica de qualidade foi
+identificada, mas o elo que os liga a um teste não foi construído.
+
+A conclusão prática é que a exigência de critério de aceitação deve ser
+\emph{universal}, não apenas aplicada aos requisitos que naturalmente se
+convertem em teste. Um requisito sem critério é um requisito não verificável, e um
+requisito não verificável é indistinguível de uma intenção. O framework precisa
+de um portão que rejeite requisito órfão de critério, ou que force sua
+conversão em métrica ou seu rebaixamento explícito a diretriz não verificável.
+
+\subsection{A lacuna do portão de intenção}
+\label{sec:disc-lacunas-do-gate}
+
+O portão G1 exige que existam um requisito identificado e um critério de
+aceitação antes do avanço para a implementação. A redação do portão, entretanto,
+é satisfeita pela existência de \emph{ao menos} um par requisito--critério. Ela
+não impõe que todo requisito declarado possua critério correspondente.
+
+A consequência é assimétrica e foi medida: o portão deixa passar uma
+especificação em que onze requisitos funcionais e dois não funcionais têm
+critério, e dez requisitos não têm nenhum. A verificação subsequente de doze
+critérios produz a impressão de cobertura completa, porque todos os critérios
+declarados foram satisfeitos. A lacuna permanece invisível até que alguém
+confronte explicitamente a contagem de requisitos com a contagem de critérios ---
+procedimento que, no caso deste trabalho, só foi executado na etapa de
+consolidação da matriz de rastreabilidade.
+
+Duas correções são possíveis, e elas não são equivalentes. A primeira é tornar o
+portão mais estrito: bloquear o avanço enquanto houver requisito sem critério. A
+segunda é tornar o portão mais informativo: exigir que todo requisito sem
+critério seja explicitamente rebaixado a ``diretriz não verificável neste
+ciclo''. A segunda é preferível, porque existem requisitos legitimamente não
+verificáveis por teste automatizado --- aparência visual, por exemplo --- e
+bloquear a implementação por causa deles tornaria o processo inaplicável. O
+rebaixamento explícito resolve o problema real, que não é a ausência de teste, e
+sim a ausência de \emph{consciência} da ausência de teste.
+
+Formalizando: seja $R$ o conjunto de requisitos e $R_c \subseteq R$ o subconjunto
+com critério de aceitação dedicado. O portão atual exige $|R_c| \geq 1$. A
+correção proposta exige que $R \setminus R_c$ esteja declarado como conjunto de
+diretrizes não verificáveis neste ciclo, e não que $R \setminus R_c = \varnothing$.
+Neste estudo de caso, $|R| = 24$ e $|R_c| = 13$, de modo que
+$|R \setminus R_c| = 11$: dez requisitos sem critério algum e um coberto apenas
+parcialmente. Esse é o conjunto que hoje não está declarado como não verificável.
+
+\section{Valor dos casos de borda e das decisões arquiteturais}
+\label{sec:disc-bordas}
+
+Dois resultados empíricos sustentam a tese de que declarar casos de borda e
+registrar decisões não é cerimônia documental.
+
+O primeiro é o estado de vitória. O caso de borda ``grade completamente
+ocupada'' foi declarado na especificação antes da implementação. Ao implementar
+o sorteio do alvo, tornou-se evidente que essa situação exigia um estado de jogo
+que não existia na modelagem inicial. O caso de borda \emph{criou} um estado
+(Figura~\ref{fig:fsm}). Sem ele, o sorteio retornaria valor inválido em uma
+situação alcançável, e o defeito só apareceria quando alguém completasse o
+tabuleiro --- provavelmente nunca, em uso normal.
+
+O segundo é o comportamento da cauda. O caso de borda~5 e a decisão ADR-004
+combinam-se para produzir um comportamento observável e não intuitivo: girando
+em quadrado com comprimento quatro o jogador sobrevive; com comprimento cinco,
+colide consigo mesmo (Seção~\ref{sec:res-extras}, item~4). Dois implementadores
+igualmente competentes, partindo da mesma especificação de requisitos e sem o
+registro de ADR-004, produziriam comportamentos diferentes. A decisão
+arquitetural é o que torna o resultado determinístico. Isso responde ao argumento
+de que registrar decisões é documentação supérflua: nesse caso, o registro
+elimina uma ambiguidade real de implementação.
+
+\section{Custo do processo}
+\label{sec:disc-custo}
+
+O processo tem custo, e ele deve ser declarado. A disciplina exigida produziu
+cinco documentos de especificação e projeto antes da primeira linha de código:
+especificação, decisões arquiteturais, tarefas, evidências e controle de estado.
+Para um produto de 1\,063 linhas, essa proporção é alta.
+
+Três observações qualificam o custo.
+
+\textbf{O custo é antecipado, não adicionado.} A declaração prévia de casos de
+borda evitou defeitos que seriam descobertos tardiamente, quando o custo de
+correção é maior (Equação~(\ref{eq:custo-fase})). O estado de vitória é o exemplo
+concreto: descobri-lo em produção custaria mais do que especificá-lo.
+
+\textbf{O custo é amortizado na verificação.} Critérios redigidos antes da
+implementação produziram verificação executável por terceiros. Critérios
+redigidos depois teriam exigido reinterpretação do autor a cada verificação.
+
+\textbf{O custo é proporcional ao risco, não ao tamanho.} O fluxo adaptativo
+(Seção~\ref{sec:fw-fluxo}) existe precisamente para evitar aplicar a cadeia
+completa a alterações pequenas. Neste estudo de caso, a trilha aplicada foi a de
+recurso médio com elevação a amplo, decisão coerente com o fato de o alvo ter
+sido especificado do zero.
+
+Não foi possível quantificar o custo em tempo ou em tokens, porque a execução não
+foi instrumentada (P-12, P-13). A avaliação acima é qualitativa e não substitui a
+medição ausente.
+
+\section{Ameaças à validade revisitadas}
+\label{sec:disc-ameacas}
+
+As sete ameaças do Quadro~\ref{qua:ameacas} são retomadas aqui quanto ao efeito
+sobre as conclusões.
+
+\textbf{AV-1, ausência de grupo de controle, é a ameaça mais séria.} Sem um grupo
+que executasse o mesmo alvo sem o processo, não é possível atribuir os doze
+critérios satisfeitos ao processo. Uma explicação alternativa é que o alvo é
+simples e que um implementador competente obteria o mesmo resultado sem
+especificação formal. O trabalho não refuta essa alternativa. O que ele
+demonstra é mais modesto e ainda assim relevante: que o processo torna o
+resultado \emph{verificável por terceiros sem acesso ao histórico}, propriedade
+que não foi medida no grupo alternativo justamente porque esse grupo não existiu.
+
+\textbf{AV-6, amostra única, limita a medição de velocidade.} O intervalo medido
+é coerente com o previsto, mas coerência em uma execução não é confirmação
+estatística. Um resultado mais forte exigiria repetição e intervalo de confiança.
+
+\textbf{AV-3, autoria coincidente, é mitigada pela natureza da evidência.} A
+verificação foi produzida por execução observada e inspeção textual, não por
+julgamento do autor. Um terceiro pode repetir os comandos e obter os mesmos
+resultados. Isso não elimina o risco de confirmação na escolha dos critérios, mas
+remove o risco de confirmação na produção da evidência.
+
+\textbf{AV-4, a métrica de rastreabilidade mede existência e não qualidade.} Um
+critério mal redigido contaria como cobertura. A ameaça é real e reduz o valor do
+número de 54,2\,\%. Ela não afeta, entretanto, o achado principal, que é a
+\emph{assimetria} entre as classes: se critérios ruins inflassem artificialmente
+a cobertura, a cobertura de requisitos não funcionais seria ainda menor, e a
+assimetria, mais acentuada.
+
+\textbf{AV-2 e AV-5} permanecem nos limites declarados: generalização restrita a
+domínios de complexidade comparável e viés positivo nos valores absolutos de
+intervalo.
+
+\section{Generalização}
+\label{sec:disc-generalizacao}
+
+A generalização de um estudo de caso único é analítica, não estatística
+(\citeonline{yin2018}): o resultado não se estende a uma população, mas
+confirma ou refuta proposições teóricas. Três proposições recebem suporte
+limitado dos dados.
+
+\textbf{Proposição 1.} Requisitos funcionais convertem-se em critério de
+aceitação com mais facilidade que requisitos não funcionais. Sustentada por
+evidência direta neste caso (73,3\,\% contra 22,2\,\%). A proposição é plausível
+em qualquer domínio de software; a magnitude específica não é transferível.
+
+\textbf{Proposição 2.} Declarar casos de borda antes da implementação altera o
+projeto, não apenas os testes. Sustentada por evidência direta (o estado de
+vitória). A proposição decorre diretamente dos dados e não depende do domínio.
+
+\textbf{Proposição 3.} Evidência produzida por observação externa ao produto é
+reproduzível por terceiros sem instrumentar o código. Sustentada pela construção
+metodológica deste trabalho, não por comparação.
+
+\textbf{O que não é transferível.} O domínio do estudo de caso tem estado
+discreto, regras determinísticas e ausência de concorrência e de integração
+externa. Em domínios com estado contínuo, tempo real estrito, sistema distribuído
+ou dependência de hardware, a conversão de requisitos em critério é
+substancialmente mais difícil, e o processo exigiria níveis de evidência que este
+trabalho não alcança. O próprio material de origem do framework previa quatro
+níveis de evidência --- teste em máquina hospedeira, simulação, bancada e
+integração com hardware --- e este estudo permaneceu no nível mais baixo. A
+aplicação a domínios de nível mais alto permanece como questão aberta.
+
+\section{Comparação com a literatura}
+\label{sec:disc-literatura}
+
+Três convergências merecem registro.
+
+A ênfase de \citeonline{boehm1984} na verificação precoce de requisitos e projeto
+encontra apoio no achado da Seção~\ref{sec:disc-bordas}: a declaração prévia de
+casos de borda alterou a modelagem de estados antes que houvesse código.
+
+A tese de \citeonline{adzic2011} de que o exemplo concreto serve
+simultaneamente como requisito, teste e documentação é confirmada pelo formato
+dos critérios usados neste trabalho, redigidos em forma de situação, ação e
+consequência esperada.
+
+A observação de \citeonline{myers2011} de que um caso de teste que não pode
+falhar não tem valor é o critério pelo qual se identifica a lacuna dos requisitos
+não funcionais: os sete requisitos sem critério não possuem caso de teste capaz de
+reprová-los, e por isso não entraram em nenhum portão.
+
+Em relação a \citeonline{hong2024metagpt}, \citeonline{qian2024chatdev} e
+\citeonline{wu2023autogen}, a diferença de ênfase apontada no
+Capítulo~\ref{cap:relacionados} é confirmada por este estudo: aqueles trabalhos
+maximizam a qualidade do artefato gerado pela coordenação de papéis; este trabalho
+deslocou o foco para os artefatos que tornam a geração auditável. Os dois enfoques
+são complementares, não concorrentes.
+
+\section{Implicações práticas}
+\label{sec:disc-implicacoes}
+
+Quatro implicações decorrem dos resultados.
+
+\textbf{Para o processo.} A exigência de critério deve ser universal e verificada
+por portão. Requisito sem critério deve ser bloqueado ou explicitamente
+rebaixado a diretriz não verificável.
+
+\textbf{Para a especificação.} Requisito não funcional deve ser redigido já com
+sua métrica, ou com a declaração explícita de que não é verificável neste ciclo.
+A declaração explícita é preferível à omissão, porque torna a lacuna visível.
+
+\textbf{Para a verificação.} Observar o produto por fora, sem instrumentá-lo,
+resolve o conflito entre testar e alterar o objeto de teste. Em interfaces
+gráficas discretas, a amostragem da superfície de desenho é uma técnica viável e
+de baixo custo.
+
+\textbf{Para a condução por agentes.} As condições de parada cumpriram função
+real: a divergência entre a documentação do repositório e seu conteúdo efetivo
+foi detectada e registrada em vez de resolvida por suposição silenciosa. Sem uma
+condição de parada explícita, a resposta mais provável teria sido produzir
+documentação sobre um sistema inexistente.

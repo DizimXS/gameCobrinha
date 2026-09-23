@@ -1,0 +1,103 @@
+%% =====================================================================
+%%  APENDICE A - MATRIZ DE RASTREABILIDADE COMPLETA
+%% =====================================================================
+
+\chapter{Matriz de rastreabilidade completa}
+\label{ap:rastreabilidade}
+
+Este apêndice apresenta a matriz de rastreabilidade do sistema-alvo no formato
+de sete colunas definido no framework: requisito, critério, tarefa, código,
+teste, evidência e estado. A matriz é a fonte primária da
+Tabela~\ref{tab:cobertura-req} e da Tabela~\ref{tab:ca-resultados}.
+
+Consulte o Quadro~\ref{qua:fr}, o Quadro~\ref{qua:nfr} e o Quadro~\ref{qua:ca}
+para o texto integral de cada identificador.
+
+{\footnotesize
+	\begin{longtable}{@{}p{1.5cm} p{1.4cm} p{1.4cm} p{1.7cm} p{1.7cm} p{1.7cm} p{1.4cm}@{}}
+		\caption{Matriz de rastreabilidade requisito--critério--tarefa--código--teste--evidência}
+		\label{tab:matriz-rastreabilidade} \\
+		\toprule
+		\textbf{Requisito} & \textbf{Critério} & \textbf{Tarefa} & \textbf{Código} & \textbf{Teste} & \textbf{Evidência} & \textbf{Estado} \\
+		\midrule
+		\endfirsthead
+		\toprule
+		\textbf{Requisito} & \textbf{Critério} & \textbf{Tarefa} & \textbf{Código} & \textbf{Teste} & \textbf{Evidência} & \textbf{Estado} \\
+		\midrule
+		\endhead
+		\midrule
+		\multicolumn{7}{r@{}}{\footnotesize continua na próxima página} \\
+		\endfoot
+		\bottomrule
+		\endlastfoot
+		FR-001   & CA-001 & T-001 & estrutura & inspeção & E-01, E-11 & PASS \\
+		\addlinespace
+		FR-002   & --- & T-009 & render & --- & E-01 & \textbf{SEM CA} \\
+		\addlinespace
+		FR-003   & CA-008 & T-010 & entrada & execução & E-18 & PASS \\
+		\addlinespace
+		FR-004   & CA-008 & T-011 & entrada & execução & E-18 & PASS \\
+		\addlinespace
+		FR-005   & CA-002 & T-006 & fila & execução & E-04, E-12 & PASS \\
+		\addlinespace
+		FR-006   & CA-004 & T-006 & sorteio & execução & E-06, E-14 & PASS \\
+		\addlinespace
+		FR-007   & CA-003 & T-007 & passo & execução & E-13 & PASS \\
+		\addlinespace
+		FR-008   & CA-005, CA-006 & T-007 & passo & execução & E-05, E-15, E-16 & PASS \\
+		\addlinespace
+		FR-009   & --- & T-003 & HUD & --- & E-17 & \textbf{SEM CA} \\
+		\addlinespace
+		FR-010   & CA-007 & T-005 & persistência & execução & E-07, E-17 & PASS \\
+		\addlinespace
+		FR-011   & CA-005 (parcial) & T-012 & sobreposição & execução & E-15 & PARCIAL \\
+		\addlinespace
+		FR-012   & CA-009 & T-012 & estados & execução & E-19 & PASS \\
+		\addlinespace
+		FR-013   & CA-010 & T-012 & estados & execução & E-20 & PASS \\
+		\addlinespace
+		FR-014   & --- & T-008 & laço & --- & E-03 & \textbf{SEM CA} \\
+		\addlinespace
+		FR-015   & CA-012 & T-007 & passo & medição & E-10, E-22 & PASS \\
+		\addlinespace
+		NFR-001  & CA-001 & T-001 & estrutura & inspeção & E-02, E-11 & PASS \\
+		\addlinespace
+		NFR-002  & --- & T-002 & estilo & --- & E-01 & \textbf{SEM CA} \\
+		\addlinespace
+		NFR-003  & --- & T-002 & estilo & --- & E-01 & \textbf{SEM CA} \\
+		\addlinespace
+		NFR-004  & --- & T-002 & estilo & --- & E-08 & \textbf{SEM CA} \\
+		\addlinespace
+		NFR-005  & --- & T-013 & todo & --- & E-01 & \textbf{SEM CA} \\
+		\addlinespace
+		NFR-006  & --- & T-009 & redimensionamento & --- & E-08 & \textbf{SEM CA} \\
+		\addlinespace
+		NFR-007  & --- & T-010 & entrada & --- & E-04 & \textbf{SEM CA} \\
+		\addlinespace
+		NFR-008  & CA-011 & T-014 & todo & execução & E-21 & PASS \\
+		\addlinespace
+		NFR-009  & --- & T-002 & estilo & --- & E-09 & \textbf{SEM CA} \\
+	\end{longtable}
+}
+
+\section{Leitura da matriz}
+\label{ap:leitura}
+
+A coluna \textbf{Estado} admite três valores. \texttt{PASS} indica critério
+verificado com evidência observada. \textbf{SEM CA} indica requisito sem critério
+de aceitação associado, e portanto sem possibilidade de verificação.
+\texttt{PARCIAL} indica requisito coberto apenas em parte pelo critério
+associado.
+
+Dez requisitos aparecem como \textbf{SEM CA} --- \texttt{FR-002}, \texttt{FR-009},
+\texttt{FR-014}, \texttt{NFR-002}, \texttt{NFR-003}, \texttt{NFR-004},
+\texttt{NFR-005}, \texttt{NFR-006}, \texttt{NFR-007} e \texttt{NFR-009} --- e um
+aparece como \texttt{PARCIAL} (\texttt{FR-011}). Os treze requisitos restantes
+possuem critério dedicado. A contagem sobre o conjunto total de 24 requisitos
+produz a cobertura de 54,2\,\% reportada na
+Seção~\ref{sec:res-rastreabilidade}.
+
+A matriz é apresentada sem correção retroativa. Corrigir a especificação agora,
+acrescentando critérios aos requisitos descobertos, invalidaria o relato da
+Seção~\ref{sec:res-rastreabilidade}: o achado depende de a lacuna ter existido
+durante a execução. A correção proposta está na Seção~\ref{sec:conc-futuros}.

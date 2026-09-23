@@ -1,0 +1,43 @@
+%% ---------------------------------------------------------------------
+%%  FIGURA - Pipeline SDD com portoes de verificacao (DG-03)
+%% ---------------------------------------------------------------------
+\begin{figure}[htb]
+	\caption{Pipeline SDD com os seis portões de verificação}
+	\label{fig:pipeline-gates}
+	\centering
+	\begin{tikzpicture}[
+			font=\footnotesize,
+			etapa/.style={draw, rounded corners=2pt, minimum width=1.95cm, minimum height=0.9cm, align=center, fill=black!4},
+			portao/.style={draw, fill=black!12, rounded corners=6pt, minimum width=0.85cm, minimum height=0.5cm, font=\scriptsize, align=center},
+			>=Stealth,
+			fl/.style={->, thick}
+		]
+
+		\node[etapa] (e1) at (0,0) {Estado\\ do repositório};
+		\node[portao, right=0.35cm of e1] (g0) {G0};
+		\node[etapa, right=0.35cm of g0] (e2) {Intenção\\ e requisito};
+		\node[portao, right=0.35cm of e2] (g1) {G1};
+		\node[etapa, right=0.35cm of g1] (e3) {Projeto e\\ decisões};
+		\node[portao, right=0.35cm of e3] (g2) {G2};
+		\node[etapa, below=1.1cm of e3] (e4) {Implementação\\ mínima};
+		\node[portao, left=0.35cm of e4] (g3) {G3};
+		\node[etapa, left=0.35cm of g3] (e5) {Evidência:\\ build e testes};
+		\node[portao, left=0.35cm of e5] (g4) {G4};
+		\node[etapa, left=0.35cm of g4] (e6) {Encerramento\\ e estado};
+		\node[portao, left=0.35cm of e6] (g5) {G5};
+
+		\draw[fl] (e1) -- (g0);
+		\draw[fl] (g0) -- (e2);
+		\draw[fl] (e2) -- (g1);
+		\draw[fl] (g1) -- (e3);
+		\draw[fl] (e3) -- (g2);
+		\draw[fl] (g2) -- (e4);
+		\draw[fl] (e4) -- (g3);
+		\draw[fl] (g3) -- (e5);
+		\draw[fl] (e5) -- (g4);
+		\draw[fl] (g4) -- (e6);
+		\draw[fl] (e6) -- (g5);
+	\end{tikzpicture}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{docs/agentic/WORKFLOW.md}.
+	O portão G2 é aplicado apenas quando a complexidade exige decisão arquitetural.}
+\end{figure}

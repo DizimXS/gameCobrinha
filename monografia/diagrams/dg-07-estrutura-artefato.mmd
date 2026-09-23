@@ -1,0 +1,21 @@
+%%{init: {"theme":"neutral"}}%%
+%% DG-07 - Estrutura do artefato unico
+%% Corresponde a Figura 5 do capitulo 7 (fig-artefato.tex)
+flowchart TB
+    subgraph ARQ["index.html - arquivo unico, 1063 linhas, 32305 bytes"]
+        direction TB
+        H["head - metadados, viewport, titulo"]
+        S["style - variaveis de tema, layout, HUD, D-Pad, sobreposicao"]
+        Bd["body - titulo, placar, tela com desenho, controles"]
+        Js["script - logica do jogo em 13 secoes"]
+    end
+
+    H --> S --> Bd --> Js
+
+    subgraph SEC["Secoes do script"]
+        direction LR
+        S1["1 Configuracao"] ~~~ S2["2 Referencias de DOM"] ~~~ S3["3 Estado"] ~~~ S4["4 Utilitarios"]
+        S5["5 Persistencia"] ~~~ S6["6 Regras puras"] ~~~ S7["7 Fluxo de partida"]
+        S8["8 Passo de simulacao"] ~~~ S9["9 Renderizacao"] ~~~ S10["10 Laco de animacao"]
+        S11["11 Interface"] ~~~ S12["12 Entrada"] ~~~ S13["13 Inicializacao"]
+    end

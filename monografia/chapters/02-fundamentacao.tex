@@ -1,0 +1,327 @@
+%% =====================================================================
+%%  CAPITULO 2 - FUNDAMENTACAO TEORICA
+%% =====================================================================
+
+\chapter{Fundamentação Teórica}
+\label{cap:fundamentacao}
+
+Este capítulo estabelece os conceitos necessários para compreender o problema e a
+solução proposta. A primeira parte trata de engenharia de software --- ciclo de
+vida, requisitos, verificação e validação, testes e qualidade. A segunda trata de
+agentes de inteligência artificial --- modelos de linguagem, agentes autônomos e
+sistemas multiagente. A terceira trata do domínio de aplicação. A seção final
+sintetiza as duas áreas e identifica a lacuna que o trabalho aborda.
+
+\section{Engenharia de software e ciclo de vida}
+\label{sec:ciclo-de-vida}
+
+Engenharia de software é a aplicação de abordagem sistemática, disciplinada e
+quantificável ao desenvolvimento, operação e manutenção de software
+(\citeonline{sommerville2019}). A palavra decisiva é \emph{sistemática}: a
+diferença entre programar e engenhar software está na existência de um processo
+que torne o resultado previsível e inspecionável.
+
+Processos de desenvolvimento organizam-se tradicionalmente em fases ---
+elicitação, análise, projeto, implementação, teste, implantação e manutenção ---
+ainda que a execução real raramente seja estritamente sequencial
+(\citeonline{pressman2016}). Modelos incrementais e iterativos reconhecem que
+requisitos mudam e que a retroalimentação é inevitável. O que não se altera entre
+modelos é a assimetria de custo: quanto mais tarde um defeito de requisito é
+descoberto, maior o custo de corrigi-lo. Essa assimetria pode ser formalizada
+como uma progressão geométrica sobre as fases do ciclo de vida:
+
+\begin{equation}
+	C(f) = C_0 \cdot \alpha^{\,f-1}, \qquad \alpha > 1
+	\label{eq:custo-fase}
+\end{equation}
+
+\noindent em que $C(f)$ é o custo de correção quando o defeito é detectado na
+fase $f$, $C_0$ é o custo de correção na fase de requisitos e $\alpha$ é o fator
+de ampliação por fase. \textbf{O parâmetro $\alpha$ depende do domínio e não foi
+medido neste trabalho}; a equação serve para formalizar a direção do efeito, não
+para quantificá-lo. A implicação prática é direta: investir em especificação é
+investir em reduzir $f$.
+
+\section{Especificação de requisitos}
+\label{sec:requisitos}
+
+A norma ISO/IEC/IEEE 29148 define os processos e os produtos da engenharia de
+requisitos, incluindo as características que tornam um requisito verificável
+(\citeonline{iso29148}). Um requisito bem formado é singular, não ambíguo,
+completo, consistente, factível, necessário e --- sobretudo para os fins deste
+trabalho --- \emph{verificável}: deve existir um procedimento finito e objetivo
+capaz de decidir se o requisito foi atendido.
+
+A literatura separa requisitos em duas classes. Requisitos funcionais descrevem o
+que o sistema deve fazer. Requisitos não funcionais descrevem como o sistema deve
+se comportar em atributos de qualidade --- desempenho, usabilidade, segurança,
+manutenibilidade (\citeonline{sommerville2019}). Requisitos não funcionais são
+notoriamente mais difíceis de verificar, porque frequentemente são enunciados
+como adjetivos. A prática recomendada é convertê-los em métricas: em vez de
+``deve ser rápido'', ``o intervalo entre passos de simulação não deve exceder
+$t_{\max}$''.
+
+Uma especificação útil também precisa declarar suas \emph{restrições} ---
+decisões já tomadas que o projeto não pode contradizer --- e seus \emph{casos de
+borda}, isto é, as entradas ou estados limítrofes que costumam revelar defeitos.
+Este trabalho adota a convenção de nomear cada elemento com identificador estável
+(\texttt{FR-XXX}, \texttt{NFR-XXX}, \texttt{CA-XXX}), prática que viabiliza a
+rastreabilidade automática entre artefatos.
+
+\section{Verificação e validação}
+\label{sec:vv}
+
+Verificação e validação são atividades distintas, distinção formalizada por
+\citeonline{boehm1984}. A verificação responde à pergunta ``o produto foi
+construído corretamente?'', isto é, se ele está em conformidade com a
+especificação. A validação responde à pergunta ``foi construído o produto
+correto?'', isto é, se ele satisfaz a necessidade que motivou o projeto.
+
+A distinção tem consequência prática imediata para este trabalho. A verificação
+de doze critérios de aceitação demonstra conformidade com a especificação; ela
+\emph{não} demonstra que o produto é útil, agradável ou que o público-alvo o
+adotaria. Afirmações sobre adequação ao uso exigiriam validação com usuários, que
+está fora do escopo declarado na Seção~\ref{sec:delimitacao}.
+
+\citeonline{boehm1984} argumenta ainda que a verificação deve incidir
+preferencialmente sobre os artefatos iniciais --- requisitos e projeto --- porque
+são eles que determinam a maior parte do custo. Verificar apenas código é
+verificar tarde.
+
+\section{Testes e critérios de aceitação}
+\label{sec:testes}
+
+Diversas estratégias de teste coexistem. \citeonline{myers2011} enfatiza que o
+objetivo do teste é \emph{encontrar defeitos}, não confirmar que o sistema
+funciona, e que um caso de teste que não pode falhar não tem valor. Daí o
+princípio de projetar casos a partir de condições limítrofes e de entradas
+inválidas.
+
+Duas práticas são diretamente relevantes para o processo proposto. A primeira é o
+desenvolvimento orientado por testes, que inverte a ordem habitual: o teste que
+expressa o comportamento desejado é escrito antes da implementação
+(\citeonline{beck2002tdd}). A segunda é a especificação por exemplo, que
+substitui descrições abstratas por exemplos concretos e executáveis do
+comportamento esperado (\citeonline{adzic2011}). Ambas compartilham a mesma tese:
+o critério de aceitação precisa existir antes da implementação, sob pena de se
+tornar uma racionalização posterior do que foi produzido.
+
+Neste trabalho, o critério de aceitação é o elo entre requisito e evidência. A
+cobertura de verificação é definida como:
+
+\begin{equation}
+	A = \frac{\left| \{ \mathrm{CA}_i \mid \mathrm{resultado}(\mathrm{CA}_i) = \mathrm{PASS} \} \right|}
+	         {\left| \{ \mathrm{CA}_i \} \right|}
+	\label{eq:cobertura}
+\end{equation}
+
+\noindent em que $A$ é a fração de critérios de aceitação satisfeitos. A equação
+mede conformidade com a especificação --- verificação, no sentido de
+\citeonline{boehm1984} --- e não adequação ao uso.
+
+\section{Qualidade de produto de software}
+\label{sec:qualidade}
+
+A ISO/IEC 25010 organiza a qualidade de produto em características como adequação
+funcional, eficiência de desempenho, compatibilidade, usabilidade, confiabilidade,
+segurança, manutenibilidade e portabilidade (\citeonline{iso25010}). O valor
+prático desse modelo, para este trabalho, é oferecer vocabulário para classificar
+requisitos não funcionais que, de outro modo, permaneceriam adjetivos soltos.
+
+A Tabela~\ref{tab:mapeamento-iso} mapeia os requisitos não funcionais do alvo nas
+características da norma. O mapeamento revela uma concentração: oito dos nove
+requisitos não funcionais distribuem-se em apenas três características, o que
+indica que a especificação priorizou fortemente portabilidade e adequação de
+interface, em detrimento de eficiência de desempenho e confiabilidade.
+
+\begin{table}[htb]
+	\caption{Mapeamento dos requisitos não funcionais do alvo nas características de qualidade da ISO/IEC 25010}
+	\label{tab:mapeamento-iso}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{3.6cm} X@{}}
+		\toprule
+		\textbf{Característica (ISO/IEC 25010)} & \textbf{Requisitos não funcionais do alvo} \\
+		\midrule
+		Adequação funcional & NFR-008 (ausência de erros no carregamento) \\
+		\addlinespace
+		Eficiência de desempenho & --- (nenhum requisito não funcional dedicado) \\
+		\addlinespace
+		Compatibilidade & NFR-001 (sem dependências externas) \\
+		\addlinespace
+		Usabilidade & NFR-002 (layout centralizado), NFR-003 (tema escuro), NFR-007 (entrada não bloqueante), NFR-009 (movimento reduzido) \\
+		\addlinespace
+		Confiabilidade & --- (apenas tolerância a falha de armazenamento, tratada em FR-010) \\
+		\addlinespace
+		Segurança & --- (fora do escopo: aplicação local, sem rede nem dados pessoais) \\
+		\addlinespace
+		Manutenibilidade & NFR-005 (código comentado e organizado) \\
+		\addlinespace
+		Portabilidade & NFR-004 (responsividade), NFR-006 (nitidez em telas de alta densidade) \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \citeonline{iso25010} e da especificação do alvo.}
+\end{table}
+
+A ausência de requisito não funcional dedicado a eficiência de desempenho é uma
+lacuna da especificação, não do produto: o alvo executa um laço contínuo de
+renderização e, sem meta declarada de consumo ou de latência, não há critério
+objetivo para reprová-lo nesse aspecto. Essa constatação reaparece na discussão
+(Capítulo~\ref{cap:discussao}).
+
+\section{Arquitetura e decisões de projeto}
+\label{sec:arquitetura}
+
+Arquitetura de software é o conjunto de decisões estruturais cujo custo de
+mudança é alto (\citeonline{bass2021}). Documentar decisões arquiteturais
+--- o problema enfrentado, a alternativa escolhida, as alternativas descartadas e
+a justificativa --- preserva o raciocínio que deu origem ao projeto. Sem esse
+registro, o código permanece como única fonte, e o código diz \emph{o que} foi
+feito, não \emph{por que} nem \emph{em vez do quê}.
+
+Padrões de projeto oferecem soluções nomeadas para problemas recorrentes
+(\citeonline{gamma1994}), e a separação de responsabilidades é critério central
+de qualidade estrutural. Neste trabalho, dois padrões são pertinentes: a
+separação entre atualização de estado e apresentação, que isola a lógica de
+simulação da lógica de desenho; e o uso de um objeto único de configuração, que
+centraliza constantes e evita a duplicação de valores mágicos.
+
+A integração contínua e a entrega contínua fornecem o contexto organizacional em
+que portões de verificação automatizados se inserem
+(\citeonline{humble2010}; \citeonline{forsgren2018}). O framework proposto no
+Capítulo~\ref{cap:framework} é uma adaptação desses portões para um fluxo
+executado por agentes.
+
+\section{Modelos de linguagem de grande porte}
+\label{sec:llm}
+
+A arquitetura \textit{Transformer}, baseada em mecanismos de atenção, substituiu
+as recorrências anteriores por processamento paralelo de dependências de longo
+alcance (\citeonline{vaswani2017}). Sobre essa base, modelos com centenas de
+bilhões de parâmetros demonstraram capacidade de executar tarefas a partir de
+poucos exemplos fornecidos no próprio texto de entrada, sem re-treinamento
+(\citeonline{brown2020}).
+
+A capacidade que interessa a este trabalho não é a fluência, e sim o
+\emph{raciocínio em etapas}. \citeonline{wei2022} mostraram que solicitar ao
+modelo que explicite o raciocínio intermediário melhora o desempenho em tarefas
+que exigem múltiplos passos. Isso importa porque verificação, análise de
+requisito e decomposição de tarefa são, todas, atividades de múltiplos passos.
+
+Duas limitações precisam ser declaradas, porque afetam a confiabilidade do
+processo. A primeira é a geração de conteúdo plausível e incorreto, produzido com
+o mesmo grau de confiança do conteúdo correto; é precisamente esse fenômeno que
+torna indispensável exigir evidência independente da afirmação. A segunda é a
+dependência do contexto: o comportamento do modelo é função do que está na janela
+de entrada, de modo que informação ausente, obsoleta ou contraditória produz
+saída degradada.
+
+\section{Agentes de inteligência artificial}
+\label{sec:agentes}
+
+Um agente é um sistema que percebe um ambiente e age sobre ele
+(\citeonline{russell2021}). A transposição dessa definição para modelos de
+linguagem produziu agentes capazes de intercalar raciocínio e ação, alternando
+etapas de deliberação com a execução de ferramentas e a observação do resultado
+(\citeonline{yao2023react}). A capacidade de refletir sobre o próprio erro,
+armazenando a avaliação crítica e reutilizando-a em tentativas seguintes,
+melhora o desempenho em tarefas iterativas (\citeonline{shinn2023reflexion}).
+
+Agentes introduzem dois problemas ausentes em modelos usados como meros
+geradores de texto. O primeiro é a \emph{deriva de objetivo}: um agente que pode
+escolher o próximo passo pode escolher um passo que não serve ao objetivo
+original. O segundo é a \emph{opacidade}: a sequência de decisões que levou ao
+artefato final pode não ser reconstruível. Ambos são problemas de controle, e é
+para eles que o framework do Capítulo~\ref{cap:framework} se orienta.
+
+\section{Sistemas multiagente}
+\label{sec:multiagente}
+
+Sistemas multiagente clássicos estudam coordenação, cooperação e negociação entre
+agentes autônomos (\citeonline{wooldridge2009}). Aplicada a modelos de linguagem,
+a ideia deu origem a frameworks que distribuem papéis especializados. MetaGPT
+organiza papéis análogos a uma equipe de software e representa os artefatos
+intermediários de forma estruturada (\citeonline{hong2024metagpt}). ChatDev
+modela o desenvolvimento como diálogo entre agentes em papéis de projetista,
+programador e revisor (\citeonline{qian2024chatdev}). AutoGen generaliza a
+conversação entre agentes configuráveis como primitiva de construção
+(\citeonline{wu2023autogen}).
+
+Esses trabalhos tratam principalmente da \emph{geração cooperativa}. A
+contribuição pretendida neste trabalho é complementar: trata-se de fixar os
+\emph{artefatos de controle} --- especificação, decisão, tarefa, evidência --- e
+as condições sob as quais o fluxo deve parar por falta de informação. A
+comparação detalhada está no Capítulo~\ref{cap:relacionados}.
+
+\section{Contexto, custo e disciplina documental}
+\label{sec:contexto-custo}
+
+Como o comportamento do agente é função da janela de contexto, o volume de
+documentação carregada tem custo duplo: custo computacional e custo de ruído.
+Informação irrelevante não é neutra --- ela compete por atenção com a informação
+relevante. Daí decorre um princípio de projeto adotado neste trabalho:
+documentos de controle devem ser curtos, e a leitura do repositório deve ser
+incremental e orientada à tarefa corrente, não exaustiva.
+
+Em tensão com esse princípio está a exigência de rastreabilidade, que empurra na
+direção oposta, a de mais documentação. O framework proposto resolve a tensão por
+especialização: cada informação tem \emph{um} documento dono, e os demais
+apontam para ele em vez de repeti-lo. Uma matriz de rastreabilidade existe para
+conectar, não para duplicar.
+
+\section{O domínio de aplicação}
+\label{sec:dominio}
+
+O estudo de caso é um jogo digital de movimentação em grade, entregue como página
+web única. Três características do domínio tornam-no adequado ao propósito.
+
+\textbf{Estado discreto e verificável.} O jogo é uma máquina de estados finitos
+sobre uma grade discreta, com condições de término bem definidas (colisão com
+borda ou com o próprio corpo). Isso permite afirmar propriedades precisas e
+verificá-las por observação, sem depender de julgamento subjetivo.
+
+\textbf{Lógica de tempo real.} O jogo exige um laço contínuo de atualização e
+desenho. A plataforma web oferece \texttt{requestAnimationFrame} para
+sincronizar o desenho com a taxa de atualização do dispositivo
+(\citeonline{mdn2024raf}), e o desacoplamento entre taxa de simulação e taxa de
+quadros é uma decisão de projeto com consequências mensuráveis
+(Capítulo~\ref{cap:implementacao}).
+
+\textbf{Apresentação e persistência locais.} A superfície de desenho vetorial
+bidimensional é adequada a grade discreta (\citeonline{mdn2024canvas}), e o
+armazenamento local do navegador permite persistir estado entre sessões sem
+servidor (\citeonline{mdn2024storage}). A acessibilidade é orientada pelas
+diretrizes WCAG (\citeonline{w3c2023wcag22}), e a linguagem é regida pelo padrão
+ECMAScript (\citeonline{ecma2023}) sobre a especificação viva de HTML
+(\citeonline{whatwg2024html}).
+
+\section{Síntese e lacuna identificada}
+\label{sec:sintese}
+
+A fundamentação apresentada sustenta três conclusões que orientam o restante do
+trabalho.
+
+Primeira: a verificação depende de critérios definidos \emph{antes} da
+implementação; critérios escritos depois são descrição, não verificação.
+
+Segunda: requisitos não funcionais só são verificáveis quando convertidos em
+métricas; quando permanecem adjetivos, eles não entram em nenhum portão de
+aceitação, e a lacuna passa despercebida justamente porque não há teste que possa
+falhar.
+
+Terceira: agentes de linguagem são úteis para gerar e para revisar, mas não são
+fonte de evidência. A evidência precisa vir de execução observável e
+reproduzível.
+
+A lacuna que o trabalho aborda é a ausência, na literatura de agentes LLM para
+engenharia de software, de um processo que trate explicitamente os artefatos de
+controle e as condições de parada, com ênfase em verificabilidade medida. O
+Capítulo~\ref{cap:relacionados} sustenta essa afirmação por comparação.
+
+A verificação, por sua vez, não é um evento único e sim um conjunto de camadas
+aplicadas em momentos distintos do trabalho. A Figura~\ref{fig:verificacao}
+representa essas camadas e registra quais foram efetivamente aplicadas na
+produção deste documento. A distinção entre camadas aplicadas e camadas não
+executadas é parte do resultado, não uma omissão.
+
+\input{figures/fig-verificacao}

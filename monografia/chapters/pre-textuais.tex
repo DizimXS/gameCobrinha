@@ -1,0 +1,277 @@
+%% =====================================================================
+%%  Elementos pre-textuais
+%%  Capa, folha de aprovacao, resumo, abstract, listas e sumario.
+%%  Conforme NBR 14724 e NBR 6027.
+%%
+%%  Os campos entre colchetes sao [VALIDAR COM O AUTOR]: nao existiam no
+%%  workspace e nao foram inventados. Ver MONOGRAFIA_PENDENCIAS.md.
+%% =====================================================================
+
+%% ---------------------------------------------------------------------
+%%  CAPA
+%% ---------------------------------------------------------------------
+\begin{capa}
+	\begin{center}
+
+		\MakeUppercase{\TrabalhoInstituicao}
+
+		\vspace{0.3cm}
+
+		\MakeUppercase{\TrabalhoUnidade}
+
+		\vspace{0.3cm}
+
+		\MakeUppercase{\TrabalhoCurso}
+
+		\vspace{2.5cm}
+
+		\MakeUppercase{\TrabalhoAutor}
+
+		\vspace{3.0cm}
+
+		\textbf{\TrabalhoTitulo}
+
+		\vfill
+
+		\TrabalhoCidade
+
+		\TrabalhoAno
+
+	\end{center}
+\end{capa}
+
+%% ---------------------------------------------------------------------
+%%  FOLHA DE APROVACAO
+%% ---------------------------------------------------------------------
+\begin{folhadeaprovacao}
+	\begin{center}
+
+		\MakeUppercase{\TrabalhoAutor}
+
+		\vspace{2.0cm}
+
+		\makebox[\textwidth]{\textbf{\TrabalhoTitulo}}
+
+		\vspace{1.5cm}
+
+		\begin{flushright}
+			\begin{minipage}{8.5cm}
+				\small\SingleSpacing
+				\TrabalhoNatureza
+				\vspace{0.4cm}
+
+				Orientador: \TrabalhoOrientador
+				\vspace{0.4cm}
+
+				Coorientador: [VALIDAR COM O AUTOR --- ou declarar ausência]
+			\end{minipage}
+		\end{flushright}
+
+		\vspace{1.5cm}
+
+		Aprovado em: \rule{1cm}{0.4pt}/\rule{1cm}{0.4pt}/\rule{1.5cm}{0.4pt}
+
+		\vspace{1.5cm}
+
+		\rule{10cm}{0.4pt}\\
+		\TrabalhoOrientador\\
+		Presidente da banca --- \TrabalhoInstituicao
+
+		\vspace{1.2cm}
+
+		\rule{10cm}{0.4pt}\\
+		\mbox{[VALIDAR COM O AUTOR --- Membro externo/interno 1]}\\
+		\mbox{[VALIDAR COM O AUTOR --- titulação e instituição]}
+
+		\vspace{1.2cm}
+
+		\rule{10cm}{0.4pt}\\
+		\mbox{[VALIDAR COM O AUTOR --- Membro externo/interno 2]}\\
+		\mbox{[VALIDAR COM O AUTOR --- titulação e instituição]}
+
+	\end{center}
+\end{folhadeaprovacao}
+
+%% ---------------------------------------------------------------------
+%%  DEDICATORIA (opcional - remover se nao for usar)
+%% ---------------------------------------------------------------------
+%% \begin{dedicatoria}
+%% 	\vspace*{\fill}
+%% 	\begin{flushright}
+%% 		\itshape [VALIDAR COM O AUTOR]
+%% 	\end{flushright}
+%% 	\vspace*{\fill}
+%% \end{dedicatoria}
+
+%% ---------------------------------------------------------------------
+%%  AGRADECIMENTOS (opcional - remover se nao for usar)
+%% ---------------------------------------------------------------------
+%% \begin{agradecimentos}
+%% 	[VALIDAR COM O AUTOR]
+%% \end{agradecimentos}
+
+%% ---------------------------------------------------------------------
+%%  EPIGRAFE (opcional - remover se nao for usar)
+%% ---------------------------------------------------------------------
+%% \begin{epigrafe}
+%% 	\vspace*{\fill}
+%% 	\begin{flushright}
+%% 		\itshape ``[VALIDAR COM O AUTOR --- citação com autoria]''
+%% 	\end{flushright}
+%% 	\vspace*{\fill}
+%% \end{epigrafe}
+
+%% ---------------------------------------------------------------------
+%%  RESUMO - NBR 6028
+%% ---------------------------------------------------------------------
+\begin{resumo}
+	Agentes de inteligência artificial generativa produzem código com alta
+	velocidade, mas a ausência de um processo que force especificação prévia,
+	critérios de aceitação verificáveis e registro de evidências compromete a
+	auditabilidade e a manutenção do que foi produzido. Este trabalho define,
+	aplica e avalia um processo de desenvolvimento orientado por especificações
+	(\textit{spec-driven development} --- SDD) executado por agentes de
+	inteligência artificial, organizado em quinze agentes especializados,
+	quatro conjuntos de instruções permanentes e cinco habilidades de domínio,
+	com fluxo adaptativo ao risco e seis portões de verificação. O processo foi
+	aplicado à construção de um jogo digital completo entregue como artefato
+	único de página web, especificado com quinze requisitos funcionais, nove
+	requisitos não funcionais e doze critérios de aceitação. A verificação foi
+	empírica, combinando inspeção estática do artefato com automação de
+	navegador para teclado, apontador e leitura de pixels da área de desenho.
+	Os doze critérios de aceitação foram satisfeitos, incluindo o bloqueio de
+	inversão de trajetória, o sorteio de alvos fora do corpo do jogador e a
+	persistência do recorde no armazenamento local. Mediu-se ainda o intervalo
+	entre passos de simulação em duas faixas de pontuação: 133\,ms para
+	pontuação inferior a quarenta pontos e 105\,ms para pontuação igual ou
+	superior a oitenta pontos, sobre 184 movimentos amostrados, confirmando o
+	aumento de velocidade previsto na especificação. O trabalho identifica como
+	limitações a ausência de grupo de controle, a extensão reduzida da amostra
+	temporal, a carência de critérios de aceitação para nove requisitos não
+	funcionais e a não validação dos controles de toque em dispositivo físico.
+	Conclui-se que o processo proposto torna cada entrega rastreável a um
+	requisito e sustentada por evidência reproduzível, ao custo de maior
+	disciplina documental.
+
+	\vspace{\onelineskip}
+
+	\noindent
+	\textbf{Palavras-chave}: desenvolvimento orientado por especificações;
+	agentes de inteligência artificial; engenharia de requisitos; verificação e
+	validação; rastreabilidade; estudo de caso.
+\end{resumo}
+
+%% ---------------------------------------------------------------------
+%%  ABSTRACT - NBR 6028
+%% ---------------------------------------------------------------------
+\begin{abstract}
+	Generative artificial intelligence agents produce code at high speed, yet
+	without a process that enforces prior specification, verifiable acceptance
+	criteria and recorded evidence, the outcome is hard to audit and to
+	maintain. This work defines, applies and evaluates a spec-driven
+	development (SDD) process executed by artificial intelligence agents,
+	organised into fifteen specialised agents, four permanent instruction sets
+	and five domain skills, with a risk-adaptive flow and six verification
+	gates. The process was applied to building a complete digital game
+	delivered as a single web page artefact, specified with fifteen functional
+	requirements, nine non-functional requirements and twelve acceptance
+	criteria. Verification was empirical, combining static inspection of the
+	artefact with browser automation for keyboard, pointer and pixel reading of
+	the drawing surface. All twelve acceptance criteria passed, including
+	trajectory reversal blocking, target spawning outside the player's body and
+	high-score persistence in local storage. The interval between simulation
+	steps was measured across two score bands: 133\,ms below forty points and
+	105\,ms at or above eighty points, over 184 sampled movements, confirming
+	the speed increase defined in the specification. The work identifies as
+	limitations the absence of a control group, the small temporal sample, the
+	lack of acceptance criteria for nine non-functional requirements and the
+	unvalidated touch controls on physical devices. It concludes that the
+	proposed process makes every deliverable traceable to a requirement and
+	supported by reproducible evidence, at the cost of greater documentation
+	discipline.
+
+	\vspace{\onelineskip}
+
+	\noindent
+	\textbf{Keywords}: spec-driven development; artificial intelligence agents;
+	requirements engineering; verification and validation; traceability; case
+	study.
+\end{abstract}
+
+%% ---------------------------------------------------------------------
+%%  LISTA DE ILUSTRACOES (figuras)
+%% ---------------------------------------------------------------------
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures
+\newpage
+
+%% ---------------------------------------------------------------------
+%%  LISTA DE QUADROS
+%% ---------------------------------------------------------------------
+\pdfbookmark[0]{Lista de quadros}{loq}
+\listofquadro
+\newpage
+
+%% ---------------------------------------------------------------------
+%%  LISTA DE TABELAS
+%% ---------------------------------------------------------------------
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables
+\newpage
+
+%% ---------------------------------------------------------------------
+%%  LISTA DE ABREVIATURAS E SIGLAS
+%% ---------------------------------------------------------------------
+\begin{siglas}
+	\item[ABNT] Associação Brasileira de Normas Técnicas
+	\item[ADR] \textit{Architecture Decision Record} (registro de decisão arquitetural)
+	\item[API] \textit{Application Programming Interface}
+	\item[AP] \textit{Access Point} (ponto de acesso sem fio)
+	\item[CA] Critério de Aceitação
+	\item[CSS] \textit{Cascading Style Sheets}
+	\item[DPR] \textit{Device Pixel Ratio} (razão de pixels do dispositivo)
+	\item[ECMA] \textit{European Computer Manufacturers Association}
+	\item[FR] Requisito Funcional
+	\item[FSM] \textit{Finite State Machine} (máquina de estados finitos)
+	\item[HTML] \textit{HyperText Markup Language}
+	\item[IA] Inteligência Artificial
+	\item[ISO] \textit{International Organization for Standardization}
+	\item[JSON] \textit{JavaScript Object Notation}
+	\item[LLM] \textit{Large Language Model} (modelo de linguagem de grande porte)
+	\item[NBR] Norma Brasileira
+	\item[NFR] Requisito Não Funcional
+	\item[RAM] \textit{Random Access Memory}
+	\item[SDD] \textit{Spec-Driven Development}
+	\item[SQuaRE] \textit{Software product Quality Requirements and Evaluation}
+	\item[SRP] \textit{Single Responsibility Principle}
+	\item[TCC] Trabalho de Conclusão de Curso
+	\item[UI] \textit{User Interface} (interface do usuário)
+	\item[V\&V] Verificação e Validação
+	\item[W3C] \textit{World Wide Web Consortium}
+	\item[WCAG] \textit{Web Content Accessibility Guidelines}
+	\item[WHATWG] \textit{Web Hypertext Application Technology Working Group}
+\end{siglas}
+
+%% ---------------------------------------------------------------------
+%%  LISTA DE SIMBOLOS
+%% ---------------------------------------------------------------------
+\begin{simbolos}
+	\item[$A$] Conjunto de critérios de aceitação verificados
+	\item[$C$] Custo agregado de verificação
+	\item[$e$] Número de itens consumidos na partida
+	\item[$\mathrm{E}{[}T{]}$] Intervalo médio entre passos de simulação
+	\item[$m$] Número de amostras de movimento
+	\item[$s$] Pontuação acumulada na partida
+	\item[$t_{\max}$] Intervalo máximo entre passos de simulação
+	\item[$t_{\min}$] Intervalo mínimo entre passos de simulação
+	\item[$t_0$] Intervalo inicial entre passos de simulação
+	\item[$\Delta$] Passo de redução do intervalo por item consumido
+	\item[$\sigma$] Desvio padrão amostral
+\end{simbolos}
+
+%% ---------------------------------------------------------------------
+%%  SUMARIO - NBR 6027
+%% ---------------------------------------------------------------------
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\newpage

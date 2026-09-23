@@ -1,0 +1,326 @@
+%% =====================================================================
+%%  CAPITULO 6 - ESPECIFICACAO DO SISTEMA-ALVO
+%% =====================================================================
+
+\chapter{Especificação do Sistema-Alvo}
+\label{cap:especificacao}
+
+Este capítulo apresenta a especificação do sistema-alvo produzida antes de
+qualquer linha de implementação. A ordem é deliberada: primeiro os requisitos
+funcionais, depois os não funcionais, depois as restrições, depois as decisões
+arquiteturais e, por fim, os critérios de aceitação. Os critérios de aceitação
+fecham o capítulo porque são derivados dos requisitos, e não o contrário.
+
+\section{Contexto de especificação}
+\label{sec:esp-contexto}
+
+A entrada do processo foi um documento de solicitação do produto, com catorze
+requisitos expressos em linguagem natural
+(Quadro~\ref{qua:requisitos-origem}). A tarefa da etapa de especificação foi
+transformar essa entrada em requisitos identificados, verificáveis e não
+ambíguos, sem ampliar o escopo.
+
+Três decisões de tradução foram tomadas nessa etapa e merecem registro, porque
+alteraram o conteúdo do que foi especificado em relação ao que foi pedido.
+
+\textbf{Ausência de recursos bônus.} A solicitação original mencionava uma seção
+opcional de recursos adicionais --- efeitos sonoros, níveis de dificuldade, itens
+especiais --- e declarava que tais recursos só entrariam se fossem explicitados.
+Como nenhum foi explicitado, nenhum foi especificado. A decisão evita a expansão
+de escopo por iniciativa do executor, que é um modo comum de desvio de requisito.
+
+\textbf{Requisitos não funcionais não pedidos.} Foram especificados requisitos
+não funcionais que a solicitação não mencionava: nitidez em telas de alta
+densidade (NFR-006), prevenção de rolagem de página por teclas de direção
+(NFR-007) e suporte a preferência de movimento reduzido (NFR-009). Esses itens
+derivam de boas práticas de plataforma web e de acessibilidade
+(\citeonline{w3c2023wcag22}), e sua inclusão é uma decisão do executor, não uma
+exigência do solicitante. Ela é declarada aqui por transparência.
+
+\textbf{Requisitos de plataforma promovidos a requisito.} A solicitação pedia
+suporte a toque; a especificação converteu isso em um requisito funcional com
+componente de interface identificável (FR-004) e em um critério de aceitação
+próprio (CA-008), tornando o item verificável.
+
+\section{Requisitos funcionais}
+\label{sec:esp-fr}
+
+Os quinze requisitos funcionais estão no Quadro~\ref{qua:fr}. Cada um descreve
+comportamento observável do sistema.
+
+\begin{quadro}[htb]
+	\caption{Requisitos funcionais do sistema-alvo}
+	\label{qua:fr}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{1.5cm} X@{}}
+		\toprule
+		\textbf{ID} & \textbf{Requisito} \\
+		\midrule
+		FR-001 & Entregar o produto como um único arquivo de página web, com estilo e script embutidos, sem arquivos auxiliares. \\
+		\addlinespace
+		FR-002 & Renderizar tabuleiro, jogador e alvo em superfície de desenho vetorial bidimensional. \\
+		\addlinespace
+		FR-003 & Permitir controle por teclas de direção e pelas teclas W, A, S e D, em ambas as caixas. \\
+		\addlinespace
+		FR-004 & Exibir quatro botões direcionais na tela, operáveis por toque e por apontador. \\
+		\addlinespace
+		FR-005 & Impedir inversão instantânea de direção. \\
+		\addlinespace
+		FR-006 & Sortear o alvo em célula livre da grade, nunca sobre o corpo do jogador. \\
+		\addlinespace
+		FR-007 & Crescer uma célula e somar dez pontos a cada alvo consumido. \\
+		\addlinespace
+		FR-008 & Encerrar a partida ao colidir com a borda do tabuleiro ou com o próprio corpo. \\
+		\addlinespace
+		FR-009 & Exibir pontuação atual e melhor pontuação. \\
+		\addlinespace
+		FR-010 & Ler e gravar a melhor pontuação no armazenamento local, tolerando indisponibilidade sem interromper o jogo. \\
+		\addlinespace
+		FR-011 & Exibir tela de fim de jogo com pontuação final e botão de reinício que restaura o estado inicial. \\
+		\addlinespace
+		FR-012 & Iniciar a movimentação somente após a primeira entrada direcional válida. \\
+		\addlinespace
+		FR-013 & Permitir pausar e retomar, inclusive por perda de foco da janela. \\
+		\addlinespace
+		FR-014 & Usar laço de animação com acumulador de tempo, desacoplando simulação de taxa de quadros. \\
+		\addlinespace
+		FR-015 & Aumentar progressivamente a velocidade conforme a pontuação, respeitando intervalo mínimo. \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{.specs/features/snake-game/spec.md}.}
+\end{quadro}
+
+\section{Requisitos não funcionais}
+\label{sec:esp-nfr}
+
+Os nove requisitos não funcionais estão no Quadro~\ref{qua:nfr}. O mapeamento nas
+características de qualidade da ISO/IEC 25010 foi apresentado na
+Tabela~\ref{tab:mapeamento-iso}.
+
+\begin{quadro}[htb]
+	\caption{Requisitos não funcionais do sistema-alvo}
+	\label{qua:nfr}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{1.7cm} X@{}}
+		\toprule
+		\textbf{ID} & \textbf{Requisito} \\
+		\midrule
+		NFR-001 & Zero dependências externas: sem bibliotecas, sem quadros de trabalho, sem rede, sem fontes ou imagens remotas. \\
+		\addlinespace
+		NFR-002 & Layout moderno, limpo, centralizado horizontal e verticalmente. \\
+		\addlinespace
+		NFR-003 & Tema escuro de estilo retro-arcade, com elementos em tons neon. \\
+		\addlinespace
+		NFR-004 & Adaptar-se a larguras de tela de 320\,px a 1920\,px, sem rolagem horizontal indesejada. \\
+		\addlinespace
+		NFR-005 & Código comentado, organizado em seções, com identificadores em inglês e comentários em português. \\
+		\addlinespace
+		NFR-006 & Ajustar as dimensões de desenho à razão de pixels do dispositivo para nitidez em telas de alta densidade. \\
+		\addlinespace
+		NFR-007 & Tratar entrada sem bloquear o laço de animação; impedir a rolagem da página provocada pelas teclas de direção. \\
+		\addlinespace
+		NFR-008 & Carregar e iniciar sem erros no console do navegador. \\
+		\addlinespace
+		NFR-009 & Respeitar a preferência de movimento reduzido do sistema operacional. \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{.specs/features/snake-game/spec.md}.}
+\end{quadro}
+
+\section{Restrições e diretrizes}
+\label{sec:esp-restricoes}
+
+Quatro restrições limitam o espaço de solução. \texttt{CON-001} exige artefato
+único, proibindo arquivos de estilo ou script separados. \texttt{CON-002} admite
+apenas CSS e JavaScript nativos, sem transpilação. \texttt{CON-003} exige
+centralizar grade e constantes de jogo em um único objeto de configuração.
+\texttt{CON-004} proíbe usar temporizador fixo para a simulação.
+
+A restrição \texttt{CON-004} é a mais consequente, porque interdita uma solução
+que funcionaria: um temporizador de intervalo fixo dispararia a simulação com
+regularidade suficiente para o jogo. A justificativa é a acumulação de atrasos:
+temporizadores fixos não se adaptam à carga do navegador e tendem a acumular
+deriva, além de não sincronizar com a taxa de atualização do dispositivo. A
+alternativa adotada --- laço de animação com acumulador --- é detalhada no
+Capítulo~\ref{cap:implementacao}.
+
+\section{Decisões arquiteturais}
+\label{sec:esp-adr}
+
+Sete decisões foram registradas no formato de problema, alternativa escolhida,
+alternativas descartadas e justificativa. O Quadro~\ref{qua:adrs} as resume.
+
+\begin{quadro}[htb]
+	\caption{Decisões arquiteturais do sistema-alvo}
+	\label{qua:adrs}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{1.7cm} p{3.1cm} X@{}}
+		\toprule
+		\textbf{ID} & \textbf{Decisão} & \textbf{Justificativa e alternativa descartada} \\
+		\midrule
+		ADR-001 & Desenho vetorial em tela única & Evita centenas de elementos estruturais e mantém estabilidade de quadro. Descartado: um elemento por célula. \\
+		\addlinespace
+		ADR-002 & Simulação por passo discreto com acumulador & Desacopla lógica de taxa de quadros. Descartado: temporizador de intervalo fixo (vedado por \texttt{CON-004}). \\
+		\addlinespace
+		ADR-003 & Fila curta de entrada com validação & Evita inversão e perda de comando em passos rápidos. Descartado: aplicação imediata da última tecla. \\
+		\addlinespace
+		ADR-004 & Remover a cauda antes de testar colisão & Permite ocupar a célula que a cauda acabou de liberar. Descartado: testar colisão com o corpo completo. \\
+		\addlinespace
+		ADR-005 & Objeto único de configuração & Centraliza grade, tempos, pontos e chave de armazenamento (\texttt{CON-003}). \\
+		\addlinespace
+		ADR-006 & Persistência tolerante a falha & Acesso ao armazenamento envolto em tratamento de exceção (\texttt{FR-010}). \\
+		\addlinespace
+		ADR-007 & Tema por variáveis de estilo & Consistência visual e suporte a movimento reduzido. \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{.specs/features/snake-game/design.md}.}
+\end{quadro}
+
+\section{Contratos de dados}
+\label{sec:esp-contratos}
+
+A especificação declara quatro contratos, o que viabiliza a verificação por
+inspeção e a implementação sem ambiguidade de nomes: o objeto de configuração
+com sete campos; o objeto de estado com dez campos; a chave de armazenamento
+local com valor inteiro; e a tabela de eventos de entrada com a origem, o evento
+e a ação correspondente.
+
+A Tabela~\ref{tab:constantes} registra os valores concretos das constantes,
+conforme fixados na especificação e implementados no artefato.
+
+\begin{table}[htb]
+	\caption{Constantes do alvo, conforme especificação e implementação}
+	\label{tab:constantes}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{4.6cm} c p{1.6cm} X@{}}
+		\toprule
+		\textbf{Constante} & \textbf{Valor} & \textbf{Unidade} & \textbf{Papel} \\
+		\midrule
+		Colunas da grade & 24 & células & Dimensão horizontal \\
+		\addlinespace
+		Linhas da grade & 24 & células & Dimensão vertical \\
+		\addlinespace
+		Comprimento inicial & 4 & células & Tamanho inicial do jogador \\
+		\addlinespace
+		Intervalo inicial $t_0$ & 140 & ms & Passo de simulação no início \\
+		\addlinespace
+		Intervalo mínimo $t_{\min}$ & 68 & ms & Piso do passo de simulação \\
+		\addlinespace
+		Passo de redução $\Delta$ & 4 & ms & Redução por item consumido \\
+		\addlinespace
+		Pontos por item & 10 & pontos & Incremento de pontuação \\
+		\addlinespace
+		Tamanho máximo da fila & 2 & entradas & Capacidade da fila de direção \\
+		\addlinespace
+		Teto de passos por quadro & 5 & passos & Proteção contra acumulação \\
+		\addlinespace
+		Chave de armazenamento & --- & texto & Identificador do registro local \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{spec.md} e \texttt{index.html}.}
+\end{table}
+
+\section{Regra de evolução da velocidade}
+\label{sec:esp-velocidade}
+
+A relação entre pontuação e intervalo entre passos é a única regra do alvo com
+comportamento contínuo observável, e por isso é central para a verificação. Sua
+forma é:
+
+\begin{equation}
+	t(e) \;=\; \max\!\left( t_{\min},\; t_0 - e \cdot \Delta \right),
+	\qquad e = \left\lfloor \frac{s}{p} \right\rfloor
+	\label{eq:velocidade}
+\end{equation}
+
+\noindent em que $e$ é o número de itens consumidos, $s$ é a pontuação corrente,
+$p = 10$ é a pontuação por item, $t_0 = 140$\,ms, $t_{\min} = 68$\,ms e
+$\Delta = 4$\,ms. Substituindo $p$ e $\Delta$, obtém-se a forma equivalente
+
+\begin{equation}
+	t(s) \;=\; \max\!\left( 68,\; 140 - \frac{2s}{5} \right) \;\text{ms}.
+	\label{eq:velocidade-simplificada}
+\end{equation}
+
+\noindent A saturação ocorre em $e = 18$ itens, isto é, $s = 180$ pontos, quando
+$140 - 18 \cdot 4 = 68$\,ms. A partir desse ponto, a velocidade permanece
+constante por construção. Essa predição é verificável e foi verificada
+indiretamente pela medição reportada na Seção~\ref{sec:res-velocidade}.
+
+\section{Critérios de aceitação}
+\label{sec:esp-ca}
+
+Os doze critérios de aceitação estão no Quadro~\ref{qua:ca}. Cada critério é
+enunciado de forma que um observador externo possa decidir se foi satisfeito,
+sem consultar o autor e sem acesso ao histórico de desenvolvimento.
+
+\begin{quadro}[htb]
+	\caption{Critérios de aceitação do sistema-alvo}
+	\label{qua:ca}
+	\centering
+	\scriptsize
+	\begin{tabularx}{\textwidth}{@{}p{1.4cm} X@{}}
+		\toprule
+		\textbf{ID} & \textbf{Critério} \\
+		\midrule
+		CA-001 & Existe exatamente um arquivo, com estilo e script embutidos e nenhuma referência de rede a script, estilo ou fonte. \\
+		\addlinespace
+		CA-002 & Ao pressionar direita e depois esquerda no mesmo passo, o jogador continua à direita. \\
+		\addlinespace
+		CA-003 & Ao consumir o alvo, o comprimento aumenta em uma célula e a pontuação em dez pontos. \\
+		\addlinespace
+		CA-004 & A célula do alvo pertence à grade e não pertence a nenhuma célula do corpo. \\
+		\addlinespace
+		CA-005 & Ao atingir célula fora da grade, o estado passa a encerrado e a tela de fim de jogo é exibida. \\
+		\addlinespace
+		CA-006 & Ao atingir célula ocupada pelo corpo, o estado passa a encerrado. \\
+		\addlinespace
+		CA-007 & Ao superar o recorde anterior, o novo valor é gravado no armazenamento local e exibido na reinicialização. \\
+		\addlinespace
+		CA-008 & Ao acionar um botão direcional, o jogador muda de direção respeitando CA-002. \\
+		\addlinespace
+		CA-009 & No estado inicial, ao pressionar uma direção válida, o jogador começa a se mover. \\
+		\addlinespace
+		CA-010 & Em execução, ao pressionar a tecla de pausa, o estado passa a pausado e o movimento cessa; novo acionamento retoma. \\
+		\addlinespace
+		CA-011 & Após cinco segundos de execução, o console não apresenta erros nem exceções. \\
+		\addlinespace
+		CA-012 & Ao aumentar a pontuação, o intervalo entre passos diminui até o mínimo definido. \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{.specs/features/snake-game/spec.md}.}
+\end{quadro}
+
+\section{Casos de borda declarados}
+\label{sec:esp-bordas}
+
+Cinco casos de borda foram declarados na especificação antes da implementação.
+Declará-los antecipadamente é o que permite transformá-los em teste, em vez de
+descobri-los como defeito.
+
+\begin{enumerate}
+	\item \textbf{Inversão no mesmo passo} --- a segunda entrada é descartada e a direção permanece.
+	\item \textbf{Grade completamente ocupada} --- o sorteio do alvo não encontra célula livre; o jogo encerra sem travar.
+	\item \textbf{Armazenamento indisponível} --- a leitura lança exceção; o recorde permanece zero e o jogo continua.
+	\item \textbf{Duas teclas no mesmo passo} --- a segunda direção é enfileirada e aplicada no passo seguinte, se não for oposta.
+	\item \textbf{Colisão com a cauda em movimento} --- mover para a célula que a cauda acabou de liberar não encerra a partida, por consequência de ADR-004.
+\end{enumerate}
+
+O item 5 é o mais sutil e é o único caso de borda que depende diretamente de uma
+decisão arquitetural, e não apenas da regra de jogo. A ordem entre remover a
+cauda e testar colisão determina se o comportamento é morte ou sobrevivência;
+sem a decisão registrada em ADR-004, dois implementadores produziriam resultados
+diferentes a partir da mesma especificação de requisitos. Esse é um argumento
+concreto a favor do registro de decisões arquiteturais.
+
+\section{Síntese do capítulo}
+\label{sec:esp-sintese}
+
+A especificação produziu 15 requisitos funcionais, 9 requisitos não funcionais,
+4 restrições, 7 decisões arquiteturais, 4 contratos de dados, 12 critérios de
+aceitação e 5 casos de borda declarados. A implementação descrita no
+Capítulo~\ref{cap:implementacao} foi conduzida sob esse contrato.

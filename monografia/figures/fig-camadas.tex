@@ -1,0 +1,31 @@
+%% ---------------------------------------------------------------------
+%%  FIGURA - Camadas do framework proposto (DG-02)
+%% ---------------------------------------------------------------------
+\begin{figure}[htb]
+	\caption{Camadas do framework SDD agêntico e responsabilidade de cada uma}
+	\label{fig:camadas}
+	\centering
+	\begin{tikzpicture}[
+			font=\footnotesize,
+			camada/.style={
+					draw,
+					rounded corners=2pt,
+					minimum width=9.4cm,
+					minimum height=1.0cm,
+					align=center,
+					fill=black!4
+				}
+		]
+		\node[camada] (c1) at (0,0) {\textbf{Princípios}\\ constituição e regras permanentes};
+		\node[camada, below=0.26cm of c1] (c2) {\textbf{Instruções}\\ contexto, mudanças, artefatos e domínio};
+		\node[camada, below=0.26cm of c2] (c3) {\textbf{Habilidades}\\ conhecimento especializado sob demanda};
+		\node[camada, below=0.26cm of c3] (c4) {\textbf{Agentes}\\ quinze papéis especializados};
+		\node[camada, below=0.26cm of c4] (c5) {\textbf{Artefatos de controle}\\ especificação, decisões, tarefas, evidências, estado};
+
+		\draw[->, thick] (-5.6,0.0) -- (-5.6,-5.5)
+		node[midway, left, align=center, font=\scriptsize] {estabilidade\\ decrescente};
+		\draw[->, thick] (5.9,-5.5) -- (5.9,0.0)
+		node[midway, right, align=center, font=\scriptsize] {persistência\\ crescente};
+	\end{tikzpicture}
+	\legend{Fonte: elaborado pelo autor (2026) a partir da estrutura do repositório.}
+\end{figure}

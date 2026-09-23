@@ -1,0 +1,15 @@
+%%{init: {"theme":"neutral"}}%%
+%% DG-09 - Cadeia de rastreabilidade do requisito a evidencia
+%% Corresponde a Figura 4 do capitulo 5 (fig-rastreabilidade.tex)
+flowchart LR
+    A["Solicitacao do produto"] --> B["Requisitos FR / NFR"]
+    B --> C["Criterios CA"]
+    C --> D["Decisoes ADR"]
+    D --> E["Tarefas T"]
+    E --> F["Codigo - artefato"]
+    F --> G["Evidencia - execucao e inspecao"]
+    G --> H["Resultado PASS / PENDENTE"]
+
+    C -.->|"ausencia de criterio rompe a cadeia"| X["Requisito SEM CA<br/>10 de 24 requisitos"]
+
+    style X fill:#f8d7da,stroke:#b02a37

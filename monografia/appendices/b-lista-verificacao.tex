@@ -1,0 +1,77 @@
+%% =====================================================================
+%%  APENDICE B - LISTA DE VERIFICACAO DE ENCERRAMENTO
+%% =====================================================================
+
+\chapter{Lista de verificação de encerramento aplicada}
+\label{ap:checklist}
+
+Este apêndice aplica ao estudo de caso a lista de verificação de encerramento do
+framework, com catorze itens. Para cada item registra-se a situação observada e a
+evidência correspondente. A coluna ``Aplicável'' distingue os itens que não se
+aplicam ao tipo de artefato produzido --- distinção necessária porque uma lista de
+verificação com itens permanentemente inaplicáveis deixa de ser um instrumento de
+controle.
+
+{\footnotesize
+	\begin{longtable}{@{}c p{6.2cm} c p{3.6cm}@{}}
+		\caption{Lista de verificação de encerramento aplicada ao estudo de caso}
+		\label{tab:checklist} \\
+		\toprule
+		\textbf{\#} & \textbf{Item} & \textbf{Aplic.} & \textbf{Situação observada} \\
+		\midrule
+		\endfirsthead
+		\toprule
+		\textbf{\#} & \textbf{Item} & \textbf{Aplic.} & \textbf{Situação observada} \\
+		\midrule
+		\endhead
+		\bottomrule
+		\endlastfoot
+		1  & Requisito relacionado identificado & Sim & Todo artefato aponta para identificador \texttt{FR}, \texttt{NFR} ou \texttt{CA} \\
+		\addlinespace
+		2  & Critérios de aceitação verificados & Sim & 12 de 12 satisfeitos (Tabela~\ref{tab:ca-resultados}) \\
+		\addlinespace
+		3  & Estado do repositório inspecionado antes da alteração & Não & O diretório não era repositório válido no início da execução. Item não cumprido, registrado no \texttt{STATUS.md} \\
+		\addlinespace
+		4  & Alteração no menor escopo necessário & Sim & Cada tarefa restrita ao módulo afetado; nenhuma refatoração não relacionada \\
+		\addlinespace
+		5  & Compilação do alvo executada & Não & Não aplicável: artefato interpretado diretamente pelo navegador, sem etapa de compilação \\
+		\addlinespace
+		6  & Testes executados & Sim & 12 verificações por inspeção e execução observada \\
+		\addlinespace
+		7  & Análise estática executada quando aplicável & Sim & Busca textual de referências externas e de temporizadores fixos \\
+		\addlinespace
+		8  & Consumo de memória e tempo verificados quando aplicável & Não & Não medido. Registrado como dado necessário P-10 \\
+		\addlinespace
+		9  & Documentação atualizada & Sim & Documento de estado e documentação de uso produzidos \\
+		\addlinespace
+		10 & Rastreabilidade atualizada & Sim & Matriz do Apêndice~\ref{ap:rastreabilidade} \\
+		\addlinespace
+		11 & Arquivo de estado atualizado & Sim & Documento de estado com pendências e riscos residuais \\
+		\addlinespace
+		12 & Arquivo de transferência atualizado apenas se houver continuidade & Não & Não houve transferência a outro responsável na execução relatada \\
+		\addlinespace
+		13 & Riscos residuais registrados & Sim & Quatro riscos residuais, incluindo a pendência de validação em dispositivo físico \\
+		\addlinespace
+		14 & Nenhuma alteração não relacionada incorporada & Sim & Escopo preservado; nenhuma dependência adicionada \\
+	\end{longtable}
+}
+
+\section{Leitura da lista}
+\label{ap:checklist-leitura}
+
+Dos catorze itens, nove foram cumpridos, quatro não se aplicam ao tipo de artefato
+e um --- a inspeção do estado do repositório antes da alteração --- não foi
+cumprido, por indisponibilidade do próprio mecanismo de controle de versão no
+ambiente de execução.
+
+A consequência prática do item 3 é relevante e merece registro. O portão G0 do
+framework exige a leitura do estado do repositório antes de qualquer alteração,
+precisamente para impedir que o executor trate uma versão lembrada de um arquivo
+como se fosse a versão presente. Como o repositório não era válido no início da
+execução, o portão não pôde ser cumprido, e a mitigação adotada foi a leitura
+direta dos arquivos antes de cada alteração.
+
+Isso expõe uma fragilidade do framework: um portão que depende de infraestrutura
+externa não possui plano alternativo declarado. A correção proposta é que o portão
+G0 defina explicitamente o procedimento substituto quando o sistema de controle de
+versão não estiver disponível, em vez de simplesmente não ser cumprido.

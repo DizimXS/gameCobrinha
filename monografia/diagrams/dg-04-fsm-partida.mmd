@@ -1,0 +1,18 @@
+%%{init: {"theme":"neutral"}}%%
+%% DG-04 - Maquina de estados da partida
+%% Corresponde a Figura 6 do capitulo 7 (fig-fsm.tex)
+stateDiagram-v2
+    [*] --> ready
+    ready --> running : primeira direcao valida
+    running --> running : passo de simulacao
+    running --> paused : pausa ou perda de foco
+    paused --> running : retomada
+    running --> over : colisao com borda ou com o corpo
+    running --> won : grade completamente ocupada
+    over --> ready : reinicio
+    won --> ready : reinicio
+    note right of won
+        Estado criado para tratar o caso de borda
+        "grade completamente ocupada", declarado
+        na especificacao antes da implementacao.
+    end note

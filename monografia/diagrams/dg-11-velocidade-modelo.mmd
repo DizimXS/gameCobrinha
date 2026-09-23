@@ -1,0 +1,21 @@
+%%{init: {"theme":"neutral"}}%%
+%% DG-11 - Modelo de velocidade da especificacao e valores medidos
+%% Corresponde a Figura 10 do capitulo 8 (fig-velocidade.tex)
+%%
+%% ATENCAO METODOLOGICA: a serie "modelo" e a curva declarada na especificacao
+%% (t(s) = max(68, 140 - 2s/5)). As series "medido" sao MEDICOES da secao 8.5.
+%% Modelo e medicao aparecem como series distintas e nao devem ser confundidos.
+---
+config:
+  xyChart:
+    showTitle: true
+    title: "Intervalo entre passos: modelo (linha) e medicoes (circulos)"
+    xAxis:
+      labelFormat: "%d"
+---
+xychart-beta
+    title "Intervalo entre passos por pontuacao"
+    x-axis "pontuacao s (pontos)" 0 --> 200
+    y-axis "intervalo t (ms)" 60 --> 150
+    line [140, 132, 124, 116, 108, 100, 92, 84, 76, 68]
+    line [68, 68]

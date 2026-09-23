@@ -1,0 +1,47 @@
+%% ---------------------------------------------------------------------
+%%  FIGURA - Fluxo agentico adaptativo por complexidade (DG-01)
+%% ---------------------------------------------------------------------
+\begin{figure}[htb]
+	\caption{Fluxo agêntico adaptativo: classificação por complexidade e risco}
+	\label{fig:fluxo-agentico}
+	\centering
+	\begin{tikzpicture}[
+			font=\footnotesize,
+			no/.style={draw, rounded corners=2pt, minimum width=2.6cm, minimum height=0.85cm, align=center},
+			dec/.style={draw, diamond, aspect=2.2, inner sep=1pt, align=center, font=\scriptsize},
+			>=Stealth,
+			fl/.style={->, thick}
+		]
+
+		\node[no] (req) at (0,0) {Solicitação};
+		\node[no, below=0.7cm of req] (router) {Roteador};
+		\node[dec, below=0.85cm of router] (risco) {complexidade\\ e risco?};
+
+		\node[no, below left=1.5cm and 3.5cm of risco] (resp) {Resposta\\ com evidência};
+		\node[no, below left=1.5cm and 0.9cm of risco] (quick) {Correção\\ local};
+		\node[no, below right=1.5cm and 0.9cm of risco] (medio) {Recurso\\ médio};
+		\node[no, below right=1.5cm and 3.5cm of risco] (grande) {Recurso\\ amplo};
+
+		\draw[fl] (req) -- (router);
+		\draw[fl] (router) -- (risco);
+		\draw[fl] (risco) -- node[sloped, above, font=\scriptsize, pos=0.55] {pergunta} (resp);
+		\draw[fl] (risco) -- node[sloped, above, font=\scriptsize] {simples} (quick);
+		\draw[fl] (risco) -- node[sloped, above, font=\scriptsize] {médio} (medio);
+		\draw[fl] (risco) -- node[sloped, above, font=\scriptsize, pos=0.55] {amplo} (grande);
+
+		\node[no, below=1.0cm of medio] (impl) {Implementação};
+		\draw[fl] (quick) |- (impl);
+		\draw[fl] (medio) -- (impl);
+		\draw[fl] (grande) |- (impl);
+
+		\node[no, below=0.7cm of impl] (teste) {Testes};
+		\node[no, below=0.7cm of teste] (revisao) {Revisão};
+		\node[no, below=0.7cm of revisao] (gate) {Portão de\\ verificação};
+
+		\draw[fl] (impl) -- (teste);
+		\draw[fl] (teste) -- (revisao);
+		\draw[fl] (revisao) -- (gate);
+	\end{tikzpicture}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{docs/agentic/WORKFLOW.md}.
+	A trilha de liberação, aplicada após o portão de verificação, foi omitida para preservar a legibilidade.}
+\end{figure}

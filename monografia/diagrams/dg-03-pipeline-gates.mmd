@@ -1,0 +1,18 @@
+%%{init: {"theme":"neutral"}}%%
+%% DG-03 - Pipeline SDD com os seis portoes de verificacao
+%% Corresponde a Figura 4 do capitulo 5 (fig-pipeline-gates.tex)
+flowchart LR
+    E1["Estado do repositorio"] --> G0["G0 Estado"]
+    G0 --> E2["Intencao e requisito"]
+    E2 --> G1["G1 Intencao"]
+    G1 --> E3["Projeto e decisoes"]
+    E3 --> G2["G2 Projeto"]
+    G2 --> E4["Implementacao minima"]
+    E4 --> G3["G3 Implementacao"]
+    G3 --> E5["Evidencia: build e testes"]
+    E5 --> G4["G4 Evidencia"]
+    G4 --> E6["Encerramento e estado"]
+    E6 --> G5["G5 Encerramento"]
+
+    G1 -.->|"sem requisito e criterio: nao avanca"| E2
+    G4 -.->|"sem evidencia: nao conclui"| E5

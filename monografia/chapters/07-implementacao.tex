@@ -1,0 +1,407 @@
+%% =====================================================================
+%%  CAPITULO 7 - IMPLEMENTACAO
+%% =====================================================================
+
+\chapter{Implementação}
+\label{cap:implementacao}
+
+Este capítulo descreve a implementação do sistema-alvo: a estrutura do artefato,
+a máquina de estados da partida, o laço de animação, o algoritmo de um passo de
+simulação, a fila de entrada, o sorteio do alvo, a persistência, a renderização e
+as decisões de acessibilidade. Cada seção aponta para a decisão arquitetural e o
+requisito correspondentes.
+
+\section{Estrutura do artefato}
+\label{sec:impl-estrutura}
+
+O produto é um único arquivo de 1\,063 linhas e 32\,305 bytes, organizado em
+treze seções comentadas. A Figura~\ref{fig:artefato} representa sua estrutura.
+
+\input{figures/fig-artefato}
+
+A organização em seções numeradas é a resposta a \texttt{NFR-005} (código
+comentado e organizado) e cumpre função operacional, não apenas estética: como o
+processo de verificação precisa localizar trechos específicos por inspeção
+textual, a previsibilidade da estrutura reduz o esforço de verificação.
+
+A restrição \texttt{CON-001} (artefato único) tem uma consequência de projeto que
+vale explicitar: sem módulos separados, não há como isolar a lógica de simulação
+da lógica de apresentação por meio de fronteiras de arquivo. O isolamento foi
+obtido por meio de funções com responsabilidade única dentro do mesmo arquivo, e
+a separação é garantida por convenção, não por mecanismo. É um enfraquecimento
+real da arquitetura em relação a uma solução modular --- aceito porque exigido
+pela especificação.
+
+\section{Máquina de estados da partida}
+\label{sec:impl-fsm}
+
+A partida é modelada como máquina de estados finitos com cinco estados:
+\texttt{ready}, \texttt{running}, \texttt{paused}, \texttt{over} e \texttt{won}.
+A Figura~\ref{fig:fsm} apresenta as transições.
+
+\input{figures/fig-fsm}
+
+Duas decisões de modelagem merecem registro. A primeira é a existência do estado
+\texttt{won}, que não constava da solicitação original. Ele é necessário porque a
+especificação declarou o caso de borda ``grade completamente ocupada''
+(Seção~\ref{sec:esp-bordas}): sem esse estado, o sorteio do alvo retornaria um
+valor inválido e o jogo entraria em estado inconsistente. A modelagem do caso de
+borda forçou a criação de um estado. Esse é um exemplo concreto de como declarar
+casos de borda altera o projeto, e não apenas os testes.
+
+A segunda é que o estado \texttt{ready} não é apenas decorativo. Ele existe
+porque a especificação exige que a movimentação comece somente após a primeira
+entrada direcional válida (\texttt{FR-012}). A consequência é que a primeira
+entrada precisa ser tratada de forma diferente das demais: como o jogador ainda
+não se moveu, qualquer direção cardinal é aceita, inclusive a oposta à direção
+inicial, e o corpo é reposicionado atrás da nova cabeça para evitar autocolisão
+imediata. Sem esse tratamento, pressionar ``esquerda'' na tela inicial mataria o
+jogador no primeiro passo.
+
+\section{Laço de animação}
+\label{sec:impl-loop}
+
+O laço usa o mecanismo de requisição de quadro de animação
+(\citeonline{mdn2024raf}), com acumulador de tempo para separar a simulação da
+apresentação, conforme \texttt{FR-014}, \texttt{CON-004} e ADR-002. A
+Figura~\ref{fig:game-loop} representa o fluxo.
+
+\input{figures/fig-game-loop}
+
+O trecho central está no Quadro~\ref{qua:codigo-loop}.
+
+\begin{quadro}[htb]
+	\caption{Trecho do laço de animação: acúmulo de tempo e execução de passos (excertado)}
+	\label{qua:codigo-loop}
+	\begin{lstlisting}[style=codigo]
+const delta = Math.min(timestamp - state.lastTs, 250);
+state.lastTs = timestamp;
+state.elapsed += delta;
+
+if (state.status === 'running') {
+  state.acc += delta;
+  let steps = 0;
+  while (state.acc >= state.stepMs && steps < CONFIG.maxTicksPerFrame) {
+    state.acc -= state.stepMs;
+    steps += 1;
+    tick();
+    if (state.status !== 'running') { state.acc = 0; break; }
+  }
+  if (state.acc > state.stepMs * CONFIG.maxTicksPerFrame) state.acc = 0;
+} else {
+  state.acc = 0;
+}
+	\end{lstlisting}
+	\legend{Fonte: \texttt{index.html}, seção~10.}
+\end{quadro}
+
+Três detalhes do trecho são decisões de engenharia, não acidentes de codificação.
+
+\textbf{Limitação do passo de tempo.} A primeira linha limita o intervalo a
+250\,ms. Sem esse limite, um retorno de segundo plano produziria um intervalo de
+vários segundos e o jogador avançaria dezenas de células em um único quadro, sem
+possibilidade de reação. O limite converte uma anomalia de temporização em uma
+perda controlada de fluidez.
+
+\textbf{Teto de passos por quadro.} A condição \texttt{steps < maxTicksPerFrame}
+limita a quantidade de simulações executadas em um mesmo quadro. Sem esse teto, a
+recuperação do atraso acumulado consumiria mais tempo de processamento do que o
+atraso original, ampliando a defasagem --- fenômeno conhecido como espiral da
+morte. O teto rompe o ciclo ao custo de a simulação ficar momentaneamente atrás
+do tempo real.
+
+\textbf{Descarte do acúmulo residual.} A linha final descarta o acúmulo quando
+ele excede o teto multiplicado pelo intervalo. É a segunda linha de defesa contra
+a mesma anomalia.
+
+A Tabela~\ref{tab:tempos} registra as grandezas temporais do laço.
+
+\begin{table}[htb]
+	\caption{Grandezas temporais do laço de animação}
+	\label{tab:tempos}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{4.4cm} c X@{}}
+		\toprule
+		\textbf{Grandeza} & \textbf{Valor} & \textbf{Observação} \\
+		\midrule
+		Intervalo inicial entre passos & 140\,ms & Aproximadamente sete passos por segundo \\
+		\addlinespace
+		Intervalo mínimo & 68\,ms & Aproximadamente quinze passos por segundo \\
+		\addlinespace
+		Teto de passo de tempo & 250\,ms & Limite do intervalo aceito em um quadro \\
+		\addlinespace
+		Teto de passos por quadro & 5 & Proteção contra espiral da morte \\
+		\addlinespace
+		Taxa de quadro alvo & --- & Delegada ao navegador pelo mecanismo de requisição de quadro \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{index.html}.}
+\end{table}
+
+\section{Algoritmo de um passo de simulação}
+\label{sec:impl-tick}
+
+O passo de simulação é a unidade atômica do jogo. Sua ordem de operações é
+determinada por ADR-004 e está representada na Figura~\ref{fig:tick}.
+
+\input{figures/fig-tick}
+
+O Quadro~\ref{qua:codigo-tick} apresenta o trecho correspondente.
+
+\begin{quadro}[htb]
+	\caption{Trecho do passo de simulação: cálculo da cabeça, colisão e remoção da cauda (excertado)}
+	\label{qua:codigo-tick}
+	\begin{lstlisting}[style=codigo]
+if (state.queue.length > 0) {
+  state.dir = state.queue.shift();
+}
+const head = {
+  x: state.snake[0].x + state.dir.x,
+  y: state.snake[0].y + state.dir.y
+};
+if (head.x < 0 || head.y < 0 ||
+    head.x >= CONFIG.cols || head.y >= CONFIG.rows) {
+  endGame('collision');
+  return;
+}
+const growing = state.food !== null && sameCell(head, state.food);
+if (!growing) {
+  state.snake.pop();
+}
+	\end{lstlisting}
+	\legend{Fonte: \texttt{index.html}, seção~8.}
+\end{quadro}
+
+A ordem tem três propriedades que importam.
+
+\textbf{A direção é aplicada antes do movimento.} A fila é consumida no início do
+passo, de modo que a direção usada no cálculo corresponde exatamente à intenção
+vigente naquele passo.
+
+\textbf{A colisão de borda é testada antes de qualquer mutação do corpo.} Se a
+cabeça saiu da grade, o estado não foi alterado. Isso mantém a consistência do
+estado observável em caso de encerramento.
+
+\textbf{A cauda é removida antes do teste de colisão com o corpo.} Essa é a
+decisão ADR-004 e produz o comportamento declarado no caso de borda~5: mover para
+a célula que a cauda acabou de liberar é sobrevivência, não morte. A ordem inversa
+produziria a morte.
+
+\section{Fila de entrada e bloqueio de inversão}
+\label{sec:impl-entrada}
+
+O bloqueio de inversão instantânea (\texttt{FR-005}) é implementado por fila de
+capacidade limitada com validação contra a última direção de referência. A
+Figura~\ref{fig:sequencia} apresenta a sequência de tratamento de uma entrada.
+
+\input{figures/fig-sequencia}
+
+O Quadro~\ref{qua:codigo-fila} apresenta o trecho.
+
+\begin{quadro}[htb]
+	\caption{Trecho do enfileiramento de direção com bloqueio de inversão (excertado)}
+	\label{qua:codigo-fila}
+	\begin{lstlisting}[style=codigo]
+const reference = state.queue.length > 0
+  ? state.queue[state.queue.length - 1]
+  : state.dir;
+
+if (sameCell(next, reference) || isOpposite(next, reference)) {
+  return;
+}
+if (state.queue.length >= CONFIG.maxQueue) {
+  state.queue.shift();
+}
+state.queue.push({ ...next });
+	\end{lstlisting}
+	\legend{Fonte: \texttt{index.html}, seção~6.}
+\end{quadro}
+
+A validação usa como referência a \emph{última direção enfileirada}, e não a
+direção corrente, quando a fila não está vazia. A diferença é o que permite duas
+mudanças de noventa graus em um mesmo passo curto --- por exemplo, direita seguida
+de baixo --- sem permitir a inversão de cento e oitenta graus. Comparar apenas
+com a direção corrente rejeitaria a segunda entrada, e o jogador perderia o
+comando; comparar com a fila preserva a intenção sem abrir a possibilidade de
+inversão.
+
+\section{Sorteio do alvo}
+\label{sec:impl-alvo}
+
+O sorteio do alvo (\texttt{FR-006}) impede que o alvo apareça sobre o corpo. A
+estratégia tem duas fases. Na primeira, sorteia-se uma célula aleatória e verifica-se
+sua presença em um conjunto de ocupação, por até 500 tentativas. Se todas
+falharem, executa-se uma varredura determinística em ordem de linha e coluna,
+retornando a primeira célula livre.
+
+A escolha de duas fases é uma decisão de robustez. A amostragem aleatória é
+adequada enquanto a ocupação é baixa; quando o tabuleiro fica quase cheio, a
+probabilidade de acerto cai e o custo esperado de tentativas cresce. A varredura
+determinística garante término e, se nenhuma célula estiver livre, retorna valor
+nulo, que o passo de simulação interpreta como vitória --- o estado
+\texttt{won}.
+
+O Quadro~\ref{qua:codigo-alvo} apresenta o núcleo do sorteio.
+
+\begin{quadro}[htb]
+	\caption{Trecho do sorteio de célula livre para o alvo (excertado)}
+	\label{qua:codigo-alvo}
+	\begin{lstlisting}[style=codigo]
+const occupied = new Set(state.snake.map(function (cell) {
+  return cell.x + ',' + cell.y;
+}));
+
+for (let attempt = 0; attempt < CONFIG.maxFoodAttempts; attempt += 1) {
+  const cell = { x: randomInt(CONFIG.cols), y: randomInt(CONFIG.rows) };
+  if (!occupied.has(cell.x + ',' + cell.y)) {
+    return cell;
+  }
+}
+	\end{lstlisting}
+	\legend{Fonte: \texttt{index.html}, seção~6.}
+\end{quadro}
+
+Uma nota de eficiência: a codificação da célula como texto para uso em conjunto
+tem custo de alocação. A alternativa sem alocação seria uma matriz de ocupação
+reutilizada entre passos, o que exigiria limpeza seletiva a cada passo e
+introduziria risco de estado residual. A escolha pela legibilidade e
+previsibilidade, com o custo de alocação assumido, é coerente com
+\texttt{NFR-005} e com o tamanho da grade (24 por 24 células).
+
+\section{Persistência do recorde}
+\label{sec:impl-persistencia}
+
+A persistência (\texttt{FR-010}) está isolada em duas funções envoltas em
+tratamento de exceção, conforme ADR-006. A gravação ocorre no momento em que a
+pontuação supera o recorde, e não apenas no encerramento da partida.
+
+A escolha de gravar durante a partida tem uma consequência favorável: se a página
+for fechada abruptamente, o recorde conquistado não se perde. O custo é uma
+escrita no armazenamento por item consumido, custo irrelevante na escala do jogo.
+A leitura ocorre uma única vez, na inicialização.
+
+O tratamento de exceção cobre dois cenários reais: navegação privada com
+armazenamento restrito e política de armazenamento desabilitada pelo usuário. Em
+ambos, a função de leitura retorna zero e o jogo permanece jogável com o recorde
+válido apenas na sessão corrente. A falha é degradada, não propagada.
+
+\section{Renderização}
+\label{sec:impl-render}
+
+A renderização ocorre em superfície vetorial bidimensional
+(\citeonline{mdn2024canvas}) e segue ADR-001. Três decisões a caracterizam.
+
+\textbf{Ajuste à densidade da tela.} O Quadro~\ref{qua:codigo-resize} mostra o
+ajuste, que atende \texttt{NFR-006}. A razão de pixels é limitada a~2 para evitar
+custo de desenho desnecessário em telas de densidade muito alta, nas quais o
+ganho visual seria imperceptível e o custo de memória, não.
+
+\begin{quadro}[htb]
+	\caption{Trecho do ajuste da superfície de desenho à densidade da tela (excertado)}
+	\label{qua:codigo-resize}
+	\begin{lstlisting}[style=codigo]
+const rect = dom.canvas.getBoundingClientRect();
+const cssSize = Math.max(1, Math.round(rect.width));
+const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+dom.canvas.width = Math.round(cssSize * dpr);
+dom.canvas.height = Math.round(cssSize * dpr);
+ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+view.size = cssSize;
+view.cell = cssSize / CONFIG.cols;
+	\end{lstlisting}
+	\legend{Fonte: \texttt{index.html}, seção~9.}
+\end{quadro}
+
+\textbf{Conversão de célula para pixel em um único ponto.} O tamanho da célula é
+calculado uma única vez, e todo o desenho deriva dele. Não há coordenada de pixel
+literal no código de desenho, exceto as relativas à própria célula (espessura de
+borda, deslocamento dos olhos). Essa disciplina é o que permite alterar o número
+de colunas da grade sem tocar no código de desenho.
+
+\textbf{Observação de redimensionamento.} O ajuste é reexecutado quando o
+contêiner muda de tamanho, por observador de redimensionamento quando disponível
+e por evento de janela como alternativa. Isso cobre rotação de tela e
+redimensionamento de janela sem recarregar a página.
+
+A Figura~\ref{fig:interface} registra visualmente o resultado da implementação no
+estado de fim de jogo: o tema escuro com acentos neon (\texttt{NFR-003}), o
+layout centralizado e responsivo (\texttt{NFR-002}), o placar com as duas
+grandezas (\texttt{FR-009} e \texttt{FR-010}), a sobreposição de fim de jogo com
+o botão de reinício (\texttt{FR-011}) e os quatro controles direcionais
+(\texttt{FR-004}).
+
+Cabe uma advertência sobre o estatuto dessa imagem. Ela é \emph{registro visual},
+não verificação. Nenhum critério de aceitação é satisfeito ou reprovado com base
+em uma captura de tela: os requisitos que ela ilustra são verificados por
+observação de comportamento (Tabela~\ref{tab:ca-resultados}) ou, quando não
+possuem critério, permanecem sem verificação. Ilustrar um requisito em uma figura
+não o promove a verificado.
+
+\input{figures/fig-interface-implementada}
+
+\section{Acessibilidade e resposta a preferências}
+\label{sec:impl-acessibilidade}
+
+Três medidas atendem \texttt{NFR-009} e às diretrizes de acessibilidade para
+conteúdo web (\citeonline{w3c2023wcag22}).
+
+\textbf{Preferência de movimento reduzido.} A animação pulsante do alvo é
+desativada e as transições de interface são reduzidas quando o sistema operacional
+declara essa preferência. A escolha é relevante porque a pulsação é o único
+elemento puramente decorativo com movimento contínuo no produto.
+
+\textbf{Foco visível.} Os elementos interativos têm indicação de foco explícita,
+o que permite operá-los por teclado. Sem isso, os botões direcionais seriam
+inacessíveis a quem não usa apontador.
+
+\textbf{Região viva para leitores de tela.} Mudanças de estado da partida são
+anunciadas em região com semântica de estado, de modo que a transição para pausa
+ou para fim de jogo não seja silenciosa para tecnologias assistivas.
+
+Registra-se uma limitação: os controles direcionais são botões com rótulo
+textual, o que os torna acessíveis, mas a superfície de desenho do jogo não
+oferece descrição textual do estado corrente para leitores de tela. Um jogo
+acessível a pessoas cegas exigiria uma representação textual do tabuleiro, que
+não foi especificada e está fora do escopo deste trabalho.
+
+\section{Verificação de restrições durante a implementação}
+\label{sec:impl-restricoes}
+
+A Tabela~\ref{tab:restricoes-verificacao} registra como cada restrição foi
+verificada na implementação.
+
+\begin{table}[htb]
+	\caption{Verificação das restrições na implementação}
+	\label{tab:restricoes-verificacao}
+	\centering
+	\footnotesize
+	\begin{tabularx}{\textwidth}{@{}p{1.7cm} X p{2.6cm}@{}}
+		\toprule
+		\textbf{ID} & \textbf{Restrição} & \textbf{Verificação} \\
+		\midrule
+		CON-001 & Artefato único & Inspeção: um único arquivo, um bloco de estilo, um bloco de script \\
+		\addlinespace
+		CON-002 & Apenas CSS e JavaScript nativos & Inspeção: ausência de referências de rede e de dependências \\
+		\addlinespace
+		CON-003 & Configuração centralizada & Inspeção: objeto de configuração único, congelado, com sete campos \\
+		\addlinespace
+		CON-004 & Sem temporizador fixo para simulação & Inspeção: laço por requisição de quadro com acumulador \\
+		\bottomrule
+	\end{tabularx}
+	\legend{Fonte: elaborado pelo autor (2026). A especificação do alvo declara quatro restrições
+	(\texttt{CON-001} a \texttt{CON-004}); as restrições de hardware do material de origem do
+	framework não têm correspondência no produto (ver P-26).}
+\end{table}
+
+\section{Síntese do capítulo}
+\label{sec:impl-sintese}
+
+A implementação materializou as sete decisões arquiteturais em 1\,063 linhas
+organizadas em treze seções. Os pontos de maior consequência para o
+comportamento observável são a ordem entre remoção da cauda e teste de colisão
+(ADR-004), a referência usada na validação da fila de entrada (ADR-003) e o
+tratamento do estado inicial (FR-012). O Capítulo~\ref{cap:resultados} verifica
+se o comportamento resultante corresponde ao especificado.

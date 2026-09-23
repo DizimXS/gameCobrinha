@@ -1,0 +1,43 @@
+%% ---------------------------------------------------------------------
+%%  FIGURA - Sequencia de tratamento de entrada (DG-08)
+%% ---------------------------------------------------------------------
+\begin{figure}[htb]
+	\caption{Sequência de tratamento de uma entrada direcional}
+	\label{fig:sequencia}
+	\centering
+	\begin{tikzpicture}[
+			font=\scriptsize,
+			ator/.style={draw, rounded corners=2pt, minimum width=2.3cm, minimum height=0.7cm, align=center, fill=black!8},
+			>=Stealth,
+			msg/.style={->, thick},
+			ret/.style={->, thick, dashed}
+		]
+
+		% atores e linhas de vida
+		\node[ator] (jog) at (0,0) {Jogador};
+		\node[ator] (ui) at (3.4,0) {Interface\\ (teclado / D-Pad)};
+		\node[ator] (fila) at (7.0,0) {Fila de\\ entrada};
+		\node[ator] (val) at (10.4,0) {Validação de\\ direção};
+		\node[ator] (pas) at (13.9,0) {Passo de\\ simulação};
+
+		\foreach \x in {0,3.4,7.0,10.4,13.9} {
+				\draw[dotted, thick] (\x,-0.45) -- (\x,-7.2);
+			}
+
+		\draw[msg] (0,-1.0) -- node[above, font=\scriptsize] {tecla ou toque} (3.4,-1.0);
+		\draw[msg] (3.4,-1.8) -- node[above, font=\scriptsize] {nome da direção} (7.0,-1.8);
+		\draw[msg] (7.0,-2.6) -- node[above, font=\scriptsize] {direção solicitada} (10.4,-2.6);
+
+		\draw[msg] (10.4,-3.4) -- ++(1.0,0) -- ++(0,-0.7) -- node[right, font=\scriptsize, pos=0.55] {descartar se igual} (11.4,-4.1);
+		\draw[msg] (10.4,-4.6) -- ++(1.0,0) -- ++(0,-0.7) -- node[right, font=\scriptsize, pos=0.55] {descartar se oposta} (11.4,-5.3);
+
+		\draw[msg] (10.4,-6.0) -- node[above, font=\scriptsize] {enfileirar} (13.9,-6.0);
+		\draw[ret] (13.9,-6.7) -- node[above, font=\scriptsize] {aplicar no próximo passo} (7.0,-6.7);
+
+		\node[font=\scriptsize, align=left, anchor=west] at (0,-7.8)
+		{Referência de comparação: a última direção enfileirada, ou a direção corrente quando a fila está vazia.};
+	\end{tikzpicture}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{index.html}, seção~6 (ADR-003).
+	Comparar com a última direção \emph{enfileirada} permite duas mudanças de noventa graus no mesmo passo
+	sem abrir a possibilidade de inversão de cento e oitenta graus.}
+\end{figure}

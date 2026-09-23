@@ -1,0 +1,20 @@
+%%{init: {"theme":"neutral"}}%%
+%% DG-02 - Camadas do framework SDD agentico
+%% Corresponde a Figura 2 do capitulo 5 (fig-camadas.tex)
+flowchart TB
+    subgraph L1["1. Principios - constituicao e regras permanentes"]
+        A["Maior estabilidade, maior precedencia"]
+    end
+    subgraph L2["2. Instrucoes - aplicadas por padrao de arquivo"]
+        B["Economia de contexto<br/>Controle de mudancas<br/>Artefatos SDD<br/>Engenharia de dominio"]
+    end
+    subgraph L3["3. Habilidades - carregadas sob demanda"]
+        C["Especificacao, embarcado, artigo, monografia, documentacao"]
+    end
+    subgraph L4["4. Agentes - quinze papeis especializados"]
+        D["Roteamento, planejamento, execucao, verificacao, encerramento"]
+    end
+    subgraph L5["5. Artefatos de controle - unica camada persistente"]
+        E["Especificacao, decisoes, tarefas, evidencias, estado"]
+    end
+    L1 --> L2 --> L3 --> L4 --> L5

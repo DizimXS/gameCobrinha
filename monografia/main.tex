@@ -1,0 +1,211 @@
+%% =====================================================================
+%%  MONOGRAFIA DE GRADUACAO EM ENGENHARIA
+%%  Desenvolvimento de software orientado por especificacoes (SDD) com
+%%  agentes de inteligencia artificial: estudo de caso de um jogo digital
+%%  em artefato unico.
+%%
+%%  IMPORTANTE: este projeto NAO foi validado por compilador. Nao havia
+%%  toolchain LaTeX no ambiente de producao (latexmk/pdflatex/xelatex/
+%%  tectonic ausentes). Ver MONOGRAFIA_STATUS.md, secao 3.
+%%
+%%  Compilacao: latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+%%  Fluxo BibTeX (abntex2cite). NAO usar biber.
+%% =====================================================================
+
+\documentclass[
+	12pt,				% tamanho da fonte (NBR 14724 pede 12)
+	openright,			% capitulos comecam em pagina impar
+	oneside,			% monografia: frente e verso iguais
+	a4paper,			% papel A4
+	brazilian,			% idioma principal
+	english,			% idioma secundario (abstract)
+	chapter=TITLE,		% capitulos em letras maiusculas (ABNT)
+	sumario=abnt-6027-2012,	% formato de sumario conforme NBR 6027
+]{abntex2}
+
+%% ---------------------------------------------------------------------
+%%  Codificacao, fonte e tipografia
+%% ---------------------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}			% fonte vetorial legivel em PDF
+\usepackage{textcomp}			% simbolos de texto (graus, etc.)
+\usepackage{microtype}			% ajuste fino de composicao
+\usepackage{indentfirst}		% indenta o primeiro paragrafo (ABNT)
+\usepackage{lastpage}
+
+%% ---------------------------------------------------------------------
+%%  Matematica
+%% ---------------------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%% ---------------------------------------------------------------------
+%%  Tabelas e quadros
+%% ---------------------------------------------------------------------
+\usepackage{booktabs}			% regras horizontais profissionais
+\usepackage{longtable}			% tabelas que quebram de pagina
+\usepackage{tabularx}			% colunas com largura elastica
+\usepackage{array}
+\usepackage{multirow}
+
+%% newfloat em vez de float: o pacote float conflita com classes baseadas
+%% em memoir (caso da abntex2). newfloat e o substituto recomendado.
+\usepackage{newfloat}
+\DeclareFloatingEnvironment[
+	fileext=loq,
+	listname={Lista de quadros},
+	name=Quadro,
+	placement=htbp,
+]{quadro}
+%% Nota: o newfloat nomeia a lista a partir do ambiente, gerando
+%% \listofquadro. Se a sua distribuicao gerar outro nome (ex.:
+%% \listofquadros), ajuste a chamada em chapters/pre-textuais.tex.
+
+%% ---------------------------------------------------------------------
+%%  Figuras e diagramas
+%% ---------------------------------------------------------------------
+\usepackage{graphicx}
+%% Alem dos diagramas TikZ em figures/, a monografia inclui a captura de
+%% tela real do produto, armazenada em images/ na raiz do repositorio
+%% (fonte unica de verdade: o arquivo nao e duplicado dentro da monografia).
+\graphicspath{{figures/}{../images/}{images/}}
+\usepackage{tikz}
+\usetikzlibrary{
+	arrows.meta,
+	positioning,
+	shapes.geometric,
+	shapes.misc,
+	fit,
+	backgrounds,
+	calc,
+	chains
+}
+
+%% ---------------------------------------------------------------------
+%%  Listagens de codigo
+%% ---------------------------------------------------------------------
+%% Snippets inseridos nesta monografia usam apenas caracteres ASCII na
+%% area de codigo (seguro com pdflatex + listings). O codigo completo
+%% permanece no repositorio, conforme a orientacao da skill.
+\usepackage{listings}
+\lstdefinestyle{codigo}{
+	basicstyle=\ttfamily\footnotesize,
+	keywordstyle=\bfseries,
+	commentstyle=\itshape,
+	breaklines=true,
+	breakatwhitespace=false,
+	showstringspaces=false,
+	tabsize=2,
+	columns=fullflexible,
+	frame=single,
+	framexleftmargin=4pt,
+	xleftmargin=6pt,
+	numbers=left,
+	numberstyle=\tiny,
+	numbersep=6pt,
+}
+
+%% ---------------------------------------------------------------------
+%%  Hipertexto
+%% ---------------------------------------------------------------------
+%% hyperref e carregado antes do abntex2cite para que as definicoes de
+%% citacao do estilo ABNT prevaleçam.
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	urlcolor=black,
+	filecolor=black,
+	pdftitle={Desenvolvimento de software orientado por especificacoes com agentes de IA},
+	pdfauthor={William},
+}
+
+%% ---------------------------------------------------------------------
+%%  Citacoes no padrao ABNT (autor-data) - NBR 10520
+%% ---------------------------------------------------------------------
+\usepackage[alf]{abntex2cite}
+
+%% ---------------------------------------------------------------------
+%%  Metadados do trabalho
+%%
+%%  ATENCAO: os campos marcados com [VALIDAR COM O AUTOR] sao dados que
+%%  NAO existiam no workspace e NAO foram inventados. Preencha-os antes
+%%  da versao final. Ver MONOGRAFIA_PENDENCIAS.md (P-01 a P-07).
+%% ---------------------------------------------------------------------
+\newcommand{\TrabalhoTitulo}{%
+	DESENVOLVIMENTO DE SOFTWARE ORIENTADO POR ESPECIFICAÇÕES COM AGENTES
+	DE INTELIGÊNCIA ARTIFICIAL: UM ESTUDO DE CASO APLICADO A UM JOGO
+	DIGITAL EM ARTEFATO ÚNICO%
+}
+\newcommand{\TrabalhoAutor}{William}
+\newcommand{\TrabalhoInstituicao}{[VALIDAR COM O AUTOR --- nome da instituição de ensino]}
+\newcommand{\TrabalhoUnidade}{[VALIDAR COM O AUTOR --- campus ou unidade]}
+\newcommand{\TrabalhoCurso}{[VALIDAR COM O AUTOR --- curso de graduação em Engenharia]}
+\newcommand{\TrabalhoOrientador}{[VALIDAR COM O AUTOR --- Prof. Dr. Nome do Orientador]}
+\newcommand{\TrabalhoCidade}{[VALIDAR COM O AUTOR --- cidade]}
+\newcommand{\TrabalhoAno}{2026}
+\newcommand{\TrabalhoNatureza}{%
+	Trabalho de Conclusão de Curso apresentado ao curso de
+	\TrabalhoCurso\ da \TrabalhoInstituicao\ como requisito parcial para a
+	obtenção do título de Engenheiro%
+}
+
+%% ---------------------------------------------------------------------
+%%  Espacamento e ajustes de composicao
+%% ---------------------------------------------------------------------
+\setlength{\parindent}{1.3cm}
+\setlength{\parskip}{0.2cm}
+\renewcommand{\arraystretch}{1.15}
+
+%% Nota de fonte de figuras, tabelas e quadros (padrao ABNT).
+%% \providecommand evita conflito caso a classe ja defina \legend.
+\providecommand{\legend}[1]{%
+	\par\vspace{3pt}%
+	{\footnotesize\setlength{\parindent}{0pt}\raggedright #1\par}%
+}
+
+%% Evita linhas muito curtas no fim de paragrafos
+\widowpenalty=10000
+\clubpenalty=10000
+
+%% =====================================================================
+\begin{document}
+
+%% ---------------------------------------------------------------------
+%%  Elementos pre-textuais
+%% ---------------------------------------------------------------------
+\pretextual
+\include{chapters/pre-textuais}
+
+%% ---------------------------------------------------------------------
+%%  Elementos textuais
+%% ---------------------------------------------------------------------
+\textual
+
+\include{chapters/01-introducao}
+\include{chapters/02-fundamentacao}
+\include{chapters/03-trabalhos-relacionados}
+\include{chapters/04-materiais-metodos}
+\include{chapters/05-framework-sdd-agentico}
+\include{chapters/06-especificacao}
+\include{chapters/07-implementacao}
+\include{chapters/08-resultados}
+\include{chapters/09-discussao}
+\include{chapters/10-conclusao}
+
+%% ---------------------------------------------------------------------
+%%  Elementos pos-textuais
+%% ---------------------------------------------------------------------
+\postextual
+
+\bibliography{references}
+
+\begin{apendicesenv}
+	\partapendices
+	\include{appendices/a-especificacao}
+	\include{appendices/b-lista-verificacao}
+\end{apendicesenv}
+
+\end{document}

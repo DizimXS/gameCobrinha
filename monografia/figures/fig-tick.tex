@@ -1,0 +1,46 @@
+%% ---------------------------------------------------------------------
+%%  FIGURA - Algoritmo de um passo de simulacao (DG-06)
+%% ---------------------------------------------------------------------
+\begin{figure}[htb]
+	\caption{Algoritmo de um passo de simulação, com destaque para a ordem de ADR-004}
+	\label{fig:tick}
+	\centering
+	\begin{tikzpicture}[
+			font=\footnotesize,
+			acao/.style={draw, rounded corners=2pt, minimum width=6.4cm, minimum height=0.78cm, align=center, fill=black!4},
+			critico/.style={acao, fill=black!14, very thick},
+			saida/.style={draw, rounded corners=2pt, minimum width=3.2cm, minimum height=0.78cm, align=center, fill=black!8},
+			dec/.style={draw, diamond, aspect=3.0, inner sep=1pt, align=center, font=\scriptsize},
+			>=Stealth,
+			fl/.style={->, thick},
+			rot/.style={font=\scriptsize, inner sep=2pt, fill=white}
+		]
+
+		\node[acao] (a1) at (0,0) {1. Aplicar a próxima direção válida da fila};
+		\node[acao, below=0.42cm of a1] (a2) {2. Calcular a nova cabeça: cabeça $+$ direção};
+		\node[dec, below=0.6cm of a2] (d1) {cabeça fora\\ da grade?};
+		\node[acao, below=0.6cm of d1] (a3) {3. Verificar se a cabeça alcançou o alvo};
+		\node[critico, below=0.42cm of a3] (a4) {4. Se não cresceu: remover a cauda};
+		\node[dec, below=0.6cm of a4] (d2) {cabeça em célula\\ do corpo?};
+		\node[acao, below=0.6cm of d2] (a5) {5. Inserir a nova cabeça no início do corpo};
+		\node[acao, below=0.42cm of a5] (a6) {6. Se cresceu: somar pontos, reduzir o intervalo, sortear novo alvo};
+
+		\node[saida, right=1.5cm of d1] (o1) {Encerrar partida};
+		\node[saida, right=1.5cm of d2] (o2) {Encerrar partida};
+		\node[saida, right=1.5cm of a6, align=center] (o3) {Ganhar\\ (sem célula livre)};
+
+		\draw[fl] (a1) -- (a2);
+		\draw[fl] (a2) -- (d1);
+		\draw[fl] (d1) -- node[rot, left] {não} (a3);
+		\draw[fl] (d1) -- node[rot, above] {sim} (o1);
+		\draw[fl] (a3) -- (a4);
+		\draw[fl] (a4) -- (d2);
+		\draw[fl] (d2) -- node[rot, left] {não} (a5);
+		\draw[fl] (d2) -- node[rot, above] {sim} (o2);
+		\draw[fl] (a5) -- (a6);
+		\draw[fl] (a6) -- (o3);
+	\end{tikzpicture}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{index.html}, seção~8.
+	O passo 4 é destacado porque sua posição \emph{antes} do teste de colisão (ADR-004) determina se
+	ocupar a célula recém-liberada pela cauda é sobrevivência ou morte.}
+\end{figure}

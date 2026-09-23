@@ -1,0 +1,44 @@
+%% ---------------------------------------------------------------------
+%%  FIGURA - Laco de animacao com acumulador (DG-05)
+%% ---------------------------------------------------------------------
+\begin{figure}[htb]
+	\caption{Laço de animação com acumulador de tempo e execução de passos}
+	\label{fig:game-loop}
+	\centering
+	\begin{tikzpicture}[
+			font=\footnotesize,
+			passo/.style={draw, rounded corners=2pt, minimum width=3.5cm, minimum height=0.8cm, align=center, fill=black!4},
+			dec/.style={draw, diamond, aspect=2.4, inner sep=1pt, align=center, font=\scriptsize},
+			>=Stealth,
+			fl/.style={->, thick},
+			rot/.style={font=\scriptsize, inner sep=2pt}
+		]
+
+		\node[passo] (raf) at (0,0) {Requisição de quadro};
+		\node[passo, below=0.55cm of raf] (delta) {Calcular intervalo $\Delta$ e limitar a 250\,ms};
+		\node[dec, below=0.75cm of delta] (rodando) {estado =\\ \texttt{running}?};
+		\node[passo, right=2.5cm of rodando] (acum) {Acumular: $a \mathrel{+}= \Delta$};
+		\node[dec, below=0.85cm of acum] (suf) {$a \geq t$ e\\ passos $< 5$?};
+		\node[passo, right=2.3cm of suf] (tick) {Executar passo\\ de simulação};
+		\node[passo, below=0.7cm of tick] (dec2) {Subtrair $t$ de $a$\\ e incrementar contador};
+		\node[passo, below=2.2cm of rodando] (desc) {Descartar acúmulo residual};
+		\node[passo, below=0.7cm of desc] (render) {Renderizar};
+		\node[passo, below=0.7cm of render] (loop) {Agendar próximo quadro};
+
+		\draw[fl] (raf) -- (delta);
+		\draw[fl] (delta) -- (rodando);
+		\draw[fl] (rodando) -- node[rot, above] {sim} (acum);
+		\draw[fl] (acum) -- (suf);
+		\draw[fl] (suf) -- node[rot, above] {sim} (tick);
+		\draw[fl] (tick) -- (dec2);
+		\draw[fl] (dec2) |- (acum);
+		\draw[fl] (suf) |- node[rot, pos=0.75, left] {não} (desc);
+		\draw[fl] (rodando) -- node[rot, left] {não} (desc);
+		\draw[fl] (desc) -- (render);
+		\draw[fl] (render) -- (loop);
+		\draw[fl] (loop) -- ++(2.2,0) |- (raf);
+	\end{tikzpicture}
+	\legend{Fonte: elaborado pelo autor (2026) a partir de \texttt{index.html}, seção~10.
+	O teto de cinco passos por quadro e o descarte do acúmulo residual são as duas defesas contra a
+	espiral da morte.}
+\end{figure}
